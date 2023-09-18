@@ -8,6 +8,9 @@ const {
 const controller = {
   createProduct: async (req, res) => {
     try {      
+      if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded, image is required' });
+      }
       const imagePath = req.file.filename;
       const result = await createProduct(req.body, imagePath) 
       return res.status(201).json(result)
@@ -37,8 +40,8 @@ const controller = {
       if (error) return res.status(400).json({ message: error });
       return res.status(200).json({ message: `Successfully deleted product with an ID of ${req.params.id}`, results });
     })
-
   }
+
 
 
 
