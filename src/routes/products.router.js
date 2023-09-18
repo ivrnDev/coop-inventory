@@ -9,7 +9,6 @@ const router = express.Router();
 const multer = require('multer');
 const fs = require('fs');
 
-
 const uploadDirectory = './images';
 
 if (!fs.existsSync(uploadDirectory)) {
@@ -27,14 +26,13 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({storage: storage});
-
+const upload = multer({ storage: storage });
 
 
 
 router.post('/', upload.single('productImage'), createProduct);
 router.get('/', getProducts);
-router.patch('/:id', updateProducts);
+router.patch('/:id', upload.single('productImage'), updateProducts);
 router.delete('/:id', deleteProduct)
 
 module.exports = router;
