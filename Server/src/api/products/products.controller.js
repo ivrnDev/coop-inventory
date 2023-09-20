@@ -40,7 +40,7 @@ const controller = {
       const result = await deleteProduct(req.params.id);
       res.status(200).json({ message: `Successfully deleted product with an ID of ${req.params.id}`, result });
     } catch (error) {
-      return res.status(400).json({ message: error });
+      return res.status(400).json(error);
     }
   }
 }
