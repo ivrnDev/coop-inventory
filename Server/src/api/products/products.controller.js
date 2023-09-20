@@ -9,9 +9,9 @@ const controller = {
   createProduct: async (req, res) => {
     try {
       if (!req.file) {
-        return res.status(400).json({ error: 'No file uploaded, image is required' });
+        return res.status(400).json({ error: 'Image is required with a file type JPG, JPEG, or PNG' });
       }
-      const imagePath = req.file.filename;
+      const imagePath = req.file.buffer;
       const result = await createProduct(req.body, imagePath)
       return res.status(201).json(result)
     } catch (error) {
@@ -28,7 +28,7 @@ const controller = {
   },
   updateProducts: async (req, res) => {
     try {
-      const imagePath = req.file.filename;
+      const imagePath = req.file.buffer;
       const result = await updateProducts(req.body, req.params.id, imagePath)
       return res.status(200).json(result)
     } catch (error) {

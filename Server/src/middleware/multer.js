@@ -1,11 +1,4 @@
 const multer = require('multer');
-const fs = require('fs');
-
-const uploadDirectory = './images';
-
-if (!fs.existsSync(uploadDirectory)) {
-  fs.mkdirSync(uploadDirectory);
-}
 
 const FILE_TYPE = {
   'image/jpg': 'jpg',
@@ -13,25 +6,17 @@ const FILE_TYPE = {
   'image/png': 'png',
 };
 
-function fileFilter(req, file, callback) {
-  if (file.mimetype in FILE_TYPE) {
-    callback(null, true);
-  } else {
-    callback(null, false);
+const upload =  multer({
+  storage: multer.memoryStorage(),
+  fileFilter: (req, file, callback) => {
+    if(file.mimetype in FILE_TYPE ) {
+      file.filename = `${Date.now}-${file.originalname}`
+      callback(null, true)
+    } else {
+      callback(null, false)
+    }
   }
-}
+})
 
-const storage = multer.diskStorage({
-  destination: (req, file, callback) => {
-    callback(null, uploadDirectory);
-  },
-  filename: (req, file, callback) => {
-    const timestamp = Date.now();
-    const filename = `${timestamp}-${file.originalname}`;
-    callback(null, filename);
-  },
-});
+module.exports = upload
 
-const upload = multer({ storage: storage, fileFilter: fileFilter });
-
-module.exports = upload;
