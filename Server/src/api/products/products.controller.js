@@ -27,6 +27,7 @@ const controller = {
     }
   },
   updateProducts: async (req, res) => {
+   
     try {
       const imagePath = req.file.buffer;
       const result = await updateProducts(req.body, req.params.id, imagePath)
