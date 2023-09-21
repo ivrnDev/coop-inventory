@@ -1,0 +1,19 @@
+ul {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+  padding: 20px
+}
+li {
+  background-color: green;
+  text-decoration: none;
+  list-style: none;
+  width: fit-content;
+  padding: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+}
