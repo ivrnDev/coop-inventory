@@ -3,6 +3,8 @@ const fs = require('fs');
 
 const service = {
   createProduct: ({ name, price, stocks, variants }, imagePath) => {
+
+    console.log()
     return new Promise((resolve, reject) => {
       pool.execute(
         'INSERT INTO products (name, price, stocks, variants, images) VALUES (?, ?, ?, ?, ?)',
