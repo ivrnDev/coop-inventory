@@ -1,10 +1,7 @@
 const pool = require('../../config/database.js')
-const fs = require('fs');
 
 const service = {
   createProduct: ({ name, price, stocks, variants }, imagePath) => {
-
-    console.log()
     return new Promise((resolve, reject) => {
       pool.execute(
         'INSERT INTO products (name, price, stocks, variants, images) VALUES (?, ?, ?, ?, ?)',
@@ -40,10 +37,10 @@ const service = {
   },
   updateProducts: async ({ name, price, stocks, variants }, id, imagePath) => {
     return new Promise((resolve, reject) => {
-      pool.execute('SELECT * FROM products WHERE id = ?', [id], (error, result) => {
+      pool.execute('SELECT * FROM products WHERE product_id = ?', [id], (error, result) => {
         if (error) return reject({ message: "Internal Server Error", error: error })
         if (result.length === 0) return reject({ message: `There is no products with an ID of ${id}` })
-        pool.execute('UPDATE products SET name = ?, price = ?, stocks = ?, variants = ?, images = ? WHERE id = ?', [
+        pool.execute('UPDATE products SET name = ?, price = ?, stocks = ?, variants = ?, images = ? WHERE product_id = ?', [
           name, price, stocks, variants, imagePath, id
         ], (error, result) => {
           if (error) return reject({ message: "Failed to update data", error: error });
