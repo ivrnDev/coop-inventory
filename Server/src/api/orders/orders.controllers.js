@@ -1,20 +1,47 @@
-const { createOrders, getOrders } = require('./orders.services')
+const { createCustomerDB, createTransactionDB, createOrderDB, getTransactionsDB } = require('./orders.services')
 
 const controller = {
-  createOrders: async (req, res) => {
+  createOrder: async (req, res) => {
     try {
-      const result = await createOrders(req.body);
-      return res.status(201).json(result);
+      const result = {};
+      result.customer = await createCustomerDB(req.body.customer); //create customer
+      
+      const {customer_email} = req.body.customer;
+      result.transactions = await createTransactionDB(customer_email) // create transaction
+      return res.status(200).json(result)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     } catch (error) {
-      if(error) return res.status(500).json(error);
+      if (error) return res.status(500).json(error);
     }
   },
-  getOrders: async (req, res) => {
+
+
+
+
+
+
+
+
+  getTransactions: async (req, res) => {
     try {
-      const result = await getOrders();
+      const result = await getTransactionsDB();
       return res.status(201).json(result);
     } catch (error) {
-      if(error) return res.status(500).json(error);
+      if (error) return res.status(500).json(error);
     }
   },
 }

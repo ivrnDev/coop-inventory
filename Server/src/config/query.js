@@ -1,6 +1,16 @@
 const queries = {
-    customers: `INSERT INTO customers (customer_name, customer_phone, customer_email) VALUES (?, ?, ?)`,
-    receiptSelect: `
+    customerQueries: {
+        getCustomersQuery: `SELECT * FROM customers`
+    },
+    
+    orderQueries: {
+        createCustomerQuery: `
+        INSERT INTO customers (customer_name, customer_phone, customer_email) VALUES (?, ?, ?)`,
+        createTransactionQuery: `
+        INSERT INTO transactions (customer_id, transaction_amount)SELECT customer_id, 0.00 FROM customers
+        WHERE customer_email = ?
+        `,
+        getAllTransactionsQuery: `
     SELECT
     transactions.transaction_id,
     transactions.transaction_date,
@@ -25,9 +35,9 @@ GROUP BY
     transactions.transaction_amount,
     customers.customer_id,
     customers.customer_name,
-    customers.customer_email;
+    customers.customer_email
 `,
-    updateTransactionAmount: `UPDATE transactions
+        updateTransactionAmountQuery: `UPDATE transactions
 SET transactions.transaction_amount = (
     SELECT SUM(orders.quantity * products.price)
     FROM orders
@@ -39,9 +49,11 @@ WHERE EXISTS (
     FROM orders
     WHERE orders.transaction_id = transactions.transaction_id
 );`
-
-
+    }
 }
+
+
+
 
 
 module.exports = queries;
