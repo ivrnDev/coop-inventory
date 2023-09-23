@@ -7,7 +7,7 @@ const queries = {
         createCustomerQuery: `
         INSERT INTO customers (customer_name, customer_phone, customer_email) VALUES (?, ?, ?)`,
         createTransactionQuery: `
-        INSERT INTO transactions (customer_id, transaction_amount)SELECT customer_id, 0.00 FROM customers
+        INSERT INTO transactions (customer_id, transaction_amount) SELECT customer_id, 0.00 FROM customers
         WHERE customer_email = ?
         `,
         getAllTransactionsQuery: `

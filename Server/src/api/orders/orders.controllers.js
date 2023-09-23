@@ -1,4 +1,4 @@
-const { createCustomerDB, createTransactionDB, createOrderDB, getTransactionsDB } = require('./orders.services')
+const { createCustomerDB, createTransactionDB, getTransactionsDB } = require('./orders.services')
 
 const controller = {
   createOrder: async (req, res) => {
@@ -8,15 +8,12 @@ const controller = {
       
       const {customer_email} = req.body.customer;
       result.transactions = await createTransactionDB(customer_email) // create transaction
+   
+
+      // result.orders = await createOrderDB(); //create transaction details or ordered products
+
+
       return res.status(200).json(result)
-
-
-
-
-
-
-
-
 
 
 
