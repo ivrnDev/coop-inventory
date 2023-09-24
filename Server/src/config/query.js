@@ -49,6 +49,14 @@ WHERE EXISTS (
     FROM orders
     WHERE orders.transaction_id = transactions.transaction_id
 );`
+    }, 
+    productQueries: {
+        createProductQuery: `INSERT INTO products (name, price, stocks, variants, images) VALUES (?, ?, ?, ?, ?)`,
+        getProductsQuery: `SELECT * FROM products`,
+        updateProductsQuery: `SELECT * FROM products WHERE product_id = ?`,
+        
+
+        
     }
 }
 
