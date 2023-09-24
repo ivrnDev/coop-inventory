@@ -1,17 +1,23 @@
 const pool = require('../../config/database.js')
-const {productQueries} = require('../../config/query.js')
-const {createProductQuery, getProductsQuery, updateProductsQuery} = productQueries
+const { productQueries } = require('../../config/query.js')
+const { createProductQuery, createVariantQuery, getProductsQuery, updateProductQuery, getProductByIdQuery } = productQueries
 
 const service = {
-  createProductDB: ({ name, price, stocks, variants }, imagePath) => {
+  createProductDB: ({ product_name, display_price, product_stocks, product_description }, imagePath) => {
     return new Promise((resolve, reject) => {
       pool.execute(createProductQuery,
-        [name, price, stocks, variants, imagePath],
+        [product_name, display_price, product_stocks, product_description, imagePath],
         (error, result) => {
-          if (error) {
-            return reject({ message: "Internal Server Error", error: error });
+          if (error) return reject(error);
+          const product_id = result.insertId;
+          const product = {
+            product_id,
+            product_name,
+            display_price,
+            product_stocks,
+            product_description
           }
-          return resolve({ message: "Products has been created successfully", result: result });
+          return resolve({ message: "Successfully added new product", product });
         }
       );
     })
@@ -19,39 +25,60 @@ const service = {
   getProductsDB: () => {
     return new Promise((resolve, reject) => {
       pool.execute(getProductsQuery, [], (error, result) => {
-        if (error) return reject({ message: "Internal Server Error", error: error })
+        if (error) return reject(error)
         if (result.length === 0) {
-          return reject({ message: "There is no existing products" })
+          return resolve(null)
         } else {
           const products = result.map((product) => ({
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            stocks: product.stocks,
-            variants: product.variants,
-            images: product.images && product.images.toString('base64'),
+            product_id: product.product_id,
+            product_name: product.product_name,
+            display_price: product.display_price,
+            product_stocks: product.product_stocks,
+            product_description: product.product_description,
+            product_images: product.product_image.toString('base64'),
           }));
-          return resolve({ message: "Successfully get all the products", result: products })
+          return resolve(products)
         }
       })
-    }) 
+    })
   },
-  updateProductsDB: async ({ name, price, stocks, variants }, id, imagePath) => {
+  createVariantsDB: (product_id, variants) => {
     return new Promise((resolve, reject) => {
-      pool.execute(updateProductsQuery, [id], (error, result) => {
-        if (error) return reject({ message: "Internal Server Error", error: error })
-        if (result.length === 0) return reject({ message: `There is no products with an ID of ${id}` })
-        pool.execute('UPDATE products SET name = ?, price = ?, stocks = ?, variants = ?, images = ? WHERE product_id = ?', [
-          name, price, stocks, variants, imagePath, id
+      for(const variant of variants) {
+        const {variant_name, variant_symbol, variant_price} = variant
+        pool.execute(createVariantQuery, [product_id, variant_name, variant_symbol, variant_price], (error, result) => {
+          if(error) return reject(error);
+          return resolve({ message: `Successfully added new variants`, variants })
+        })
+      }
+    })
+
+  },
+  updateProductsDB: async ({ product_name, display_price, product_stocks, product_description }, id, imagePath) => {
+    return new Promise((resolve, reject) => {
+      pool.execute(getProductByIdQuery, [id], (error, result) => {
+        if (error) return reject(error)
+        if (result.length === 0) return resolve(null)
+
+        pool.execute(updateProductQuery, [
+          product_name, display_price, product_stocks, product_description, imagePath, id
         ], (error, result) => {
-          if (error) return reject({ message: "Failed to update data", error: error });
-          return resolve({ message: "Successfully Updated the data", result: result });
+          if (error) return reject(error);
+          return resolve(result);
         })
       })
 
     })
 
   },
+  getProductByIdDB: (id) => {
+    return new Promise((resolve, reject) => {
+      pool.execute(getProductByIdQuery, [id], (error, result) => {
+        if (error) return reject(error);
+        return resolve(result);
+      })
+    })
+  }
   // deleteProductDB: (id) => {
   //   return new Promise((resolve, reject) => {
   //     pool.execute('SELECT images FROM products WHERE id = ?', [id], (error, results) => {
