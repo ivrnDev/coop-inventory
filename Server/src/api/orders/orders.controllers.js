@@ -1,19 +1,16 @@
-const { createCustomerDB, createTransactionDB, createOrderDB, getTransactionsDB } = require('./orders.services')
+const { createCustomerDB, createTransactionDB, getOrderPrice, createOrderDB, getTransactionsDB } = require('./orders.services')
 
 const controller = {
   createOrder: async (req, res) => {
     try {
       const customerData = req.body.customer
-      customer = await createCustomerDB(customerData); //create customer
-      transaction = await createTransactionDB(customer.customer_id) // create transaction
+      const customer = await createCustomerDB(customerData); //create customer
+      const transaction = await createTransactionDB(customer.customer_id) // create transaction
       
+
       const orderData = req.body.orders;
-      const orders = await createOrderDB(
-        transaction.transaction_id,
-        orderData.product_id,
-        orderData.variant_id,
-        orderData.quantity
-      );
+     
+      const orders = await createOrderDB(orderData, transaction.transaction_id);
 
 
 
@@ -21,7 +18,7 @@ const controller = {
 
       const result = {
         customer,
-        transactions,
+        transaction,
         orders
       }
 

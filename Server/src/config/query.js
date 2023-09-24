@@ -7,9 +7,10 @@ const queries = {
         createCustomerQuery: `
         INSERT INTO customers (customer_name, customer_phone, customer_email) VALUES (?, ?, ?)`,
         createTransactionQuery: `
-        INSERT INTO transactions (customer_id, transaction_amount) SELECT customer_id, 0.00 FROM customers
-        WHERE customer_id = ?
+         INSERT INTO transactions (customer_id, transaction_amount) VALUES (?, 0)
         `,
+        getPriceQuery: `SELECT variant_price FROM variants WHERE product_id = ? AND variant_id = ?`,
+        createOrderQuery: `INSERT INTO orders (transaction_id, product_id, variant_id, quantity, order_total) VALUES (?, ?, ?, ?, ?)`,
         getAllTransactionsQuery: `
     SELECT
     transactions.transaction_id,
@@ -52,7 +53,7 @@ WHERE EXISTS (
     },
     productQueries: {
         createProductQuery: `INSERT INTO products (product_name, display_price, product_stocks, product_description, product_image) VALUES (?, ?, ?, ?, ?)`,
-        createVariantQuery: `INSERT INTO variants (product_id, variant_name, variant_symbol, variant_price) VALUES (?, ?, ?, ?)`,
+        createVariantQuery: `INSERT INTO variants (variant_id, product_id, variant_name, variant_symbol, variant_price) VALUES (?, ?, ?, ?, ?)`,
         getProductsQuery: `SELECT * FROM products`,
         getProductByIdQuery: `SELECT * FROM products WHERE product_id = ?`,
         updateProductQuery: `UPDATE products SET product_name = ?, display_price = ?, product_stocks = ?, product_description = ?, product_image = ? WHERE product_id = ?`

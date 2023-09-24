@@ -44,13 +44,16 @@ const service = {
   },
   createVariantsDB: (product_id, variants) => {
     return new Promise((resolve, reject) => {
-      for(const variant of variants) {
-        const {variant_name, variant_symbol, variant_price} = variant
-        pool.execute(createVariantQuery, [product_id, variant_name, variant_symbol, variant_price], (error, result) => {
-          if(error) return reject(error);
+      variants.forEach((value, index) => {
+        const { variant_name, variant_symbol, variant_price } = value
+        pool.execute(createVariantQuery, [index + 1, product_id, variant_name, variant_symbol, variant_price], (error, result) => {
+          if (error) return reject(error);
           return resolve({ message: `Successfully added new variants`, variants })
         })
-      }
+
+      })
+
+   
     })
 
   },
