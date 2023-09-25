@@ -1,10 +1,23 @@
 const pool = require('../../config/database.js');
 const {customerQueries} = require('../../config/query.js')
+const {createCustomerQuery, getCustomersQuery} = customerQueries
 
-const {getCustomersQuery} = customerQueries;
-
-const services = {
-
+module.exports = {
+  createCustomerDB: ({ customer_name, customer_phone, customer_email }) => {
+    return new Promise((resolve, reject) => {
+      pool.execute(createCustomerQuery, [customer_name, customer_phone, customer_email], (error, result) => {
+        if (error) reject(error);
+        const customer_id = result.insertId;
+        const customer = {
+          customer_id,
+          customer_name,
+          customer_phone,
+          customer_email,
+        };
+        resolve(customer);
+      })
+    })
+  },
   getCustomersDB: () => {
     return new Promise((resolve, reject) => {
       pool.execute(getCustomersQuery, [], (error, result) => {
@@ -14,5 +27,3 @@ const services = {
     })
   }
 }
-
-module.exports = services;

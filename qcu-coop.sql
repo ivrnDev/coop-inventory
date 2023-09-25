@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 25, 2023 at 06:36 AM
+-- Generation Time: Sep 25, 2023 at 10:46 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -44,9 +44,10 @@ CREATE TABLE `orders` (
   `id` int(11) NOT NULL,
   `transaction_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
-  `variant_id` int(11) NOT NULL,
+  `variant_name` varchar(255) NOT NULL,
   `quantity` int(11) NOT NULL,
-  `order_total` decimal(10,2) NOT NULL
+  `order_total` decimal(10,2) NOT NULL,
+  `date_created` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -61,6 +62,7 @@ CREATE TABLE `products` (
   `display_name` varchar(255) NOT NULL,
   `display_price` varchar(255) NOT NULL DEFAULT '0.00',
   `product_stocks` int(11) NOT NULL,
+  `product_sold` int(11) NOT NULL DEFAULT 0,
   `product_description` varchar(255) NOT NULL,
   `product_image` longblob NOT NULL,
   `product_album` longblob NOT NULL,

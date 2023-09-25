@@ -15,3 +15,5 @@ ALTER TABLE variants AUTO_INCREMENT = 0;
 
 DELETE FROM products;
 ALTER TABLE products AUTO_INCREMENT = 0;
+
+

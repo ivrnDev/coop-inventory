@@ -13,6 +13,6 @@ router.post('/', upload.single('product_image'), createProduct);
 router.patch('/:id', upload.single('product_image'), updateProducts);
 router.get('/', getProducts);
 router.get('/:id', getProductById)
-// router.delete('/:id', deleteProduct)
+
 
 module.exports = router;

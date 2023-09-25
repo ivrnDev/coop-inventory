@@ -1,10 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { createOrder, getTransactions } = require('../api/orders/orders.controllers');
+const { createOrder, getAllOrders } = require('../api/orders/orders.controllers');
+const { getAllTransactions, updateTransactionStatus, updateOrderStatus } = require('../api/transactions/transactions.controller')
 
-router.post('/', createOrder)
+router.get('/', getAllOrders);
+router.post('/', createOrder);
+router.post('/updateStatus', updateOrderStatus);
+router.get('/transactions', getAllTransactions);
+router.post('/transactions/updateStatus', updateTransactionStatus);
 
-router.get('/transactions', getTransactions);
 
 
 module.exports = router;

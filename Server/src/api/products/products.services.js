@@ -9,7 +9,7 @@ const {
   getProductByIdQuery
 } = productQueries
 
-const service = {
+module.exports = {
   createProductDB: ({ product_name, display_name, display_price, product_stocks, product_description }, imagePath) => {
     return new Promise((resolve, reject) => {
       pool.execute(createProductQuery,
@@ -103,19 +103,8 @@ const service = {
         return resolve(result);
       })
     })
-  }
-  // deleteProductDB: (id) => {
-  //   return new Promise((resolve, reject) => {
-  //     pool.execute('SELECT images FROM products WHERE id = ?', [id], (error, results) => {
-  //       if (error) return reject({ message: "Internal Server Error", error: error })
-  //       if (results.length === 0) return reject(`There is no products with an ID of ${id}`);
-  //       pool.execute('DELETE FROM products WHERE id = ?', [id], (error, results) => {
-  //         if (error) return reject({ message: "Internal Server Error", error: error })
-  //         return resolve(results)
-  //       })
-  //     })
-  //   })
-  // }
+  },
+  
+
 };
 
-module.exports = service;
