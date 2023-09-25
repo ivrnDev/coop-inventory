@@ -34,31 +34,22 @@ const services = {
       });
     });
   },
-  // getOrderPrice: ({ product_id, variant_id, quantity }) => {
-  //   return new Promise((resolve, reject) => {
-  //     pool.execute(getPriceQuery, [product_id, variant_id], (error, result) => {
-  //       if (error) reject(error)
-  //       if (result.length === 0) resolve(null)
-  //       const variant_price = result[0].variant_price
-  //       const order_total = variant_price * quantity
-  //       console.log(order_total)
-  //       return resolve(order_total);
-  //     })
-  //   })
-
-  // },
   createOrderDB: (orderData, transaction_id) => {
     const getOrderPrice = (product_id, variant_id, quantity) => {
       return new Promise((resolve, reject) => {
         pool.execute(getPriceQuery, [product_id, variant_id], (error, result) => {
           if (error) reject(error)
-          if (result.length === 0) resolve(null)
-          const variant_price = result[0].variant_price
-          const order_total = variant_price * quantity
-          return resolve(order_total);
-        })
+          if (result.length === 0) {
+            resolve(null)
+          } else {
+            const variant_price = result[0].variant_price
+            const order_total = variant_price * quantity
+            console.log(orderData)
+            return resolve(order_total);
+          }
+          
+        }) 
       })
-
     }
     return new Promise(async (resolve, reject) => {
       try {
@@ -77,16 +68,9 @@ const services = {
               quantity: quantity,
               order_price: orderPrice
             }
-            
             resolve(orders)
           });
-
-
         }
-
-
-
-
       } catch (error) {
         reject(error);
       }

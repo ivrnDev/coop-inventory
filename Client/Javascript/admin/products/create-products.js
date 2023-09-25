@@ -5,9 +5,10 @@ document.querySelector('.create-submit').addEventListener('click', function crea
   e.preventDefault();
   
   const formData = new FormData(formUpdate)
+  console.log(formData)
   fetch(`http://localhost:3000/api/products`, {
     method: 'POST',
-    body: formData,
+    body: formData,   
   })
     .then(response => response.json())
     .then(data => {

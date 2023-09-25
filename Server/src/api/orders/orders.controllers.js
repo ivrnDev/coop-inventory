@@ -6,14 +6,11 @@ const controller = {
       const customerData = req.body.customer
       const customer = await createCustomerDB(customerData); //create customer
       const transaction = await createTransactionDB(customer.customer_id) // create transaction
-      
+
 
       const orderData = req.body.orders;
-     
+
       const orders = await createOrderDB(orderData, transaction.transaction_id);
-
-
-
 
 
       const result = {

@@ -4,7 +4,8 @@ const {
   getProductsDB,
   updateProductsDB,
   getProductByIdDB,
-  deleteProductDB
+  deleteProductDB,
+  updateVariantsDB
 } = require('./products.service.js');
 const fs = require('fs').promises;
 
@@ -46,11 +47,6 @@ const controller = {
       return res.status(500).json({ message: "Internal Server Error", error: error });
     }
   },
-
-
-
-
-
   getProducts: async (req, res) => {
     try {
       const result = await getProductsDB();
@@ -73,12 +69,26 @@ const controller = {
           return res.status(500).json({ error: "Error reading default image" });
         }
       };
-      const result = await updateProductsDB(req.body, req.params.id, imagePath)
-      if (result === null) {
-        return res.status(404).json({ message: `There is no product with an ID of ${req.params.id}` });
-      } else if (!result) {
-        return res.status(500).json({ error: "Failed to update product" });
+      const updatedProduct = await updateProductsDB(req.body, req.params.id, imagePath)
+      if (updatedProduct === null) return res.status(404).json({ message: `There is no product with an ID of ${req.params.id}` });
+      if (!updatedProduct) return res.status(500).json({ error: "Failed to update product" });
+        
+      const { variant_name, variant_symbol, variant_price } = req.body;
+
+      const variant = variant_name.map((name, index) => ({
+        variant_name: name,
+        variant_symbol: variant_symbol[index],
+        variant_price: variant_price[index]
+      }))
+      
+      const updateVariants = await updateVariantsDB(req.params.id, variant);
+
+
+      const result = {
+        updatedProduct,
+        updateVariants
       }
+      
       return res.status(200).json({ message: `Successfully Updated the product with an ID of ${req.params.id}`, result: result })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error });

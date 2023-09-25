@@ -52,11 +52,12 @@ WHERE EXISTS (
 );`
     },
     productQueries: {
-        createProductQuery: `INSERT INTO products (product_name, display_price, product_stocks, product_description, product_image) VALUES (?, ?, ?, ?, ?)`,
+        createProductQuery: `INSERT INTO products (product_name, display_name, display_price, product_stocks, product_description, product_image) VALUES (?, ?, ?, ?, ?, ?)`,
         createVariantQuery: `INSERT INTO variants (variant_id, product_id, variant_name, variant_symbol, variant_price) VALUES (?, ?, ?, ?, ?)`,
         getProductsQuery: `SELECT * FROM products`,
         getProductByIdQuery: `SELECT * FROM products WHERE product_id = ?`,
-        updateProductQuery: `UPDATE products SET product_name = ?, display_price = ?, product_stocks = ?, product_description = ?, product_image = ? WHERE product_id = ?`
+        updateProductQuery: `UPDATE products SET product_name = ?, display_name = ?, display_price = ?, product_stocks = ?, product_description = ?, product_image = ? WHERE product_id = ?`,
+        updateVariantQuery: `UPDATE variants SET variant_name = ?, variant_symbol = ?, variant_price = ? WHERE product_id = ? AND variant_id = ? `
     }
 }
 
