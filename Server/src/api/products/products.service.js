@@ -41,18 +41,18 @@ const service = {
       })
     })
   },
-  updateProductsDB: async ({ product_name, display_name, display_price, product_stocks, product_description }, id, imagePath) => {
+  updateProductsDB: async ({display_name, display_price, product_stocks, product_description }, id, imagePath) => {
     return new Promise((resolve, reject) => {
       pool.execute(getProductByIdQuery, [id], (error, result) => {
         if (error) return reject(error)
         if (result.length === 0) return resolve(null)
 
         pool.execute(updateProductQuery, [
-          product_name, display_name, display_price, product_stocks, product_description, imagePath, id
+          display_name, display_price, product_stocks, product_description, imagePath, id
         ], (error, result) => {
           if (error) return reject(error)
           const updatedProduct = {
-            product_name: product_name,
+            product_id: id,
             display_name: display_name,
             display_price: display_price,
             product_stocks: product_stocks,
