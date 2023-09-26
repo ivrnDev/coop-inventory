@@ -42,12 +42,12 @@ module.exports = {
       })
     })
   },
-  uploadProductAlbumDB: (albums) => {
+  uploadProductAlbumDB: (albums, product_id) => {
     return new Promise(async (resolve, reject) => {
       const albumData = albums.map(photo => ({
         buffer: photo.buffer.toString('base64')
       }))
-      pool.execute(uploadProductAlbumQuery, [JSON.stringify(albumData), 1], (error, result) => {
+      pool.execute(uploadProductAlbumQuery, [JSON.stringify(albumData), product_id], (error, result) => {
         if (error) return reject(error)
         return resolve(result)
       })

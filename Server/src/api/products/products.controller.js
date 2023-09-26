@@ -51,8 +51,9 @@ module.exports = {
   },
   createProductAlbum: async (req, res) => {
     const album = req.files
+    const {product_id} = req.query
     try {
-      const result = await uploadProductAlbumDB(album)
+      const result = await uploadProductAlbumDB(album, product_id)
       if(!result) return res.status(400).json({message: 'Failed to upload product albums'})
       return res.status(201).json({message: 'Successfully uploaded product album'})
     } catch (error) {

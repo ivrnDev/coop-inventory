@@ -1,4 +1,5 @@
 const productList = document.querySelector('.product-list');
+const pictureList = document.querySelector('.product-album');
 
 let isServerUp = true;
 
@@ -14,7 +15,7 @@ async function getProductList() {
     productList.append(addMsg)
   }
 
-  console.log(result)
+  // console.log(result)
 
   
   
@@ -22,6 +23,7 @@ async function getProductList() {
   
 
   result && result.map(product => {
+    const album = JSON.parse(product.product_albums)
     
     const list = document.createElement('div')
     list.classList.add('product-cards')
@@ -34,11 +36,24 @@ async function getProductList() {
       <h3>Stocks:         ${product.product_stocks}<h3>
     </div>
     <div class="product-order">
-      <button>ADD TO CART</button>
+      <a href="./productalbum.html"><button>ALBUM</button></a>
       <button>BUY</button>
     </div>    
     `
     productList.append(list)
+
+    album.forEach(picture => {
+      
+      const imageAlbum = document.createElement('div')
+      imageAlbum.innerHTML = `
+     <img src="data:image/png;base64,${picture.buffer}" alt="album" width = "100"></img>
+    `
+      pictureList.append(imageAlbum)
+
+    })
+   
+  
+    
   })
 }
 
