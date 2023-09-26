@@ -15,7 +15,7 @@ module.exports = {
             INSERT INTO orders (transaction_id, product_id, variant_name, quantity, order_total) VALUES (?, ?, ?, ?, ?)
         `,
         getAllOrdersQuery: `
-            SELECT o.id as order_id, p.product_name, o.variant_name, o.quantity as order_quantity, o.order_total
+            SELECT o.id as order_id, p.product_name, o.variant_name, o.quantity as order_quantity, o.order_status, o.order_total
             FROM orders as o
             JOIN products AS p ON o.product_id = p.product_id;
         `
@@ -28,7 +28,7 @@ module.exports = {
         createVariantQuery: `
             INSERT INTO variants (variant_id, product_id, variant_name, variant_symbol, variant_price) VALUES (?, ?, ?, ?, ?)
         `,
-        uploadProductAlbumQuery: `
+        createProductAlbumQuery: `
             UPDATE products SET product_albums = ? WHERE product_id = ?
         `,
         getProductsQuery: `

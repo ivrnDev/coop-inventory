@@ -1,7 +1,7 @@
 const {
   createProductDB,
   createVariantsDB,
-  uploadProductAlbumDB,
+  createProductAlbumDB,
   getProductsDB,
   updateProductsDB,
   getProductByIdDB,
@@ -30,6 +30,7 @@ module.exports = {
       if (!createdProduct) return res.status(400).json({ message: "Failed to insert product" });
 
       const { product_id } = createdProduct.product;
+      
       const { variant_name, variant_symbol, variant_price } = req.body;
       const variants = variant_name.map((name, index) => ({
         variant_name: name,
@@ -49,11 +50,12 @@ module.exports = {
       return res.status(500).json({ message: "Internal Server Error", error: error });
     }
   },
+  //Create product album
   createProductAlbum: async (req, res) => {
     const album = req.files
     const {product_id} = req.query
     try {
-      const result = await uploadProductAlbumDB(album, product_id)
+      const result = await createProductAlbumDB(album, product_id)
       if(!result) return res.status(400).json({message: 'Failed to upload product albums'})
       return res.status(201).json({message: 'Successfully uploaded product album'})
     } catch (error) {
@@ -62,7 +64,6 @@ module.exports = {
     }    
 
   },
-
   //Get all products list
   getProducts: async (req, res) => {
     try {

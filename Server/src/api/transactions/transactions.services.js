@@ -34,14 +34,34 @@ module.exports = {
       })
     })
   },
+
+
+
   updateOrderStatusDB: (transaction_id, transaction_status, order_id, order_status) => {
     return new Promise((resolve, reject) => {
-      let updateOrderStatusQuery;
-      if (transaction_id === null) {
-        updateOrderStatusQuery = `UPDATE orders SET order_status = '${order_status}' WHERE id = ${order_id}`
+      let id;
+      let status;
+      let target;
+
+      if(transaction_status === 'cancelled') {
+        id = transaction_id;
+        status = 'cancelled'
+        target = 'transaction_id'
+      } else if (transaction_status === 'completed') {
+        id = transaction_id;
+        status = 'paid'
+        target = 'transaction_id'
+      } else if (transaction_status === 'pending') {
+        id = transaction_id;
+        status = 'unpaid'
+        target = 'transaction_id'
       } else {
-        updateOrderStatusQuery = `UPDATE orders set order_status = "${transaction_status}" WHERE transaction_id = ${transaction_id}`
+        id = order_id;
+        status = order_status
+        target = 'id'
       }
+
+      const updateOrderStatusQuery = `UPDATE orders SET order_status = '${status}' WHERE ${target} = ${id}`;
       pool.execute(updateOrderStatusQuery, [], (error, result) => {
         if (error) return reject(error);
         return resolve(result)

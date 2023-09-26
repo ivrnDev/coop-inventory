@@ -3,7 +3,7 @@ const { productQueries } = require('../../config/query.js')
 const {
   createProductQuery,
   createVariantQuery,
-  uploadProductAlbumQuery,
+  createProductAlbumQuery,
   updateProductQuery,
   updateVariantQuery,
   getProductsQuery,
@@ -12,6 +12,8 @@ const {
 
 module.exports = {
   createProductDB: ({ product_name, display_name, display_price, product_stocks, product_description }, imagePath) => {
+
+
     return new Promise((resolve, reject) => {
       pool.execute(createProductQuery,
         [product_name, display_name, display_price, product_stocks, product_description, imagePath],
@@ -42,12 +44,12 @@ module.exports = {
       })
     })
   },
-  uploadProductAlbumDB: (albums, product_id) => {
+  createProductAlbumDB: (albums, product_id) => {
     return new Promise(async (resolve, reject) => {
       const albumData = albums.map(photo => ({
         buffer: photo.buffer.toString('base64')
       }))
-      pool.execute(uploadProductAlbumQuery, [JSON.stringify(albumData), product_id], (error, result) => {
+      pool.execute(createProductAlbumQuery, [JSON.stringify(albumData), product_id], (error, result) => {
         if (error) return reject(error)
         return resolve(result)
       })
@@ -55,7 +57,6 @@ module.exports = {
     })
 
   },
-
   updateProductsDB: async ({ display_name, display_price, product_stocks, product_description }, id, imagePath) => {
     return new Promise((resolve, reject) => {
       pool.execute(getProductByIdQuery, [id], (error, result) => {
