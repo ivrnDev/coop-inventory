@@ -8,9 +8,6 @@ module.exports = {
     },
 
     orderQueries: {
-        getPriceQuery: `
-            SELECT variant_price, variant_name FROM variants WHERE product_id = ? AND variant_id = ?
-        `,
         createOrderQuery: `
             INSERT INTO orders (transaction_id, product_id, variant_name, quantity, order_total) VALUES (?, ?, ?, ?, ?)
         `,
@@ -18,7 +15,18 @@ module.exports = {
             SELECT o.id as order_id, p.product_name, o.variant_name, o.quantity as order_quantity, o.order_status, o.order_total
             FROM orders as o
             JOIN products AS p ON o.product_id = p.product_id;
+        `,
+        getOrderByIdQuery: (id, target) => {
+            return `
+            SELECT o.id as order_id, p.product_name, o.variant_name, o.quantity as order_quantity, o.order_status, o.order_total
+            FROM orders as o
+            JOIN products AS p ON o.product_id = p.product_id
+            WHERE ${target} = ${id}
         `
+        },
+        getVariantPriceQuery: `
+            SELECT variant_price, variant_name FROM variants WHERE product_id = ? AND variant_id = ?
+        `,
     },
 
     productQueries: {
@@ -26,12 +34,12 @@ module.exports = {
             INSERT INTO products (product_name, display_name, display_price, product_stocks, product_description, product_image) VALUES (?, ?, ?, ?, ?, ?)
         `,
         createVariantQuery: `
-            INSERT INTO variants (variant_id, product_id, variant_name, variant_symbol, variant_price) VALUES (?, ?, ?, ?, ?)
+            INSERT INTO variants (variant_id, product_id, variant_name, variant_symbol, variant_price, variant_stocks) VALUES (?, ?, ?, ?, ?, ?)
         `,
         createProductAlbumQuery: `
             UPDATE products SET product_albums = ? WHERE product_id = ?
         `,
-        getProductsQuery: `
+        getAllProductsQuery: `
             SELECT * FROM products
         `,
         getProductByIdQuery: `
@@ -41,13 +49,13 @@ module.exports = {
             UPDATE products SET display_name = ?, display_price = ?, product_stocks = ?, product_description = ?, product_image = ? WHERE product_id = ?
         `,
         updateVariantQuery: `
-            UPDATE variants SET variant_name = ?, variant_symbol = ?, variant_price = ? WHERE product_id = ? AND variant_id = ?
+            UPDATE variants SET variant_name = ?, variant_symbol = ?, variant_price = ?, variant_stocks = ? WHERE product_id = ? AND variant_id = ?
         `
     },
 
     transactionQueries: {
         createTransactionQuery: `
-             INSERT INTO transactions (customer_id, transaction_amount) VALUES (?, 0)
+             INSERT INTO transactions (customer_id, payment_method) VALUES (?, ?)
         `,
         updateTransactionAmountQuery: `
             UPDATE transactions SET transaction_amount = ? WHERE transaction_id = ?
@@ -57,9 +65,12 @@ module.exports = {
             FROM transactions as t
             JOIN customers AS c ON t.customer_id = c.customer_id
         `,
+        getTransactionByIdQuery: `
+            SELECT * FROM transactions WHERE transaction_id = ?
+        `,
         updateTransactionStatusQuery: `
             UPDATE transactions SET status = ? WHERE transaction_id = ?
-        `
+            `
     },
 
     analyticsQueries: {
