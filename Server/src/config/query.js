@@ -28,6 +28,9 @@ module.exports = {
         createVariantQuery: `
             INSERT INTO variants (variant_id, product_id, variant_name, variant_symbol, variant_price) VALUES (?, ?, ?, ?, ?)
         `,
+        uploadProductAlbumQuery: `
+            UPDATE products SET product_albums = ? WHERE product_id = ?
+        `,
         getProductsQuery: `
             SELECT * FROM products
         `,

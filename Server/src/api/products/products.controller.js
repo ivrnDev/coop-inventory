@@ -1,6 +1,7 @@
 const {
   createProductDB,
   createVariantsDB,
+  uploadProductAlbumDB,
   getProductsDB,
   updateProductsDB,
   getProductByIdDB,
@@ -48,6 +49,19 @@ module.exports = {
       return res.status(500).json({ message: "Internal Server Error", error: error });
     }
   },
+  createProductAlbum: async (req, res) => {
+    const album = req.files
+    try {
+      const result = await uploadProductAlbumDB(album)
+      if(!result) return res.status(400).json({message: 'Failed to upload product albums'})
+      return res.status(201).json({message: 'Successfully uploaded product album'})
+    } catch (error) {
+      res.status(500).json({message: 'Internal Server Error', error: error})
+      
+    }    
+
+  },
+
   //Get all products list
   getProducts: async (req, res) => {
     try {

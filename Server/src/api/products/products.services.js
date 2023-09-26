@@ -3,6 +3,7 @@ const { productQueries } = require('../../config/query.js')
 const {
   createProductQuery,
   createVariantQuery,
+  uploadProductAlbumQuery,
   updateProductQuery,
   updateVariantQuery,
   getProductsQuery,
@@ -41,7 +42,21 @@ module.exports = {
       })
     })
   },
-  updateProductsDB: async ({display_name, display_price, product_stocks, product_description }, id, imagePath) => {
+  uploadProductAlbumDB: (albums) => {
+    return new Promise(async (resolve, reject) => {
+      const albumData = albums.map(photo => ({
+        buffer: photo.buffer.toString('base64')
+      }))
+      pool.execute(uploadProductAlbumQuery, [JSON.stringify(albumData), 1], (error, result) => {
+        if (error) return reject(error)
+        return resolve(result)
+      })
+
+    })
+
+  },
+
+  updateProductsDB: async ({ display_name, display_price, product_stocks, product_description }, id, imagePath) => {
     return new Promise((resolve, reject) => {
       pool.execute(getProductByIdQuery, [id], (error, result) => {
         if (error) return reject(error)
@@ -90,7 +105,8 @@ module.exports = {
             product_stocks: product.product_stocks,
             product_description: product.product_description,
             product_image: product.product_image.toString('base64'),
-          }));
+            product_albums: product.product_albums
+          }))
           return resolve(products)
         }
       })
@@ -104,7 +120,7 @@ module.exports = {
       })
     })
   },
-  
+
 
 };
 
