@@ -6,13 +6,18 @@ const {
   updateProductQuery,
   updateVariantQuery,
   getAllProductsQuery,
-  getProductByIdQuery
+  getProductByIdQuery,
+  addProductStocksQuery,
+  subtractProductStocksQuery,
+  addVariantStocksQuery,
+  subtractVariantStocksQuery,
+  addProductSoldQuery,
+  subtractProductSoldQuery
 } = productQueries
 
 module.exports = {
   //Create a new product information
   createProductDB: (product_name, display_name, display_price, product_stocks, product_description, imagePath) => {
-    console.log(imagePath)
     return new Promise((resolve, reject) => {
       pool.execute(createProductQuery,
         [product_name, display_name, display_price, product_stocks, product_description, imagePath],
@@ -81,7 +86,36 @@ module.exports = {
       })
     })
   },
-  //Get all the products
+  updateProductStocksDB: (product_id, operation, value) => {
+    let updateProductStocksQuery;
+    operation === 'add' ? updateProductStocksQuery = addProductStocksQuery : updateProductStocksQuery = subtractProductStocksQuery
+    return new Promise((resolve, reject) => {
+      pool.execute(updateProductStocksQuery, [value, product_id], (error, result) => {
+        if (error) return reject(error)
+        return resolve(result)
+      })
+    })
+  },
+  updateVariantStocksDB: (id, operation, value) => {
+    let updateVariantStocksQuery;
+    operation === 'add' ? updateVariantStocksQuery = addVariantStocksQuery : updateVariantStocksQuery = subtractVariantStocksQuery
+    return new Promise((resolve, reject) => {
+      pool.execute(updateVariantStocksQuery, [value, id], (error, result) => {
+        if (error) return reject(error)
+        return resolve(result)
+      })
+    })
+  },
+  updateProductSoldDB: (product_id, operation, value) => {
+    let updateProductQuery;
+    operation === 'add' ? updateProductQuery = addProductSoldQuery : updateProductQuery = subtractProductSoldQuery
+    return new Promise((resolve, reject) => {
+      pool.execute(updateProductQuery, [value, product_id], (error, result) => {
+        if (error) return reject(error)
+        return resolve(result)
+      })
+    })
+  },
   getAllProductsDB: () => {
     return new Promise((resolve, reject) => {
       pool.execute(getAllProductsQuery, [], (error, result) => {
@@ -103,8 +137,6 @@ module.exports = {
       })
     })
   },
-
-  //Get products by ID
   getProductByIdDB: (id) => {
     return new Promise((resolve, reject) => {
       pool.execute(getProductByIdQuery, [id], (error, result) => {
@@ -114,7 +146,6 @@ module.exports = {
       })
     })
   },
-
 
 };
 

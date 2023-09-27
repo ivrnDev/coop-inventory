@@ -1,5 +1,5 @@
 const fs = require('fs').promises;
-const { createProductDB, createVariantsDB, updateProductsDB, updateVariantsDB, getAllProductsDB, getProductByIdDB } = require('../services/products.services')
+const { createProductDB, createVariantsDB, updateProductsDB, updateVariantsDB, getAllProductsDB, getProductByIdDB, updateProductStocksDB, updateVariantStocksDB, updateProductSoldDB, } = require('../services/products.services')
 
 module.exports = {
   //Create new product
@@ -50,7 +50,6 @@ module.exports = {
       return res.status(500).json({ message: "Internal Server Error", error: error });
     }
   },
-
   //Get all products list
   getAllProducts: async (req, res) => {
     try {
@@ -61,7 +60,6 @@ module.exports = {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }
   },
-
   //Update product by ID
   updateProducts: async (req, res) => {
     try {
@@ -114,6 +112,48 @@ module.exports = {
       const result = await getProductByIdDB(req.params.id);
       if (!result || result.length === 0) return res.status(404).json({ error: `Product with an Id of ${req.params.id} has not found` })
       return res.status(200).json({ message: `Successfully get the product with an ID of ${req.params.id}`, result: result });
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+  },
+  getAllVariant: async (req, res) => {
+
+  },
+  getVariantById: async (req, res) => {
+
+  },
+  updateProductStocks: async (req, res) => {
+    const { id } = req.params
+    const { action, value } = req.query
+    try {
+      const result = await updateProductStocksDB(id, action, value);
+      if (!result) return res.status(404).json({ error: `Failed to update the stock of product with ID of ${id}` })
+      if (result.length === 0) return res.status(404).json({ error: `Product with an Id of ${id} has not found` })
+      return res.status(200).json({ message: `Successfully updated the stock of product with ID of ${id}`, result: result });
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+  },
+  updateVariantStocks: async (req, res) => {
+    const { id } = req.params
+    const { action, value } = req.query
+    try {
+      const result = await updateVariantStocksDB(id, action, value);
+      if (!result) return res.status(404).json({ error: `Failed to update the stock of variant with ID of ${id}` })
+      if (result.length === 0) return res.status(404).json({ error: `Variant with an Id of ${id} has not found` })
+      return res.status(200).json({ message: `Successfully updated the stock of variant with ID of ${id}`, result: result });
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+  },
+  updateProductSold: async (req, res) => {
+    const { id } = req.params
+    const { action, value } = req.query
+    try {
+      const result = await updateProductSoldDB(id, action, value);
+      if (!result) return res.status(404).json({ error: `Failed to update the number of sold items in product with ID of ${id}` })
+      if (result.length === 0) return res.status(404).json({ error: `Product with an Id of ${id} has not found` })
+      return res.status(200).json({ message: `Successfully updated the number of sold items in product with ID of ${id}`, result: result });
     } catch (error) {
       return res.status(500).json(error)
     }

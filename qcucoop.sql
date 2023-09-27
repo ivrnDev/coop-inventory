@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 27, 2023 at 02:49 PM
+-- Generation Time: Sep 27, 2023 at 02:56 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -91,8 +91,7 @@ CREATE TABLE `products` (
   `product_stocks` int(11) NOT NULL,
   `product_sold` int(11) NOT NULL DEFAULT 0,
   `product_description` varchar(255) NOT NULL,
-  `display_image` longblob NOT NULL,
-  `product_albums` longtext NOT NULL,
+  `display_image` blob NOT NULL,
   `status` varchar(255) NOT NULL DEFAULT 'Inactive',
   `isFeatured` tinyint(1) NOT NULL DEFAULT 0,
   `isDeleted` tinyint(4) NOT NULL DEFAULT 0,

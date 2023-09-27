@@ -52,17 +52,5 @@ module.exports = {
       return res.status(500).json({ message: "Internal Server Error", error: erro })
     }
   },
-  updateOrderStatus: async (req, res) => {
-    const { order_id, order_status } = req.query
-    try {
-      const result = await updateOrderStatusDB(null, null, order_id, order_status)
-      if (!result) return res.status(400).json({ message: "Failed to updated order status" })
-      return res.status(200).json({ message: "Successfully updated the order status", result: result })
-    } catch (error) {
-      return res.status(500).json({ message: "Internal Server Error", error: error })
-    }
-
-  }
-
 
 }

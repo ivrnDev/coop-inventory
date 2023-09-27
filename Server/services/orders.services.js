@@ -1,7 +1,13 @@
 const pool = require('../db/database')
 const { orderQueries } = require('../db/dbQueries.js');
-const { createOrderQuery, getVariantPriceQuery, getAllOrdersQuery, getOrderbyIdQuery, getOrderbyTransactionIdQuery } = orderQueries;
-const { updateTransactionDB } = require('./transactions.services');
+const {
+  createOrderQuery,
+  getVariantPriceQuery,
+  getAllOrdersQuery,
+  getOrderbyIdQuery,
+  getOrderbyTransactionIdQuery,
+} = orderQueries;
+const { updateTransactionAmountDB, getTransactionByIdDB } = require('./transactions.services');
 
 module.exports = {
   createOrderDB: (transaction_id, order_data) => {
@@ -19,9 +25,13 @@ module.exports = {
         const { order_total, variant_name } = orderPrice;
         total_transaction_amount += order_total;
 
-        pool.execute(createOrderQuery, [transaction_id, product_id, variant_name, quantity, order_total], async (error, result) => {
+        const checkPaymentMethod = await getTransactionByIdDB(transaction_id);
+        const paymentMethod = checkPaymentMethod[0].payment_method
+
+        const setPayment = paymentMethod === 'cash' ? "unpaid" : "paid"
+        pool.execute(createOrderQuery, [transaction_id, product_id, variant_name, quantity, order_total, setPayment], async (error, result) => {
           if (error) reject(error);
-          await updateTransactionDB(transaction_id, total_transaction_amount);
+          await updateTransactionAmountDB(transaction_id, total_transaction_amount);
           resolve(result);
         });
       }
@@ -70,35 +80,5 @@ module.exports = {
       })
     })
   },
-  updateOrderStatusDB: (transaction_id, transaction_status, order_id, order_status) => {
-    return new Promise((resolve, reject) => {
-      let id;
-      let status;
-      let target;
 
-      if (transaction_status === 'cancelled') {
-        id = transaction_id;
-        status = 'cancelled'
-        target = 'transaction_id'
-      } else if (transaction_status === 'completed') {
-        id = transaction_id;
-        status = 'paid'
-        target = 'transaction_id'
-      } else if (transaction_status === 'pending') {
-        id = transaction_id;
-        status = 'unpaid'
-        target = 'transaction_id'
-      } else {
-        id = order_id;
-        status = order_status
-        target = 'id'
-      }
-
-      const updateOrderStatusQuery = `UPDATE orders SET order_status = '${status}' WHERE ${target} = ${id}`;
-      pool.execute(updateOrderStatusQuery, [], (error, result) => {
-        if (error) return reject(error);
-        return resolve(result)
-      })
-    })
-  },
 }
