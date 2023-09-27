@@ -61,8 +61,6 @@ module.exports = {
     })
   },
   getOrderbyIdDB: (order_id, transaction_id) => {
-    console.log(transaction_id)
-    console.log(transaction_id)
     let id;
     let target;
     if (order_id) {

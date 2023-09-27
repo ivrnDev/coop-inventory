@@ -1,5 +1,5 @@
 const fs = require('fs').promises;
-const { createProductDB, createVariantsDB, createProductAlbumDB, updateProductsDB, updateVariantsDB, getAllProductsDB, getProductByIdDB } = require('../services/products.services')
+const { createProductDB, createVariantsDB, updateProductsDB, updateVariantsDB, getAllProductsDB, getProductByIdDB } = require('../services/products.services')
 
 module.exports = {
   //Create new product
@@ -31,7 +31,6 @@ module.exports = {
       //Get requested variant
       const { variant_name, variant_symbol, variant_price, variant_stocks } = req.body;
       //Loop through variant and return an array of variants
-      console.log(variant_stocks)
       const variants = variant_name.map((name, index) => ({
         variant_name: name,
         variant_symbol: variant_symbol[index],
@@ -51,20 +50,7 @@ module.exports = {
       return res.status(500).json({ message: "Internal Server Error", error: error });
     }
   },
-  //Create product album
-  createProductAlbum: async (req, res) => {
-    const album = req.files
-    const { product_id } = req.query
-    try {
-      const result = await createProductAlbumDB(album, product_id)
-      if (!result) return res.status(400).json({ message: 'Failed to upload product albums' })
-      return res.status(201).json({ message: 'Successfully uploaded product album' })
-    } catch (error) {
-      res.status(500).json({ message: 'Internal Server Error', error: error })
 
-    }
-
-  },
   //Get all products list
   getAllProducts: async (req, res) => {
     try {
@@ -75,6 +61,7 @@ module.exports = {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }
   },
+
   //Update product by ID
   updateProducts: async (req, res) => {
     try {
@@ -106,7 +93,7 @@ module.exports = {
         variant_symbol: variant_symbol[index],
         variant_price: variant_price[index],
         variant_stocks: variant_stocks[index]
-      })) 
+      }))
 
       const updatedVariants = await updateVariantsDB(req.params.id, variant);
 

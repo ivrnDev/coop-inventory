@@ -3,7 +3,6 @@ const { productQueries } = require('../db/dbQueries.js')
 const {
   createProductQuery,
   createVariantQuery,
-  createProductAlbumQuery,
   updateProductQuery,
   updateVariantQuery,
   getAllProductsQuery,
@@ -13,6 +12,7 @@ const {
 module.exports = {
   //Create a new product information
   createProductDB: (product_name, display_name, display_price, product_stocks, product_description, imagePath) => {
+    console.log(imagePath)
     return new Promise((resolve, reject) => {
       pool.execute(createProductQuery,
         [product_name, display_name, display_price, product_stocks, product_description, imagePath],
@@ -26,7 +26,7 @@ module.exports = {
             display_price: display_price,
             product_stocks: product_stocks,
             product_description: product_description,
-            product_image: imagePath.toString('base64')
+            display_image: imagePath.toString('base64')
           }
           return resolve(product);
         }
@@ -40,26 +40,12 @@ module.exports = {
         const { variant_name, variant_symbol, variant_price, variant_stocks } = value
         pool.execute(createVariantQuery, [index + 1, product_id, variant_name, variant_symbol, variant_price, variant_stocks], (error, result) => {
           if (error) return reject(error);
-          
+
           return resolve(variants)
         })
       })
     })
   },
-  //Create a product album
-  createProductAlbumDB: (product_id, albums) => {
-    return new Promise((resolve, reject) => {
-      const albumData = albums.map(photo => ({
-        buffer: photo.buffer.toString('base64')
-      }))
-      pool.execute(createProductAlbumQuery, [JSON.stringify(albumData), product_id], (error, result) => {
-        if (error) return reject(error)
-        return resolve(albumData)
-      })
-
-    })
-  },
-
   //Update product details
   updateProductsDB: async (display_name, display_price, product_stocks, product_description, product_id, imagePath) => {
     return new Promise(async (resolve, reject) => {
@@ -110,14 +96,14 @@ module.exports = {
             display_price: product.display_price,
             product_stocks: product.product_stocks,
             product_description: product.product_description,
-            product_image: product.product_image.toString('base64'),
-            product_albums: product.product_albums // image is already base 64
+            display_image: product.display_image.toString('base64'),
           }))
           return resolve(products)
         }
       })
     })
   },
+
   //Get products by ID
   getProductByIdDB: (id) => {
     return new Promise((resolve, reject) => {

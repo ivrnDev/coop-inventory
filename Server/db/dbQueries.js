@@ -31,13 +31,10 @@ module.exports = {
 
     productQueries: {
         createProductQuery: `
-            INSERT INTO products (product_name, display_name, display_price, product_stocks, product_description, product_image) VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO products (product_name, display_name, display_price, product_stocks, product_description, display_image) VALUES (?, ?, ?, ?, ?, ?)
         `,
         createVariantQuery: `
             INSERT INTO variants (variant_id, product_id, variant_name, variant_symbol, variant_price, variant_stocks) VALUES (?, ?, ?, ?, ?, ?)
-        `,
-        createProductAlbumQuery: `
-            UPDATE products SET product_albums = ? WHERE product_id = ?
         `,
         getAllProductsQuery: `
             SELECT * FROM products
@@ -46,13 +43,30 @@ module.exports = {
             SELECT * FROM products WHERE product_id = ?
         `,
         updateProductQuery: `
-            UPDATE products SET display_name = ?, display_price = ?, product_stocks = ?, product_description = ?, product_image = ? WHERE product_id = ?
+            UPDATE products SET display_name = ?, display_price = ?, product_stocks = ?, product_description = ?, display_image = ? WHERE product_id = ?
         `,
         updateVariantQuery: `
             UPDATE variants SET variant_name = ?, variant_symbol = ?, variant_price = ?, variant_stocks = ? WHERE product_id = ? AND variant_id = ?
         `
     },
+    albumQueries: {
+        createProductAlbumQuery: `
+            INSERT INTO albums (product_id, product_photo) VALUES (?, ?)    
+        `,
+        updateProductAlbumImageQuery: `
+            UPDATE albums SET product_photo = ? WHERE photo_id = ?
+        `,
+        getAllAlbumsQuery: `
+            SELECT * FROM albums
+        `,
+        getAlbumByIdQuery: `
+            SELECT * FROM albums WHERE photo_id = ?
+        `,
+        getProductAlbumByIDQuery: `
+            SELECT * FROM albums WHERE product_id = ?
+        `,
 
+    },
     transactionQueries: {
         createTransactionQuery: `
              INSERT INTO transactions (customer_id, payment_method) VALUES (?, ?)
