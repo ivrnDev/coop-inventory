@@ -16,14 +16,18 @@ module.exports = {
             FROM orders as o
             JOIN products AS p ON o.product_id = p.product_id;
         `,
-        getOrderByIdQuery: (id, target) => {
-            return `
-            SELECT o.id as order_id, p.product_name, o.variant_name, o.quantity as order_quantity, o.order_status, o.order_total
+        getOrderbyIdQuery: `
+            SELECT o.id as order_id, o.transaction_id, p.product_name, o.variant_name, o.quantity as order_quantity, o.order_status, o.order_total
             FROM orders as o
             JOIN products AS p ON o.product_id = p.product_id
-            WHERE ${target} = ${id}
-        `
-        },
+            WHERE id = ?
+        `,
+        getOrderbyTransactionIdQuery: `
+            SELECT o.id as order_id, o.transaction_id, p.product_name, o.variant_name, o.quantity as order_quantity, o.order_status, o.order_total
+            FROM orders as o
+            JOIN products AS p ON o.product_id = p.product_id
+            WHERE transaction_id = ?
+        `,
         getVariantPriceQuery: `
             SELECT variant_price, variant_name FROM variants WHERE product_id = ? AND variant_id = ?
         `,
@@ -80,7 +84,10 @@ module.exports = {
             JOIN customers AS c ON t.customer_id = c.customer_id
         `,
         getTransactionByIdQuery: `
-            SELECT * FROM transactions WHERE transaction_id = ?
+            SELECT t.transaction_id, c.customer_name, t.transaction_amount, t.payment_method, t.status as order_status, t.transaction_date
+            FROM transactions as t
+            JOIN customers AS c ON t.customer_id = c.customer_id
+            WHERE transaction_id = ?
         `,
         updateTransactionStatusQuery: `
             UPDATE transactions SET status = ? WHERE transaction_id = ?

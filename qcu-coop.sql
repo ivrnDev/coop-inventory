@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 27, 2023 at 04:26 AM
+-- Generation Time: Sep 27, 2023 at 02:49 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -24,14 +24,15 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `admin`
+-- Table structure for table `admins`
 --
 
-CREATE TABLE `admin` (
+CREATE TABLE `admins` (
   `admin_id` int(11) NOT NULL,
   `admin_name` varchar(255) NOT NULL DEFAULT 'Admin',
   `admin_username` varchar(255) NOT NULL,
-  `admin_password` varchar(255) NOT NULL
+  `admin_password` varchar(255) NOT NULL,
+  `profile_picture` blob NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -90,7 +91,7 @@ CREATE TABLE `products` (
   `product_stocks` int(11) NOT NULL,
   `product_sold` int(11) NOT NULL DEFAULT 0,
   `product_description` varchar(255) NOT NULL,
-  `product_image` longblob NOT NULL,
+  `display_image` longblob NOT NULL,
   `product_albums` longtext NOT NULL,
   `status` varchar(255) NOT NULL DEFAULT 'Inactive',
   `isFeatured` tinyint(1) NOT NULL DEFAULT 0,
@@ -134,9 +135,9 @@ CREATE TABLE `variants` (
 --
 
 --
--- Indexes for table `admin`
+-- Indexes for table `admins`
 --
-ALTER TABLE `admin`
+ALTER TABLE `admins`
   ADD PRIMARY KEY (`admin_id`);
 
 --
@@ -185,9 +186,9 @@ ALTER TABLE `variants`
 --
 
 --
--- AUTO_INCREMENT for table `admin`
+-- AUTO_INCREMENT for table `admins`
 --
-ALTER TABLE `admin`
+ALTER TABLE `admins`
   MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
