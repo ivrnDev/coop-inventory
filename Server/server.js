@@ -5,6 +5,7 @@ const customersRouter = require('./routes/customers.router');
 const ordersRouter = require('./routes/orders.router');
 const albumsRouter = require('./routes/albums.router');
 const transactionsRouter = require('./routes/transactions.router');
+const bannersRouter = require('./routes/banners.router');
 const cors = require('cors');
 const app = express();
 
@@ -16,6 +17,7 @@ app.use('/api/albums', albumsRouter);
 app.use('/api/orders', ordersRouter);
 app.use('/api/customers', customersRouter);
 app.use('/api/transactions', transactionsRouter);
+app.use('/api/banners', bannersRouter);
 
 
 

@@ -1,5 +1,5 @@
 const fs = require('fs').promises;
-const { createProductDB, createVariantsDB, updateProductsDB, updateVariantsDB, getAllProductsDB, getProductByIdDB, updateProductStocksDB, updateVariantStocksDB, updateProductSoldDB, } = require('../services/products.services')
+const { createProductDB, createVariantsDB, updateProductsDB, updateVariantsDB, getAllProductsDB, getProductByIdDB, updateProductStocksDB, updateVariantStocksDB, updateProductSoldDB, getAllCategoryDB, getCategoryByIdDB, createNewCategoryDB, updateCategoryByIdDB, } = require('../services/products.services')
 
 module.exports = {
   //Create new product
@@ -19,10 +19,10 @@ module.exports = {
       };
 
       //Get requested product
-      const { product_name, display_name, display_price, product_stocks, product_description } = req.body;
+      const { category_id, product_name, display_name, display_price, product_stocks, product_description } = req.body;
 
       //Create Product
-      const createdProduct = await createProductDB(product_name, display_name, display_price, product_stocks, product_description, imagePath);
+      const createdProduct = await createProductDB(category_id, product_name, display_name, display_price, product_stocks, product_description, imagePath);
 
       if (!createdProduct) return res.status(400).json({ message: "Failed to insert product" });
 
@@ -113,7 +113,7 @@ module.exports = {
       if (!result || result.length === 0) return res.status(404).json({ error: `Product with an Id of ${req.params.id} has not found` })
       return res.status(200).json({ message: `Successfully get the product with an ID of ${req.params.id}`, result: result });
     } catch (error) {
-      return res.status(500).json(error)
+      return res.status(500).json({ message: "Internal Server Error", error: error })
     }
   },
   getAllVariant: async (req, res) => {
@@ -131,7 +131,7 @@ module.exports = {
       if (result.length === 0) return res.status(404).json({ error: `Product with an Id of ${id} has not found` })
       return res.status(200).json({ message: `Successfully updated the stock of product with ID of ${id}`, result: result });
     } catch (error) {
-      return res.status(500).json(error)
+      return res.status(500).json({ message: "Internal Server Error", error: error })
     }
   },
   updateVariantStocks: async (req, res) => {
@@ -143,7 +143,7 @@ module.exports = {
       if (result.length === 0) return res.status(404).json({ error: `Variant with an Id of ${id} has not found` })
       return res.status(200).json({ message: `Successfully updated the stock of variant with ID of ${id}`, result: result });
     } catch (error) {
-      return res.status(500).json(error)
+      return res.status(500).json({ message: "Internal Server Error", error: error })
     }
   },
   updateProductSold: async (req, res) => {
@@ -158,5 +158,49 @@ module.exports = {
       return res.status(500).json(error)
     }
   },
+  getAllCategory: async (req, res) => {
+    try {
+      const result = await getAllCategoryDB()
+      if (result === null) return res.status(400).json({ error: "There is no existing category" })
+      return res.status(201).json({ message: `Successfully get all category`, result: result })
+    } catch (error) {
+      return res.status(500).json({ message: "Internal Server Error", error: error })
+    }
+  },
+  getCategoryById: async (req, res) => {
+    try {
+      const { id } = req.params
+      const result = await getCategoryByIdDB(id)
+      if (result === null) return res.status(400).json({ error: `There is no existing category with an ID of ${id}` })
+      return res.status(201).json({ message: `Successfully get category with an ID of ${id}`, result: result })
+    } catch (error) {
+      return res.status(500).json({ message: "Internal Server Error", error: error })
+    }
+  },
+
+  createNewCategory: async (req, res) => {
+    try {
+      const { category_name } = req.body;
+      const category_image = req.file.buffer;
+      const result = await createNewCategoryDB(category_name, category_image)
+      if (!result) return res.status(400).json({ message: "Failed to create a new category" });
+      return res.status(201).json({ message: `Successfully added new category ${category_name}` })
+    } catch (error) {
+      return res.status(500).json({ message: "Internal Server Error", error: error })
+    }
+  },
+  updateCategoryById: async (req, res) => {
+    try {
+      const id = req.params.id
+      const { category_name } = req.body;
+      const category_image = req.file.buffer;
+      const result = await updateCategoryByIdDB(category_name, category_image, id)
+      if (!result) return res.status(400).json({ message: "Failed to create a new category" });
+      return res.status(201).json({ message: `Successfully update category ID of ${id} to ${category_name}` })
+    } catch (error) {
+      return res.status(500).json({ message: "Internal Server Error", error: error })
+    }
+  },
+
 }
 

@@ -40,10 +40,22 @@ module.exports = {
     },
     productQueries: {
         createProductQuery: `
-            INSERT INTO products (product_name, display_name, display_price, product_stocks, product_description, display_image) VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO products (category_id, product_name, display_name, display_price, product_stocks, product_description, display_image) VALUES (?, ?, ?, ?, ?, ?, ?)
         `,
         createVariantQuery: `
             INSERT INTO variants (variant_id, product_id, variant_name, variant_symbol, variant_price, variant_stocks) VALUES (?, ?, ?, ?, ?, ?)
+        `,
+        getAllCategoryQuery: `
+            SELECT * FROM category
+        `,
+        getCategoryByIdQuery: `
+            SELECT * FROM category WHERE category_id = ?
+        `,
+        createNewCategoryQuery: `
+          INSERT INTO category (category_name, category_image) VALUES (?, ?) 
+        `,
+        updateCategoryByIdQuery: `
+          UPDATE category SET category_name = ?, category_image = ? WHERE category_id = ? 
         `,
         getAllProductsQuery: `
             SELECT * FROM products
@@ -75,6 +87,7 @@ module.exports = {
         subtractVariantStocksQuery: `
            UPDATE variants SET variant_stocks = variant_stocks - ? WHERE id = ?
         `,
+
     },
     albumQueries: {
         createProductAlbumQuery: `
@@ -96,7 +109,7 @@ module.exports = {
     },
     transactionQueries: {
         createTransactionQuery: `
-             INSERT INTO transactions (customer_id, payment_method) VALUES (?, ?)
+            INSERT INTO transactions (customer_id, payment_method) VALUES (?, ?)
         `,
         getAllTransactionsQuery: `
             SELECT t.transaction_id, c.customer_name, c.customer_phone, c.customer_email, t.transaction_amount, t.payment_method, t.status as order_status, t.transaction_date
@@ -116,15 +129,28 @@ module.exports = {
             UPDATE transactions SET status = ? WHERE transaction_id = ?
             `,
     },
-
     analyticsQueries: {
         getProductSalesQuery: `
-        SELECT o.product_id, p.product_name, SUM(quantity) as total_orders, SUM(order_total) as total_amount
-        FROM orders as o
-        JOIN products as p ON o.product_id = p.product_id
-        GROUP BY o.product_id
+            SELECT o.product_id, p.product_name, SUM(quantity) as total_orders, SUM(order_total) as total_amount
+            FROM orders as o
+            JOIN products as p ON o.product_id = p.product_id
+            GROUP BY o.product_id
         `,
 
+    },
+    bannerQueries: {
+        createBannerQuery: `
+            INSERT INTO banner (banner_image) VALUES(?)
+        `,
+        updateBannerQuery: `
+            UPDATE banner SET banner_image = ? WHERE banner_Id = ?
+        `,
+        getAllBannersQuery: `
+            SELECT * FROM banner
+        `,
+        getBannerByIdQuery: `
+            SELECT * FROM banner WHERE banner_id = ?
+        `
     }
 }
 

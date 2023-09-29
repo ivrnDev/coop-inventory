@@ -12,15 +12,19 @@ const {
   addVariantStocksQuery,
   subtractVariantStocksQuery,
   addProductSoldQuery,
-  subtractProductSoldQuery
+  subtractProductSoldQuery,
+  getAllCategoryQuery,
+  getCategoryByIdQuery,
+  createNewCategoryQuery,
+  updateCategoryByIdQuery,
 } = productQueries
 
 module.exports = {
   //Create a new product information
-  createProductDB: (product_name, display_name, display_price, product_stocks, product_description, imagePath) => {
+  createProductDB: (category_id, product_name, display_name, display_price, product_stocks, product_description, imagePath) => {
     return new Promise((resolve, reject) => {
       pool.execute(createProductQuery,
-        [product_name, display_name, display_price, product_stocks, product_description, imagePath],
+        [category_id, product_name, display_name, display_price, product_stocks, product_description, imagePath],
         (error, result) => {
           if (error) return reject(error);
           const product_id = result.insertId;
@@ -146,7 +150,40 @@ module.exports = {
       })
     })
   },
-
+  getAllCategoryDB: () => {
+    return new Promise((resolve, reject) => {
+      pool.execute(getAllCategoryQuery, [], (error, result) => {
+        if(error) return reject(error)
+        if(result.length === 0) return resolve(null)
+        return resolve(result)
+      })
+    })
+  },
+  getCategoryByIdDB: (id) => {
+    return new Promise((resolve, reject) => {
+      pool.execute(getCategoryByIdQuery, [id], (error, result) => {
+        if(error) return reject(error)
+        if(result.length === 0) return resolve(null)
+        return resolve(result)
+      })
+    })
+  },
+  createNewCategoryDB: (category_name, category_image) => {
+    return new Promise((resolve, reject) => {
+      pool.execute(createNewCategoryQuery, [category_name, category_image], (error, result) => {
+        if(error) return reject(error)
+        return resolve(result)
+      })
+    })
+  },
+  updateCategoryByIdDB: (category_name, category_image, id) => {
+    return new Promise((resolve, reject) => {
+      pool.execute(updateCategoryByIdQuery, [category_name, category_image, id], (error, result) => {
+        if(error) return reject(error)
+        return resolve(result)
+      })
+    })
+  }
 };
 
 

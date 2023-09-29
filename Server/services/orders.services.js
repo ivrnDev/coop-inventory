@@ -32,7 +32,7 @@ module.exports = {
         pool.execute(createOrderQuery, [transaction_id, product_id, variant_name, quantity, order_total, setPayment], async (error, result) => {
           if (error) reject(error);
           await updateTransactionAmountDB(transaction_id, total_transaction_amount);
-          resolve(result);
+          resolve(result); 
         });
       }
     })
