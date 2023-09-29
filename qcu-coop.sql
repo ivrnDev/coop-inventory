@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 27, 2023 at 02:56 PM
+-- Generation Time: Sep 29, 2023 at 05:59 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -50,6 +50,29 @@ CREATE TABLE `albums` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `banner`
+--
+
+CREATE TABLE `banner` (
+  `banner_id` int(11) NOT NULL,
+  `banner_image` blob NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `category`
+--
+
+CREATE TABLE `category` (
+  `category_id` int(11) NOT NULL,
+  `category_name` varchar(255) NOT NULL,
+  `category_image` blob NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `customers`
 --
 
@@ -85,11 +108,12 @@ CREATE TABLE `orders` (
 
 CREATE TABLE `products` (
   `product_id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
   `product_name` varchar(255) NOT NULL,
   `display_name` varchar(255) NOT NULL,
   `display_price` varchar(255) NOT NULL DEFAULT '0.00',
-  `product_stocks` int(11) NOT NULL,
-  `product_sold` int(11) NOT NULL DEFAULT 0,
+  `product_stocks` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `product_sold` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `product_description` varchar(255) NOT NULL,
   `display_image` blob NOT NULL,
   `status` varchar(255) NOT NULL DEFAULT 'Inactive',
@@ -126,7 +150,7 @@ CREATE TABLE `variants` (
   `variant_name` varchar(255) NOT NULL,
   `variant_symbol` varchar(8) NOT NULL,
   `variant_price` decimal(10,2) NOT NULL,
-  `variant_stocks` int(11) NOT NULL
+  `variant_stocks` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -147,6 +171,18 @@ ALTER TABLE `albums`
   ADD KEY `fk_album_product_id` (`product_id`);
 
 --
+-- Indexes for table `banner`
+--
+ALTER TABLE `banner`
+  ADD PRIMARY KEY (`banner_id`);
+
+--
+-- Indexes for table `category`
+--
+ALTER TABLE `category`
+  ADD PRIMARY KEY (`category_id`);
+
+--
 -- Indexes for table `customers`
 --
 ALTER TABLE `customers`
@@ -164,7 +200,8 @@ ALTER TABLE `orders`
 -- Indexes for table `products`
 --
 ALTER TABLE `products`
-  ADD PRIMARY KEY (`product_id`);
+  ADD PRIMARY KEY (`product_id`),
+  ADD KEY `fk_category_id` (`category_id`);
 
 --
 -- Indexes for table `transactions`
@@ -195,6 +232,18 @@ ALTER TABLE `admins`
 --
 ALTER TABLE `albums`
   MODIFY `photo_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `banner`
+--
+ALTER TABLE `banner`
+  MODIFY `banner_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `category`
+--
+ALTER TABLE `category`
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `customers`
@@ -242,6 +291,12 @@ ALTER TABLE `albums`
 ALTER TABLE `orders`
   ADD CONSTRAINT `fk_order_product_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_transaction_id` FOREIGN KEY (`transaction_id`) REFERENCES `transactions` (`transaction_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `products`
+--
+ALTER TABLE `products`
+  ADD CONSTRAINT `fk_category_id` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `transactions`
