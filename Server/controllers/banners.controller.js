@@ -16,7 +16,7 @@ module.exports = {
       const image = req.file.buffer;
 
       const getBannerById = await getBannerByIdDB(id);
-      if (getBannerById === null) return res.status(400).json({ error: `Failed to update, there is no existing banner with an ID of ${id} ` })
+      if (getBannerById === null) return res.status(404).json({ error: `Failed to update, there is no existing banner with an ID of ${id} ` })
 
       const result = await updateBannerDB(image, id)
       return res.status(201).json({ message: `Successfully updated a banner with an ID of ${id}`, result: result })

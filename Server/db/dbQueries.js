@@ -4,6 +4,9 @@ module.exports = {
             INSERT INTO customers (customer_name, customer_phone, customer_email) VALUES (?, ?, ?)`,
         getCustomersQuery: `
             SELECT * FROM customers
+        `,
+        getCustomerbyIdQuery: `
+            SELECT * FROM customers WHERE customer_id = ?
         `
     },
     orderQueries: {
@@ -44,6 +47,12 @@ module.exports = {
         `,
         createVariantQuery: `
             INSERT INTO variants (variant_id, product_id, variant_name, variant_symbol, variant_price, variant_stocks) VALUES (?, ?, ?, ?, ?, ?)
+        `,
+        getAllVariantsQuery: `
+            SELECT * FROM variants
+        `,
+        getVariantByIdQuery: `
+            SELECT * FROM variants WHERE id = ?
         `,
         getAllCategoryQuery: `
             SELECT * FROM category

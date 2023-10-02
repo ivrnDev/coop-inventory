@@ -1,6 +1,5 @@
 const { createProductAlbumDB, getAlbumByIdDB, getAllAlbumsDB, getProductAlbumByIdDB, updateProductAlbumImageDB } = require('../services/albums.services');
 module.exports = {
-  //Create product album
   createProductAlbum: async (req, res) => {
     console.log(req.files)
     const album = req.files
@@ -17,18 +16,21 @@ module.exports = {
   updateProductAlbumImage: async (req, res) => {
     try {
       let image;
-      //Check if there is an image
       if (req.file) {
         image = req.file.buffer;
       } else {
         return res.status(200).json({ message: "Photo has not been updated, invalid photo" })
       }
 
-      //Update product
-      const result = await updateProductAlbumImageDB(req.params.id, image)
+      const { id } = req.params;
+      
+      const getAlbumById = await getAlbumByIdDB(id);
+      if (getAlbumById === null) return res.status(400).json({ error: `Failed to update, there is no existing album with an ID of ${id}`})
+
+      const result = await updateProductAlbumImageDB(id, image);
       if (!result) return res.status(400).json({ message: "Failed to update product" });
 
-      return res.status(200).json({ message: `Successfully Updated the photo with an ID of ${req.params.id}`, result: result })
+      return res.status(200).json({ message: `Successfully Updated the photo with an ID of ${id}`, result: result })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error });
     }
@@ -62,6 +64,6 @@ module.exports = {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }
   },
- 
+
 
 }

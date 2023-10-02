@@ -23,9 +23,14 @@ module.exports = {
     const { id } = req.params;
     const { set } = req.query
     try {
+
+      const getTransactionById = await getTransactionByIdDB(id)
+      if (!getTransactionById) return res.status(400).json({ error:  `Failed to get transaction with an ID of ${id}`});
+      if (getTransactionById === null) return res.status(404).json({ error: `There is no transaction with an ID of ${id}` })
+
       const result = await updateTransactionStatusDB(id, set);
       if (!result) return res.status({ message: "Failed to update transaction status" });
-      return res.status(200).json({ message: `Transaction status was successfully set to ${set}` })
+      return res.status(200).json({ message: `Transaction status was successfully set to ${ set }` })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }

@@ -3,8 +3,10 @@ const { productQueries } = require('../db/dbQueries.js')
 const {
   createProductQuery,
   createVariantQuery,
-  updateProductQuery,
+  getAllVariantsQuery,
   updateVariantQuery,
+  getVariantByIdQuery,
+  updateProductQuery,
   getAllProductsQuery,
   getProductByIdQuery,
   addProductStocksQuery,
@@ -42,20 +44,7 @@ module.exports = {
       );
     })
   },
-  //Create product variants and prices
-  createVariantsDB: (product_id, variants) => {
-    return new Promise((resolve, reject) => {
-      variants.forEach((value, index) => {
-        const { variant_name, variant_symbol, variant_price, variant_stocks } = value
-        pool.execute(createVariantQuery, [index + 1, product_id, variant_name, variant_symbol, variant_price, variant_stocks], (error, result) => {
-          if (error) return reject(error);
-
-          return resolve(variants)
-        })
-      })
-    })
-  },
-  //Update product details
+  //Update products
   updateProductsDB: async (display_name, display_price, product_stocks, product_description, product_id, imagePath) => {
     return new Promise(async (resolve, reject) => {
       //Check if product with given ID exist
@@ -78,7 +67,37 @@ module.exports = {
       })
     })
   },
-  //Update Variants of product
+  //Create product variants and prices
+  createVariantsDB: (product_id, variants) => {
+    return new Promise((resolve, reject) => {
+      variants.forEach((value, index) => {
+        const { variant_name, variant_symbol, variant_price, variant_stocks } = value
+        pool.execute(createVariantQuery, [index + 1, product_id, variant_name, variant_symbol, variant_price, variant_stocks], (error, result) => {
+          if (error) return reject(error);
+
+          return resolve(variants)
+        })
+      })
+    })
+  }, 
+  getAllVariantsDB: () => {
+    return new Promise((resolve, reject) => {
+      pool.execute(getAllVariantsQuery, [], (error, result) => {
+        if (error) return reject(error)
+        if (result.length === 0) return resolve(null)
+        return resolve(result)
+      })
+    })
+  },
+  getVariantByIdDB: (id) => {
+    return new Promise((resolve, reject) => {
+      pool.execute(getVariantByIdQuery, [id], (error, result) => {
+        if (error) return reject(error)
+        if (result.length === 0) return resolve(null)
+        return resolve(result)
+      })
+    })
+  },
   updateVariantsDB: (product_id, variants) => {
     return new Promise((resolve, reject) => {
       variants.forEach((value, index) => {
@@ -155,7 +174,12 @@ module.exports = {
       pool.execute(getAllCategoryQuery, [], (error, result) => {
         if(error) return reject(error)
         if(result.length === 0) return resolve(null)
-        return resolve(result)
+        const categories = result.map(category => ({
+          category_id: category.category_id,
+          category_name: category.category_name,
+          category_image: category.category_image.toString('base64')
+      }))
+        return resolve(categories)
       })
     })
   },
@@ -164,7 +188,12 @@ module.exports = {
       pool.execute(getCategoryByIdQuery, [id], (error, result) => {
         if(error) return reject(error)
         if(result.length === 0) return resolve(null)
-        return resolve(result)
+        const categories = result.map(category => ({
+          category_id: category.category_id,
+          category_name: category.category_name,
+          category_image: category.category_image.toString('base64')
+        }))
+        return resolve(categories)
       })
     })
   },

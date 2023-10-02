@@ -1,5 +1,21 @@
 const fs = require('fs').promises;
-const { createProductDB, createVariantsDB, updateProductsDB, updateVariantsDB, getAllProductsDB, getProductByIdDB, updateProductStocksDB, updateVariantStocksDB, updateProductSoldDB, getAllCategoryDB, getCategoryByIdDB, createNewCategoryDB, updateCategoryByIdDB, } = require('../services/products.services')
+const {
+  createProductDB,
+  createVariantsDB,
+  getAllVariantsDB,
+  getVariantByIdDB,
+  updateProductsDB,
+  updateVariantsDB,
+  getAllProductsDB,
+  getProductByIdDB,
+  updateProductStocksDB,
+  updateVariantStocksDB,
+  updateProductSoldDB,
+  getAllCategoryDB,
+  getCategoryByIdDB,
+  createNewCategoryDB,
+  updateCategoryByIdDB,
+} = require('../services/products.services')
 
 module.exports = {
   //Create new product
@@ -116,20 +132,39 @@ module.exports = {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }
   },
-  getAllVariant: async (req, res) => {
-
-  },
-  getVariantById: async (req, res) => {
-
-  },
   updateProductStocks: async (req, res) => {
     const { id } = req.params
     const { action, value } = req.query
     try {
+      const getProductId = await getProductByIdDB(id)
+      if (getProductId === null) return res.status(404).json({ error: `Product with an Id of ${id} has not found` })
+
       const result = await updateProductStocksDB(id, action, value);
-      if (!result) return res.status(404).json({ error: `Failed to update the stock of product with ID of ${id}` })
-      if (result.length === 0) return res.status(404).json({ error: `Product with an Id of ${id} has not found` })
+      if (!result) return res.status(400).json({ error: `Failed to update the stock of product with ID of ${id}` })
+
       return res.status(200).json({ message: `Successfully updated the stock of product with ID of ${id}`, result: result });
+    } catch (error) {
+      return res.status(500).json({ message: "Internal Server Error", error: error })
+    }
+  },
+  getAllVariants: async (req, res) => {
+    try {
+      const result = await getAllVariantsDB();
+      if (!result) return res.status(400).json({ error: "Failed to get all variants" });
+      if (result === null) res.status(200).json({ error: `There is no existing variants` });
+      return res.status(201).json({ message: `Successfully get all variants`, result: result })
+    } catch (error) {
+      return res.status(500).json({ message: "Internal Server Error", error: error })
+    }
+
+  },
+  getVariantById: async (req, res) => {
+    try {
+      const { id } = req.params
+      const result = await getVariantByIdDB(id);
+      if (result === null) return res.status(404).json({ error: `There is no existing variant with an ID of ${id}` })
+      if (!result) return res.status(400).json({ error: `Failed to get variant with an ID of ${id}` });
+      return res.status(201).json({ message: `Successfully get variant with an ID of ${id}`, result: result })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }
@@ -138,9 +173,11 @@ module.exports = {
     const { id } = req.params
     const { action, value } = req.query
     try {
+
+      const getVariantById = await getVariantById()
+      if (getVariantById === null) return res.status(404).json({ error: `Variant with an Id of ${id} has not found` })
       const result = await updateVariantStocksDB(id, action, value);
-      if (!result) return res.status(404).json({ error: `Failed to update the stock of variant with ID of ${id}` })
-      if (result.length === 0) return res.status(404).json({ error: `Variant with an Id of ${id} has not found` })
+      if (!result) return res.status(400).json({ error: `Failed to update the stock of variant with ID of ${id}` })
       return res.status(200).json({ message: `Successfully updated the stock of variant with ID of ${id}`, result: result });
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })
@@ -161,7 +198,8 @@ module.exports = {
   getAllCategory: async (req, res) => {
     try {
       const result = await getAllCategoryDB()
-      if (result === null) return res.status(400).json({ error: "There is no existing category" })
+      if (!result) return res.status(400).json({ error: "Failed to get all category" })
+      if (result === null) return res.status(404).json({ error: "There is no existing category" })
       return res.status(201).json({ message: `Successfully get all category`, result: result })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })
