@@ -1,29 +1,36 @@
-"use client";
-import styles from "@/styles/layouts/user.module.css";
-import { userMenu } from "@/constants/layout/user";
-import { UserMenu } from "@/types/layout";
 import Image from "next/image";
 import Link from "next/link";
+import React from "react";
+import { HeaderProps } from "@/types/layout";
 import Searchbar from "../Searchbar";
 
-const Navbar = () => {
-  const { display, route }: UserMenu = userMenu;
+const Header: React.FC<HeaderProps> = ({
+  menu,
+  title,
+  logoSrc,
+  logoAlt,
+  logoWidth,
+  logoHeight,
+  styles,
+  isUser,
+}: HeaderProps) => {
+  const { display, route } = menu;
 
   return (
     <header className={styles.header}>
-      <div className={styles.logo_container}>
+      <div className={styles.logoContainer}>
         <div className={styles.logo}>
           <Link href="/">
             <Image
-              src="/../images/qcu-logo.png"
-              alt="LOGO"
-              width={55}
-              height={55}
+              src={logoSrc}
+              alt={logoAlt}
+              width={logoWidth}
+              height={logoHeight}
             />
           </Link>
-          <h1>QCU COOP STORE</h1>
+          <h1>{title}</h1>
         </div>
-        <div className={styles.user_icon_container}>
+        {isUser && (
           <Link href="/login">
             <Image
               src="../assets/icons/user-icon.svg"
@@ -32,23 +39,23 @@ const Navbar = () => {
               height={40}
             />
           </Link>
-        </div>
+        )}
       </div>
 
       <nav className={styles.navbar}>
         <div>
-          {userMenu &&
-            display.map((menu, index) => (
+          {menu &&
+            display.map((menuText, index) => (
               <Link key={index} href={route[index]} className={styles.link}>
-                {menu}
+                {menuText}
               </Link>
             ))}
         </div>
 
-        <Searchbar />
+        {isUser && <Searchbar />}
       </nav>
     </header>
   );
 };
 
-export default Navbar;
+export default Header;

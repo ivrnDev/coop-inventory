@@ -37,7 +37,8 @@ module.exports = {
             display_price: display_price,
             product_stocks: product_stocks,
             product_description: product_description,
-            display_image: imagePath.toString('base64')
+            display_image: imagePath.toString('base64'),
+
           }
           return resolve(product);
         }
@@ -79,7 +80,7 @@ module.exports = {
         })
       })
     })
-  }, 
+  },
   getAllVariantsDB: () => {
     return new Promise((resolve, reject) => {
       pool.execute(getAllVariantsQuery, [], (error, result) => {
@@ -147,12 +148,18 @@ module.exports = {
           return resolve(null)
         } else {
           const products = result.map((product) => ({
+            category_id: product.category_id,
             product_id: product.product_id,
             product_name: product.product_name,
             display_name: product.display_name,
             display_price: product.display_price,
             product_stocks: product.product_stocks,
             product_description: product.product_description,
+            product_sold: product.product_sold,
+            status: product.status,
+            isFeatured: product.isFeatured,
+            isDeleted: product.isDeleted,
+            date_created: product.date_created,
             display_image: product.display_image.toString('base64'),
           }))
           return resolve(products)
@@ -172,13 +179,13 @@ module.exports = {
   getAllCategoryDB: () => {
     return new Promise((resolve, reject) => {
       pool.execute(getAllCategoryQuery, [], (error, result) => {
-        if(error) return reject(error)
-        if(result.length === 0) return resolve(null)
+        if (error) return reject(error)
+        if (result.length === 0) return resolve(null)
         const categories = result.map(category => ({
           category_id: category.category_id,
           category_name: category.category_name,
           category_image: category.category_image.toString('base64')
-      }))
+        }))
         return resolve(categories)
       })
     })
@@ -186,8 +193,8 @@ module.exports = {
   getCategoryByIdDB: (id) => {
     return new Promise((resolve, reject) => {
       pool.execute(getCategoryByIdQuery, [id], (error, result) => {
-        if(error) return reject(error)
-        if(result.length === 0) return resolve(null)
+        if (error) return reject(error)
+        if (result.length === 0) return resolve(null)
         const categories = result.map(category => ({
           category_id: category.category_id,
           category_name: category.category_name,
@@ -200,7 +207,7 @@ module.exports = {
   createNewCategoryDB: (category_name, category_image) => {
     return new Promise((resolve, reject) => {
       pool.execute(createNewCategoryQuery, [category_name, category_image], (error, result) => {
-        if(error) return reject(error)
+        if (error) return reject(error)
         return resolve(result)
       })
     })
@@ -208,7 +215,7 @@ module.exports = {
   updateCategoryByIdDB: (category_name, category_image, id) => {
     return new Promise((resolve, reject) => {
       pool.execute(updateCategoryByIdQuery, [category_name, category_image, id], (error, result) => {
-        if(error) return reject(error)
+        if (error) return reject(error)
         return resolve(result)
       })
     })

@@ -1,11 +1,24 @@
-import { products } from '@/constants/admin/products';
-import product from '../../../styles/home/products.module.css';
+"use client";
+import { useEffect, useState } from "react";
+import { getAllProducts } from "@/lib/api/products/getProducts";
+import Products from "@/components/user/products/Products";
 
+const ProductsPage = () => {
+  const [products, setProducts] = useState([]);
 
-const Products = () => {
+  useEffect(() => {
+    getAllProducts()
+      .then((data) => {
+        setProducts(data);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
   return (
-    <div>PRODUCTS</div>
-  )
-}
+    <main>
+      <Products products={products} />
+    </main>
+  );
+};
 
-export default Products
+export default ProductsPage;

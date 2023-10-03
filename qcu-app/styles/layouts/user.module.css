@@ -3,7 +3,7 @@
   top: 0;
 }
 
-.logo_container {
+.logoContainer {
   background-color: var(--header-color);
   width: 100vw;
   display: flex;
