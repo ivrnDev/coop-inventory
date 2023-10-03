@@ -1,4 +1,4 @@
-import AdminHeader from "@/components/AdminHeader";
+import AdminHeader from "@/components/header/AdminHeader";
 import "@/styles/globals.css";
 
 import type { Metadata } from "next";
@@ -16,7 +16,7 @@ export default function AdminLayout({
   return (
     <>
       <AdminHeader />
-      <main>{children}</main>
+      <main className="admin-main">{children}</main>
     </>
   );
 }

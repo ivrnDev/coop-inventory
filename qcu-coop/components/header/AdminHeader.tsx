@@ -18,19 +18,19 @@ const AdminHeader = () => {
 
       <nav className={styles.navbar}>
         <div className={styles.link_container}>
-          <Link href="/dashboard" className={styles.link}>
+          <Link href="/admin/dashboard" className={styles.link}>
             Dashboard
           </Link>
-          <Link href="/orders" className={styles.link}>
+          <Link href="/admin/orders" className={styles.link}>
             Orders
           </Link>
-          <Link href="/products" className={styles.link}>
+          <Link href="/admin/products" className={styles.link}>
             Products
           </Link>
-          <Link href="/payments" className={styles.link}>
+          <Link href="/admin/payments" className={styles.link}>
             Payments
           </Link>
-          <Link href="/analytics" className={styles.link}>
+          <Link href="/admin/analytics" className={styles.link}>
             Analytics
           </Link>
         </div>

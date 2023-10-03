@@ -14,9 +14,9 @@
   --primary-color: #3085c3;
   --header-color: #ffffff;
 }
-
 .home-main {
   margin-top: calc(90px + 55px);
 }
-
-
+.admin-main {
+  margin-left: 150px;
+}
