@@ -16,6 +16,7 @@ export async function getAllProducts() {
   }
 }
 
+
 export async function createProduct(form: FormData) {
   try {
     const res = await fetch("http://localhost:3000/api/products", {
