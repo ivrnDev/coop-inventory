@@ -14,6 +14,7 @@ const CreateCategoriesForm = () => {
     const fieldValue = e.target.value;
     setFormData({ ...formData, [fieldName]: fieldValue });
   };
+  
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const fieldName = e.target.name;
     if (e.target.files && e.target.files.length > 0) {

@@ -19,8 +19,6 @@ const CreateProductForm = () => {
     variant_symbol: "",
     variant_price: 0,
     variant_stocks: 0,
-  });
-  const [file, setFile] = useState<any>({
     display_image: null,
   });
 
@@ -33,18 +31,15 @@ const CreateProductForm = () => {
     const fieldName = e.target.name;
     if (e.target.files && e.target.files.length > 0) {
       const selectedFile = e.target.files[0];
-      setFile({
-        [fieldName]: selectedFile,
-      });
+      setFormData({ ...formData, [fieldName]: selectedFile });
     }
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = new FormData();
-    for (const [key, value] of Object.entries(formData)) {
-      form.append(key, value);
+    for (const key of Object.keys(formData) as (keyof typeof formData)[]) {
+      form.append(key, formData[key]);
     }
-    form.append("display_image", file);
 
     try {
       const response = await createProduct(form);
@@ -169,7 +164,7 @@ const CreateProductForm = () => {
               <label>Display Image</label>
               <input
                 type="file"
-                name="product_image"
+                name="display_image"
                 onChange={handleFileChange}
               />
             </div>
