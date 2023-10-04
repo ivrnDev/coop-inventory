@@ -172,7 +172,22 @@ module.exports = {
       pool.execute(getProductByIdQuery, [id], (error, result) => {
         if (error) return reject(error);
         if (result.length === 0) resolve(null)
-        return resolve(result);
+        const products = result.map((product) => ({
+          category_id: product.category_id,
+          product_id: product.product_id,
+          product_name: product.product_name,
+          display_name: product.display_name,
+          display_price: product.display_price,
+          product_stocks: product.product_stocks,
+          product_description: product.product_description,
+          product_sold: product.product_sold,
+          status: product.status,
+          isFeatured: product.isFeatured,
+          isDeleted: product.isDeleted,
+          date_created: product.date_created,
+          display_image: product.display_image.toString('base64'),
+        }))
+        return resolve(products);
       })
     })
   },
