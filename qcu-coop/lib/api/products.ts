@@ -16,6 +16,25 @@ export async function getAllProducts() {
   }
 }
 
+export async function createProduct(form: FormData) {
+  try {
+    const res = await fetch("http://localhost:3000/api/products", {
+      method: "POST",
+      body: form,
+    });
+    const data = await res.json();
+    return {
+      status: res.status,
+      data,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      data: null,
+    };
+  }
+}
+
 export async function createCategory(form: FormData) {
   try {
     const res = await fetch("http://localhost:3000/api/products/category", {

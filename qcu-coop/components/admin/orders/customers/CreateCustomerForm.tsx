@@ -3,7 +3,7 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { CustomerType } from "@/types/customers/customers";
 import { createCustomer } from "@/lib/api/customers";
 
-const CreateProductForm = () => {
+const CreateCustomerForm = () => {
   const [formData, setFormData] = useState<CustomerType>({
     customer_name: "",
     customer_phone: "",
@@ -82,4 +82,4 @@ const CreateProductForm = () => {
   );
 };
 
-export default CreateProductForm;
+export default CreateCustomerForm;
