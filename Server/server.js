@@ -1,5 +1,5 @@
 require('dotenv').config();
-const express = require('express') 
+const express = require('express')
 const productRouter = require('./routes/products.router');
 const customersRouter = require('./routes/customers.router');
 const ordersRouter = require('./routes/orders.router');
@@ -9,9 +9,9 @@ const bannersRouter = require('./routes/banners.router');
 const cors = require('cors');
 const app = express();
 
+app.use(cors({ origin: 'http://localhost:5000' }));
 app.use(express.json());
-app.use(express.urlencoded({extended: true}))
-app.use(cors());
+app.use(express.urlencoded({ extended: true }))
 app.use('/api/products', productRouter);
 app.use('/api/albums', albumsRouter);
 app.use('/api/orders', ordersRouter);

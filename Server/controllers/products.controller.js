@@ -18,17 +18,15 @@ const {
 } = require('../services/products.services')
 
 module.exports = {
-  //Create new product
   createProduct: async (req, res) => {
     try {
-      //Check if there is an image
       let imagePath;
       if (req.file) {
         imagePath = req.file.buffer;
       } else {
         const defaultImagePath = './public/default-image.jpg';
         try {
-          imagePath = await fs.readFile(defaultImagePath); //Read image as buffer
+          imagePath = await fs.readFile(defaultImagePath);
         } catch (error) {
           return res.status(500).json({ message: "Error reading default image" });
         }
