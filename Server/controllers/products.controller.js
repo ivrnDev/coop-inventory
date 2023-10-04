@@ -45,12 +45,23 @@ module.exports = {
       //Get requested variant
       const { variant_name, variant_symbol, variant_price, variant_stocks } = req.body;
       //Loop through variant and return an array of variants
-      const variants = variant_name.map((name, index) => ({
-        variant_name: name,
-        variant_symbol: variant_symbol[index],
-        variant_price: variant_price[index],
-        variant_stocks: variant_stocks[index],
-      }));
+
+      let variants;
+      variants = [{
+        variant_name,
+        variant_symbol,
+        variant_price,
+        variant_stocks,
+      }]
+      if (Array.isArray(variant_name)) {
+        variants = variant_name.map((name, index) => ({
+          variant_name: name,
+          variant_symbol: variant_symbol[index],
+          variant_price: variant_price[index],
+          variant_stocks: variant_stocks[index],
+        }));
+      }
+
       //Create Variants
       const createdVariants = await createVariantsDB(product_id, variants)
       if (!createdVariants) return res.status(400).json({ message: `Failed to insert variants in a product with an ID of ${product_id}` })
