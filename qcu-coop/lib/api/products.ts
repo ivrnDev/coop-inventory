@@ -16,12 +16,21 @@ export async function getAllProducts() {
   }
 }
 
-// export async function createProduct() {
-//   const response = await fetch("http://localhost:3000/api/customers", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(),
-//   });
-// }
+export async function createCategory(form: FormData) {
+  try {
+    const res = await fetch("http://localhost:3000/api/products/category", {
+      method: "POST",
+      body: form,
+    });
+    const data = await res.json();
+    return {
+      status: res.status,
+      data,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      data: null,
+    };
+  }
+}

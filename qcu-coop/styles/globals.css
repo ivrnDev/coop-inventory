@@ -19,4 +19,6 @@
 }
 .admin-main {
   margin-left: 150px;
+  height: 100vh;
+  background-color: rgb(221, 219, 219);
 }
