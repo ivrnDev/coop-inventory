@@ -16,3 +16,31 @@ variant_name:large
 variant_symbol:l
 variant_price:99
 variant_stocks:244
+
+
+DELETE FROM customers;
+ALTER TABLE customers AUTO_INCREMENT = 0;
+
+DELETE FROM orders;
+ALTER TABLE orders AUTO_INCREMENT = 0;
+
+DELETE FROM transactions;
+ALTER TABLE transactions AUTO_INCREMENT = 0;
+
+DELETE FROM variants;
+ALTER TABLE variants AUTO_INCREMENT = 0;
+
+DELETE FROM products;
+ALTER TABLE products AUTO_INCREMENT = 0;
+
+DELETE FROM albums;
+ALTER TABLE albums AUTO_INCREMENT = 0;
+
+DELETE FROM admins;
+ALTER TABLE admins AUTO_INCREMENT = 0;
+
+DELETE FROM banner;
+ALTER TABLE banner AUTO_INCREMENT = 0;
+
+DELETE FROM category;
+ALTER TABLE category AUTO_INCREMENT = 0;

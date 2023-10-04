@@ -1,12 +1,11 @@
 import { getAllProducts } from "@/lib/api/products";
-import { products } from "@/types/products/products";
+import { Products } from "@/types/products/products";
 import styles from "@/styles/pages/user/displayProducts.module.css";
 import Button from "@/components/Button";
 import Image from "next/image";
-import Link from "next/link";
 
 const Products = async () => {
-  const products: products[] = await getAllProducts();
+  const products: Products[] = await getAllProducts();
   return (
     <section className={styles.section}>
       {products ? (
@@ -27,9 +26,13 @@ const Products = async () => {
               <p>Stocks {product.product_stocks}</p>
             </div>
             <div className={styles.buttons}>
-              <Button label={'ADD TO CART'} style={styles.button}/>
-              <Button label={'BUY NOW'} style={styles.button} onclick={null} link={`/`}/>
-             
+              <Button label={"ADD TO CART"} style={styles.button} />
+              <Button
+                label={"BUY NOW"}
+                style={styles.button}
+                onclick={null}
+                link={`/`}
+              />
             </div>
           </div>
         ))
