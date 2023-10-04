@@ -6,7 +6,7 @@ export type ProductsType = {
   display_price: string;
   product_stocks: number;
   product_description: string;
-  product_sold: number;
+  product_sold?: number;
   status: string;
   isFeatured?: number;
   isDeleted?: number;
@@ -15,6 +15,7 @@ export type ProductsType = {
   variant_name: string;
   variant_symbol: string;
   variant_price: number;
+  variant_stocks: number;
 };
 
 export type CategoriesType = {

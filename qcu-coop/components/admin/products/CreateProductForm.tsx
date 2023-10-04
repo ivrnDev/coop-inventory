@@ -18,6 +18,7 @@ const CreateProductForm = () => {
     variant_name: "",
     variant_symbol: "",
     variant_price: 0,
+    variant_stocks: 0,
   });
   const [file, setFile] = useState<any>({
     display_image: null,
@@ -48,7 +49,7 @@ const CreateProductForm = () => {
     try {
       const response = await createProduct(form);
       if (response.status === 201) {
-        console.log("Category created successfully");
+        console.log("Product created successfully");
         setFormData({
           category_id: 0,
           product_name: "",
@@ -56,18 +57,18 @@ const CreateProductForm = () => {
           display_price: "",
           product_stocks: 0,
           product_description: "",
-          product_sold: 0,
           status: "",
           isFeatured: 0,
           isDeleted: 0,
           variant_name: "",
           variant_symbol: "",
           variant_price: 0,
+          variant_stocks: 0,
           display_image: null,
         });
         console.log(response.data);
       } else {
-        console.error("Failed to create category");
+        console.error("Failed to create Product");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -135,16 +136,6 @@ const CreateProductForm = () => {
               />
             </div>
             <div>
-              <label>Product Sold</label>
-              <input
-                type="text"
-                name="product_sold"
-                value={formData.product_sold}
-                onChange={handleChange}
-                autoComplete="off"
-              />
-            </div>
-            <div>
               <label>Status</label>
               <input
                 type="text"
@@ -178,8 +169,47 @@ const CreateProductForm = () => {
               <label>Display Image</label>
               <input
                 type="file"
-                name="display_image"
+                name="product_image"
                 onChange={handleFileChange}
+              />
+            </div>
+            <div>
+              <label>Variant Name</label>
+              <input
+                type="text"
+                name="variant_name"
+                value={formData.variant_name}
+                onChange={handleChange}
+                autoComplete="off"
+              />
+            </div>
+            <div>
+              <label>Variant Symbol</label>
+              <input
+                type="text"
+                name="variant_symbol"
+                value={formData.variant_symbol}
+                onChange={handleChange}
+                autoComplete="off"
+              />
+            </div>
+            <div>
+              <label>Variant Price</label>
+              <input
+                type="text"
+                name="variant_price"
+                value={formData.variant_price}
+                onChange={handleChange}
+                autoComplete="off"
+              />
+            </div>
+            <div>
+              <label>Variant Stocks</label>
+              <input
+                type="text"
+                name="variant_stocks"
+                value={formData.variant_stocks}
+                onChange={handleChange}
                 autoComplete="off"
               />
             </div>
