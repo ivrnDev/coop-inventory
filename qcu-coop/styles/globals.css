@@ -12,7 +12,7 @@
 
 .home-main {
   margin-top: 124px;
-  height: 100vh;
+  height: calc(100vh - 124px);
   background-color: #ebebeb;
 }
 .admin-main {

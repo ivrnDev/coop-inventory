@@ -1,5 +1,5 @@
 .section {
-  @apply ml-[35%] p-[30px] grid grid-cols-4 gap-10 h-screen;
+  @apply ml-[35%] p-[30px] grid grid-cols-4 gap-10 h-fit;
 }
 
 .card {

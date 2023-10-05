@@ -40,7 +40,7 @@ const RenderProducts: React.FC<RenderProductsProps> = ({ products }) => {
           </div>
         ))
       ) : (
-        <p className="color-black text-lg">NO AVAILABLE PRODUCTS</p>
+        <p className="color-black text-lg text-[2.5rem] text-center font-extrabold absolute left-1/2 top-1/2">NO AVAILABLE PRODUCTS</p>
       )}
     </>
   );
