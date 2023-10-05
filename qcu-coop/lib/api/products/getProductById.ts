@@ -1,5 +1,3 @@
-
-
 export async function getProductById(productId: string) {
   try {
     const res = await fetch(`http://localhost:3000/api/products/${productId}`, {

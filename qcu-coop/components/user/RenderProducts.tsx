@@ -10,7 +10,7 @@ type RenderProductsProps = {
 const RenderProducts: React.FC<RenderProductsProps> = ({ products }) => {
   return (
     <>
-      {products ? (
+      {products && products.length > 0 ? (
         products.map((product) => (
           <div key={product.product_id} className={styles.card}>
             <div className={styles.image_container}>
@@ -32,14 +32,13 @@ const RenderProducts: React.FC<RenderProductsProps> = ({ products }) => {
               <Button
                 label={"BUY NOW"}
                 style={styles.button}
-                onclick={null}
                 link={`/products/${product.product_id}`}
               />
             </div>
           </div>
         ))
       ) : (
-        <div>NO AVAILABLE PRODUCTS</div>
+        <p className="color-black text-lg">NO AVAILABLE PRODUCTS</p>
       )}
     </>
   );

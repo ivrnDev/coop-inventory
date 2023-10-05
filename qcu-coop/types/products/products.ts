@@ -18,6 +18,8 @@ export type ProductsType = {
   variant_stocks: number;
 };
 
+
+
 export type CategoriesType = {
   category_name: string;
   category_image: any;
