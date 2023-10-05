@@ -1,3 +1,4 @@
+import CategoriesSidebar from "@/components/header/CategoriesSidebar";
 import HomeHeader from "@/components/header/HomeHeader";
 import type { Metadata } from "next";
 
@@ -14,6 +15,9 @@ export default function HomeLayout({
   return (
     <>
       <HomeHeader />
+      <aside className="aside-home">
+        <CategoriesSidebar />
+      </aside>
       <main className="home-main">{children}</main>
     </>
   );

@@ -11,12 +11,20 @@
 }
 
 .home-main {
-  margin-top: 124px;
-  height: calc(100vh - 124px);
+  min-height: 100vh;
+  padding-top: 120px;
   background-color: #ebebeb;
 }
 .admin-main {
-  margin-left: 150px;
-  height: 100vh;
+  padding-left: 150px;
+  min-height: 100vh;
+  min-width: 100vw;
   background-color: #ebebeb;
+}
+
+.aside-home {
+  position: fixed;
+  padding-top: 120px;
+  height: 100vh;
+  width: fit-content;
 }

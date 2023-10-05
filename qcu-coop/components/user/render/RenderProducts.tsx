@@ -17,8 +17,8 @@ const RenderProducts: React.FC<RenderProductsProps> = ({ products }) => {
               <Image
                 src={`data:image/png;base64,${product.display_image}`}
                 alt={product.product_name}
-                width={150}
-                height={150}
+                layout="fill"
+                className={styles.image}
               />
             </div>
             <div className={styles.product_info}>
@@ -40,7 +40,9 @@ const RenderProducts: React.FC<RenderProductsProps> = ({ products }) => {
           </div>
         ))
       ) : (
-        <p className="color-black text-lg text-[2.5rem] text-center font-extrabold absolute left-1/2 top-1/2">NO AVAILABLE PRODUCTS</p>
+        <p className={styles.no_available_products}>
+          NO AVAILABLE PRODUCTS
+        </p>
       )}
     </>
   );

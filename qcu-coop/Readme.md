@@ -44,3 +44,7 @@ ALTER TABLE banner AUTO_INCREMENT = 0;
 
 DELETE FROM category;
 ALTER TABLE category AUTO_INCREMENT = 0;
+
+
+
+
