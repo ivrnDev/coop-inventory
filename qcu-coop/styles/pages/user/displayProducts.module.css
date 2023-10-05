@@ -1,36 +1,36 @@
 .section {
-  margin-left: 35%;
-  padding: 30px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 40px;
+  @apply ml-[35%] p-[30px] grid grid-cols-4 gap-10 h-screen;
 }
 
 .card {
-  display: flex;
-  flex-direction: column;
-  background-color: green;
-  padding: 20px;
-  width: fit-content;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-}
-.image_container {
+  @apply flex flex-col p-3 justify-center items-center gap-4 bg-white  rounded-lg h-[300px] w-[220px] shadow-md;
 }
 
 .product_info {
-  color: white;
-  text-align: center;
+  @apply w-[inherit] flex flex-col gap-3;
 }
 .product_info h1 {
-  font-size: 20px;
+  @apply text-center font-bold uppercase  text-[1.1rem];
 }
 
-.button {
-  background-color: rgb(3, 111, 235);
-  padding: 10x;
-  font-size: 1rem;
-  border-radius: 10px;
-  color: white;
+.product_info .display_price {
+  @apply text-center font-semibold text-[1.1rem];
 }
+
+.sub_info {
+  @apply flex w-[inherit] justify-between px-2;
+}
+.sold,
+.stocks {
+  @apply text-[0.7rem] font-normal;
+}
+
+.add_cart {
+  @apply bg-blue-700 font-semibold text-[0.9rem] text-white mx-1 rounded-md p-1 shadow-sm
+}
+
+.buy_now {
+  @apply bg-green-900 font-semibold text-[0.9rem] text-white mx-1 rounded-md p-1 shadow-sm
+}
+
+

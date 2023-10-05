@@ -1,55 +1,23 @@
 .header {
-  position: fixed;
-  left: 0;
-  top: 0;
-  background-color: var(--header-color);
-  height: fit-content;
-  width: 100vw;
-  
+  @apply fixed left-0 top-0 h-[124px] bg-slate-600 w-[100vw];
 }
 .top_header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 30px;
-  height: 90px;
-
+  @apply flex justify-between bg-white justify-between px-4 py-3 items-center;
 }
-
 .top_header h1 {
-  font-size: 1.4rem;
-  font-weight: bold;
-  display: flex;
-  height: fit-content;
+  @apply text-[1.4rem] font-bold flex h-fit;
 }
-
 .logo_container {
-  display: flex;
-  align-items: center;
-  gap: 15px;
+  @apply flex align-middle gap-[15px];
 }
-
 .navbar {
-  position: fixed;
-  top: 90px;
-  left: 0;
-  width: 100vw;
-  height: 55px;
-  background-color: var(--primary-color);
-  padding: 5px 30px;
+  @apply flex h-[40px] bg-[#3085c3] items-center
+  justify-between px-2;
 }
 
 .navbar .link_container {
-  display: flex;
-  gap: 20px;
-  font-weight: 700;
-  font-size: 1.3rem;
+  @apply flex gap-5 w-fit h-fit;
 }
 .link {
-  padding: 8px;
-}
-
-.link:hover {
-  background-color: rgb(255, 0, 0);
-  border-radius: 15px;
+  @apply font-semibold text-[1.1rem] hover:bg-red-500 rounded-md no-underline p-1 text-white;
 }

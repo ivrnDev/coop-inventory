@@ -11,8 +11,8 @@ const HomeHeader = () => {
             <Image
               src="/images/qcu-logo.png"
               alt="QCU-Logo"
-              width={65}
-              height={65}
+              width={60}
+              height={60}
             />
           </Link>
           <h1>QCU COOP STORE</h1>

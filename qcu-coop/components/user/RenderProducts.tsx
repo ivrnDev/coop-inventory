@@ -23,15 +23,17 @@ const RenderProducts: React.FC<RenderProductsProps> = ({ products }) => {
             </div>
             <div className={styles.product_info}>
               <h1>{product.display_name}</h1>
-              <p>{product.display_price}</p>
-              <p>Sold {product.product_sold}</p>
-              <p>Stocks {product.product_stocks}</p>
+              <p className={styles.display_price}>₱ {product.display_price}</p>
+              <div className={styles.sub_info}>
+                <p className={styles.sold}>Sold {product.product_sold}</p>
+                <p className={styles.stocks}>Stocks {product.product_stocks}</p>
+              </div>
             </div>
             <div className={styles.buttons}>
-              <Button label={"ADD TO CART"} style={styles.button} />
+              <Button label={"ADD TO CART"} style={styles.add_cart} />
               <Button
                 label={"BUY NOW"}
-                style={styles.button}
+                style={styles.buy_now}
                 link={`/products/${product.product_id}`}
               />
             </div>

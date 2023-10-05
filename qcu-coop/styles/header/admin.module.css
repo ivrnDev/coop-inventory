@@ -1,52 +1,17 @@
 .header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  background-color: var(--primary-color);
-  width: 150px;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  gap: 20px;
+  @apply fixed top-0 left-0 bg-[#3085c3] w-[150px] h-screen;
+}
+.header_container {
+  @apply flex flex-col items-center p-2 gap-y-6;
 }
 .logo_container {
-  position: relative;
-  width: inherit;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 20px;
-  text-align: center;
-}
-
-.logo_container h1 {
-  font-size: 1.3rem;
-  font-weight: bold;
+  @apply w-fit flex flex-col gap-5 items-center text-center font-bold text-[1.3rem];
 }
 .navbar {
-  height: fit-content;
-  display: flex;
-  width: inherit;
-  flex-direction: column;
-  align-items: center;
-}
-.link_container {
-  display: flex;
-  flex-direction: column;
-  align-items: left;
-  gap: 40px;
+   @apply h-fit flex text-left flex-col
+   uppercase font-bold text-white text-[1.2rem] gap-y-12 
 }
 
 .link {
-  color: white;
-  text-transform: uppercase;
-  font-weight: bold;
-  font-size: 1.3rem;
-  padding: 10px;
-}
-.link:hover {
-  background-color: red;
-  border-radius: 10px;
+  @apply hover:bg-red-700 rounded-md p-1
 }

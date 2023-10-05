@@ -1,7 +1,7 @@
 "use client";
 import { createProduct } from "@/lib/api/products";
 import { ProductsType } from "@/types/products/products";
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 
 const CreateProductForm = () => {
   const [formData, setFormData] = useState<ProductsType>({
