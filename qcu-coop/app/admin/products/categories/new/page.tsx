@@ -1,4 +1,4 @@
-import CreateCategoriesForm from "@/components/admin/products/CreateCategoriesForm";
+import CreateCategoriesForm from "@/components/admin/products/forms/CreateCategories";
 
 const CreateNewCategoryPage = () => {
   return (

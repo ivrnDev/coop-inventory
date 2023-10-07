@@ -1,16 +1,17 @@
-import { ProductsType } from "@/types/products/products";
-import styles from "@/styles/pages/user/displayProducts.module.css";
-import Button from "@/components/Button";
 import Image from "next/image";
+import Link from "next/link";
+import styles from "@/styles/pages/user/render/products.module.css";
+import { ProductsType } from "@/types/products/products";
 
-type RenderProductsProps = {
+interface Props {
   products: ProductsType[];
-};
+}
 
-const RenderProducts: React.FC<RenderProductsProps> = ({ products }) => {
+const RenderProducts: React.FC<Props> = ({ products }) => {
   return (
     <>
-      {products && products.length > 0 ? (
+      {products &&
+        products.length > 0 &&
         products.map((product) => (
           <div key={product.product_id} className={styles.card}>
             <div className={styles.image_container}>
@@ -30,20 +31,18 @@ const RenderProducts: React.FC<RenderProductsProps> = ({ products }) => {
               </div>
             </div>
             <div className={styles.buttons}>
-              <Button label={"ADD TO CART"} style={styles.add_cart} />
-              <Button
-                label={"BUY NOW"}
-                style={styles.buy_now}
-                link={`/products/${product.product_id}`}
-              />
+              <button>ADD TO CART</button>
+              <Link
+                scroll={false}
+                href={`?${new URLSearchParams({
+                  item: String(product.product_id),
+                })}`}
+              >
+                BUY NOW
+              </Link>
             </div>
           </div>
-        ))
-      ) : (
-        <p className={styles.no_available_products}>
-          NO AVAILABLE PRODUCTS
-        </p>
-      )}
+        ))}
     </>
   );
 };

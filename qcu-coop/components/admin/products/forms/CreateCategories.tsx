@@ -1,7 +1,7 @@
 "use client";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { CategoriesType } from "@/types/products/products";
-import { createCategory } from "@/lib/api/products";
+import { createCategory } from "@/lib/api/categories";
 
 const CreateCategoriesForm = () => {
   const [formData, setFormData] = useState<CategoriesType>({
@@ -14,7 +14,7 @@ const CreateCategoriesForm = () => {
     const fieldValue = e.target.value;
     setFormData({ ...formData, [fieldName]: fieldValue });
   };
-  
+
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const fieldName = e.target.name;
     if (e.target.files && e.target.files.length > 0) {
