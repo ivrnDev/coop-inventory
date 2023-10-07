@@ -1,4 +1,4 @@
-import AdminHeader from "@/components/header/AdminHeader";
+import AdminHeader from "@/components/ui/header/Admin";
 import "@/styles/globals.css";
 
 import type { Metadata } from "next";
