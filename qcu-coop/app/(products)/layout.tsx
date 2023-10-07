@@ -15,7 +15,7 @@ export default function HomeLayout({
   return (
     <>
       <HomeHeader />
-      <aside className="aside-home">
+      <aside>
         <CategoriesSidebar />
       </aside>
       <main className="home-main">{children}</main>
