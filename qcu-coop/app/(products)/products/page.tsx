@@ -7,7 +7,7 @@ import RenderProducts from "@/components/user/render/Products";
 interface Params {
   searchParams: { [key: string]: string | string[] | undefined };
 }
-
+  
 const Products = async ({ searchParams }: Params) => {
   const selectedProduct = searchParams.item as string;
   const products: ProductsType[] = await getAllProducts();
