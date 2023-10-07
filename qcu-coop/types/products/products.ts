@@ -19,7 +19,7 @@ export type ProductsType = {
 };
 
 export type CategoriesType = {
-  category_id: number;
+  category_id?: number;
   category_name: string;
   category_image: any;
 };
