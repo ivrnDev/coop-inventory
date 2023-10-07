@@ -1,4 +1,4 @@
-import styles from "@/styles/header/admin.module.css";
+import styles from "@/styles/ui/header/admin.module.css";
 import Link from "next/link";
 import Image from "next/image";
 const AdminHeader = () => {
