@@ -17,22 +17,29 @@ export async function getAllProducts() {
 }
 
 export async function getProductById(productId: string) {
-  try {
-    const res = await fetch(`http://localhost:3000/api/products/${productId}`, {
-      next: {
-        revalidate: 0,
-      },
-    });
+  if (!productId) {
+    throw new Error("Invalid productId");
+  }
+  if (productId) {
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/products/${productId}`,
+        {
+          next: {
+            revalidate: 0,
+          },
+        }
+      );
 
-    if (!res.ok) throw new Error("Failed to fetch Data");
-    const data = await res.json();
-    return data.result;
-  } catch (error) {
-    console.error("Error fetching data", error);
-    return [];
+      if (!res.ok) throw new Error("Failed to fetch Data");
+      const data = await res.json();
+      return data.result;
+    } catch (error) {
+      console.error("Error fetching data", error);
+      return [];
+    }
   }
 }
-
 
 export async function createProduct(form: FormData) {
   try {

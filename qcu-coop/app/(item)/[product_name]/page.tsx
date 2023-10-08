@@ -6,10 +6,11 @@ type Params = {
 };
 
 const ItemPage = ({ searchParams }: Params) => {
-  const id = searchParams.id as string;
+  const id = String(searchParams.id);
   return (
     <>
-      <Item productId={id} />
+      {id && id !== "undefined"  && <Item productId={id} />}
+     
     </>
   );
 };

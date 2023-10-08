@@ -7,11 +7,11 @@ type Props = {
   productId: string;
 };
 
-const Item: React.FC<Props> = async ({ productId }) => {
+const Item = async ({ productId }: Props) => {
   const product: ItemType[] = await getProductById(productId);
   return (
     <>
-      {productId && (
+      {product && (
         <>
           <section className="flex">
             <div className="relative h-[450px] w-[500px] rounded-md object-cover">
@@ -27,13 +27,13 @@ const Item: React.FC<Props> = async ({ productId }) => {
               <h1>{product[0].display_name}</h1>
               <p>{product[0].product_description}</p>
               <div className="flex gap-2">
-                {product.map((product, index) => (
+                {product.map((item, index) => (
                   <Link
                     href={`/`}
                     key={index}
                     className="bg-blue-500 p-1 capitalize w-8 flex justify-center items-center"
                   >
-                    {product.variant_symbol}
+                    {item.variant_symbol}
                   </Link>
                 ))}
               </div>
