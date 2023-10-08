@@ -36,7 +36,9 @@ const Item = async ({ id, productVariant }: Props) => {
                 {product.map(
                   (variant, index) =>
                     variant.variant_name === productVariant && (
-                      <p key={index} className="text-[1.5rem] font-bold">{variant.variant_price}</p>
+                      <p key={index} className="text-[1.5rem] font-bold">
+                        {variant.variant_price}
+                      </p>
                     )
                 )}
               </div>
@@ -49,7 +51,11 @@ const Item = async ({ id, productVariant }: Props) => {
                       variant: `${item.variant_name}`,
                     })}`}
                     key={index}
-                    className="bg-blue-500 p-1 capitalize w-8 flex justify-center items-center "
+                    className={`p-1 capitalize w-8 flex justify-center items-center ${
+                      productVariant === item.variant_name
+                        ? "bg-green-500"
+                        : "bg-blue-500"
+                    }`}
                   >
                     {item.variant_symbol}
                   </Link>
