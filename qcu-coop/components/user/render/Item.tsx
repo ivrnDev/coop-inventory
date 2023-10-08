@@ -1,34 +1,45 @@
 import Image from "next/image";
 import { getProductById } from "@/lib/api/products";
-import { getVariantById } from "@/lib/api/variants";
-import { VariantTypes } from "@/variants";
+import { ItemType } from "@/types/products/products";
+import Link from "next/link";
 
 type Props = {
   productId: string;
 };
 
 const Item: React.FC<Props> = async ({ productId }) => {
-  const product: any = await getProductById(productId);
-  // const variants: VariantTypes[] = await getVariantById(productId);
+  const product: ItemType[] = await getProductById(productId);
   return (
     <>
       {productId && (
-        <div className="flex">  
-          <div className="relative h-[450px] w-[500px] rounded-md object-cover">
-            <Image
-              src={`data:image/png;base64,${product.display_image}`}
-              alt={product.product_name}
-              fill
-            />
-          </div>
-          <div>
-            <h1>{product.display_name}</h1>
-            <p>{product.product_description}</p>
-            {/* {variants.map((variant, index) => (
-              <p key={index}>{variant.variant_name}</p>
-            ))} */}
-          </div>
-        </div>
+        <>
+          <section className="flex">
+            <div className="relative h-[450px] w-[500px] rounded-md object-cover">
+              <Image
+                src={`data:image/png;base64,${product[0].display_image}`}
+                alt={product[0].product_name}
+                fill
+              />
+            </div>
+          </section>
+          <section>
+            <div>
+              <h1>{product[0].display_name}</h1>
+              <p>{product[0].product_description}</p>
+              <div className="flex gap-2">
+                {product.map((product, index) => (
+                  <Link
+                    href={`/`}
+                    key={index}
+                    className="bg-blue-500 p-1 capitalize w-8 flex justify-center items-center"
+                  >
+                    {product.variant_symbol}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        </>
       )}
     </>
   );

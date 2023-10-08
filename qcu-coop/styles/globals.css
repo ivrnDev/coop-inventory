@@ -15,6 +15,13 @@
   padding-top: 120px;
   background-color: #ebebeb;
 }
+.item-main {
+  display: flex;
+  overflow-y: auto;
+  min-height: 100vh;
+  padding-top: 120px;
+  background-color: #ebebeb;
+}
 .admin-main {
   padding-left: 150px;
   min-height: 100vh;

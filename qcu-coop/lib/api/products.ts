@@ -26,7 +26,7 @@ export async function getProductById(productId: string) {
 
     if (!res.ok) throw new Error("Failed to fetch Data");
     const data = await res.json();
-    return data.result[0];
+    return data.result;
   } catch (error) {
     console.error("Error fetching data", error);
     return [];

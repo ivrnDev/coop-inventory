@@ -15,7 +15,7 @@ export default function HomeLayout({
   return (
     <>
       <HomeHeader />
-      <main className="home-main">{children}</main>
+      <main className="item-main">{children}</main>
     </>
   );
 }
