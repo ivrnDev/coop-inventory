@@ -15,9 +15,6 @@ export default function HomeLayout({
   return (
     <>
       <HomeHeader />
-
-      <CategoriesSidebar />
-
       <main className="home-main">{children}</main>
     </>
   );

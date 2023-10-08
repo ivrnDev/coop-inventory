@@ -20,7 +20,7 @@ const RenderProductsAdmin: React.FC<Props> = async ({ products }) => {
               <Image
                 src={`data:image/png;base64,${product.display_image}`}
                 alt={product.product_name}
-                layout="fill"
+                fill
                 className={styles.image}
               />
             </div>

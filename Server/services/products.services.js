@@ -95,6 +95,8 @@ module.exports = {
       pool.execute(getVariantByIdQuery, [id], (error, result) => {
         if (error) return reject(error)
         if (result.length === 0) return resolve(null)
+
+
         return resolve(result)
       })
     })

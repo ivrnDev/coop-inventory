@@ -17,6 +17,10 @@ variant_symbol:l
 variant_price:99
 variant_stocks:244
 
+interface Params {
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
 
 DELETE FROM customers;
 ALTER TABLE customers AUTO_INCREMENT = 0;
