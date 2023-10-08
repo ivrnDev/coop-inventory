@@ -1,16 +1,17 @@
 import Item from "@/components/user/render/Item";
-import React from "react";
 
 type Params = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
 
 const ItemPage = ({ searchParams }: Params) => {
-  const id = String(searchParams.id);
+  const id = searchParams?.id as string;
+  const productVariant = searchParams?.variant as string;
   return (
     <>
-      {id && id !== "undefined"  && <Item productId={id} />}
-     
+      {id && id !== "undefined" && (
+        <Item id={id} productVariant={productVariant} />
+      )}
     </>
   );
 };

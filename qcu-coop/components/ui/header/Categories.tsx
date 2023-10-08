@@ -6,7 +6,7 @@ const CategoriesSidebar = async () => {
   const categories: CategoriesType[] = await getAllCategories();
   return (
     <>
-      <aside className="flex flex-col p-5 mt-[120px] items-center rounded-lg bg-blue-700 absolute top-1/2 -translate-y-1/2 left-6">
+      <aside className="flex flex-col p-5 mt-[120px] items-center rounded-lg bg-blue-700 fixed top-1/2 -translate-y-1/2 left-6">
         <p className="text-black text-[1.2rem] font-bold border-b-2">
           CATEGORIES
         </p>

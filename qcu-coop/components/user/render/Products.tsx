@@ -32,7 +32,9 @@ const RenderProducts: React.FC<Props> = ({ product }) => {
             <button>ADD TO CART</button>
             <Link
               scroll={false}
-              href={`/${product.product_name.toLowerCase()}?id=${product.product_id}`}
+              href={`/products/${product.product_name.toLowerCase()}?id=${
+                product.product_id
+              }`}
             >
               BUY NOW
             </Link>

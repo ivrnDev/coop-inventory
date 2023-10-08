@@ -17,9 +17,6 @@ export async function getAllProducts() {
 }
 
 export async function getProductById(productId: string) {
-  if (!productId) {
-    throw new Error("Invalid productId");
-  }
   if (productId) {
     try {
       const res = await fetch(

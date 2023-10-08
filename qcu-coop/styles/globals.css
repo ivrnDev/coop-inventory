@@ -9,19 +9,17 @@
   padding: 0;
   margin: 0;
 }
+body {
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
 .home-main {
-  overflow-y: auto;
-  min-height: 100vh;
-  padding-top: 120px;
-  background-color: #ebebeb;
+  padding-top: 124px;
+  min-height: inherit;
+  background-color: red;
 }
-.item-main {
-  display: flex;
-  overflow-y: auto;
-  min-height: 100vh;
-  padding-top: 120px;
-  background-color: #ebebeb;
-}
+
 .admin-main {
   padding-left: 150px;
   min-height: 100vh;
@@ -29,3 +27,8 @@
   background-color: #ebebeb;
 }
 
+.item-main {
+  display: flex;
+  padding-top: 124px;
+  min-height: inherit;
+}

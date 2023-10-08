@@ -1,7 +1,6 @@
 import { getAllProducts } from "@/lib/api/products";
 import { ProductsType } from "@/types/products/products";
 import styles from "@/styles/pages/user/render/products.module.css";
-import ProductModal from "@/components/user/render/Item";
 import RenderProducts from "@/components/user/render/Products";
 
 type Props = {

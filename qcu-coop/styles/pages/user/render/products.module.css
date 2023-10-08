@@ -1,7 +1,7 @@
 .section {
-  height: calc(100vh - 120px);
-  @apply ml-[35%] p-[30px] grid grid-cols-3 gap-12;
+  @apply ml-[35%] p-[30px] grid grid-cols-3 gap-12 bg-green-400;
 }
+
 
 .card {
   @apply flex flex-col p-3 justify-center items-center gap-4 bg-white  rounded-lg h-fit w-[220px] shadow-md;

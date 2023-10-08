@@ -1,5 +1,5 @@
 .header {
-  @apply fixed left-0 top-0 h-[124px] bg-slate-600 w-[100vw] z-30;
+  @apply absolute w-screen h-[124px] bg-slate-600;
 }
 .top_header {
   @apply flex justify-between bg-white justify-between px-4 py-3 items-center;
