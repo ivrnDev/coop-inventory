@@ -163,6 +163,13 @@ module.exports = {
             isDeleted: product.isDeleted,
             date_created: product.date_created,
             display_image: product.display_image.toString('base64'),
+            variant_id: product.variant_id,
+            variant_name: product.variant_name,
+            variant_symbol: product.variant_symbol,
+            variant_price: product.variant_price,
+            variant_stocks: product.variant_stocks,
+            category_name: product.category_name,
+            category_image: product.category_image.toString('base64')
           }))
           return resolve(products)
         }
@@ -188,6 +195,13 @@ module.exports = {
           isDeleted: product.isDeleted,
           date_created: product.date_created,
           display_image: product.display_image.toString('base64'),
+          variant_id: product.variant_id,
+          variant_name: product.variant_name,
+          variant_symbol: product.variant_symbol,
+          variant_price: product.variant_price,
+          variant_stocks: product.variant_stocks,
+          category_name: product.category_name,
+          category_image: product.category_image.toString('base64')
         }))
         return resolve(products);
       })

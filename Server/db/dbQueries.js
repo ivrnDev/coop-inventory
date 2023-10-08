@@ -67,10 +67,15 @@ module.exports = {
           UPDATE category SET category_name = ?, category_image = ? WHERE category_id = ? 
         `,
         getAllProductsQuery: `
-            SELECT * FROM products
+            SELECT * FROM products as p
+            JOIN  variants as v ON v.product_id = p.product_id
+            JOIN category as ct ON p.category_id = ct.category_id
         `,
         getProductByIdQuery: `
-            SELECT * FROM products WHERE product_id = ?
+            SELECT * FROM products as p
+            JOIN  variants as v ON v.product_id = p.product_id
+            JOIN category as ct ON p.category_id = ct.category_id 
+            WHERE p.product_id = ?
         `,
         updateProductQuery: `
             UPDATE products SET display_name = ?, display_price = ?, product_stocks = ?, product_description = ?, display_image = ? WHERE product_id = ?
