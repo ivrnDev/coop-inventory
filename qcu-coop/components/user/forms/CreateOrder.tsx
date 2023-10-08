@@ -1,13 +1,18 @@
 "use client";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { CustomerType } from "@/types/customers/customers";
+import { Customer } from "@/types/orders/orders";
 import { createCustomer } from "@/lib/api/customers";
+type Props = {
+  searchParams: { [key: string]: string | string[] | undefined };
+};
 
-const CreateCustomerForm = () => {
-  const [formData, setFormData] = useState<CustomerType>({
+const CreateOrderForm = ({ searchParams }: Props) => {
+  const { product_id, variant_id, quantity } = searchParams;
+  const [formData, setFormData] = useState<Customer>({
     customer_name: "",
     customer_phone: "",
     customer_email: "",
+    payment_method: "",
   });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -18,6 +23,7 @@ const CreateCustomerForm = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     try {
       const response = await createCustomer(formData);
 
@@ -27,6 +33,7 @@ const CreateCustomerForm = () => {
           customer_name: "",
           customer_phone: "",
           customer_email: "",
+          payment_method: "",
         });
         console.log(response.data);
       } else {
@@ -82,4 +89,4 @@ const CreateCustomerForm = () => {
   );
 };
 
-export default CreateCustomerForm;
+export default CreateOrderForm;

@@ -6,10 +6,20 @@ import Link from "next/link";
 type Props = {
   id: string;
   productVariant: string;
+  qty: string;
+  children: React.ReactNode;
 };
 
-const Item = async ({ id, productVariant }: Props) => {
+const Item = async ({ id, productVariant, qty, children }: Props) => {
   const product: ItemType[] = await getProductById(id);
+
+  const order = {
+    product_id: id,
+    variant_id: productVariant,
+    quantity: qty,
+  };
+
+  console.log(order);
   return (
     <>
       {product && (
@@ -42,17 +52,18 @@ const Item = async ({ id, productVariant }: Props) => {
                     )
                 )}
               </div>
-
+              {children} {/*Quantity Button*/}
               <div className="flex gap-10">
                 {product.map((item, index) => (
                   <Link
                     href={`?${new URLSearchParams({
                       id,
+                      variantId: `${item.variant_id}`,
                       variant: `${item.variant_name}`,
-                    })}`}
+                    }).toString()}`}
                     key={index}
                     className={`p-1 capitalize w-8 flex justify-center items-center ${
-                      productVariant === item.variant_name
+                      productVariant === String(item.variant_id)
                         ? "bg-green-500"
                         : "bg-blue-500"
                     }`}
@@ -61,12 +72,34 @@ const Item = async ({ id, productVariant }: Props) => {
                   </Link>
                 ))}
               </div>
-
               <div>
                 <button className="bg-yellow-500 p-3 rounded-xl">
                   Add to Cart
                 </button>
-                <button className="bg-green-500 p-3 rounded-xl">Buy Now</button>
+                {order &&
+                order.product_id &&
+                order.variant_id &&
+                order.quantity ? (
+                  <Link
+                    href={{
+                      pathname: `./buy`,
+                      query: {
+                        qty: qty,
+                        products: JSON.stringify(order),
+                      },
+                    }}
+                    className="bg-green-500 p-3 rounded-xl"
+                  >
+                    Buy Now
+                  </Link>
+                ) : (
+                  <Link
+                    href=""
+                    className="bg-green-500 p-3 rounded-xl opacity-50 cursor-not-allowed"
+                  >
+                    Buy Now
+                  </Link>
+                )}
               </div>
             </div>
           </section>

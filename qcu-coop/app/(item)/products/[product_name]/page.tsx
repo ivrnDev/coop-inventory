@@ -1,3 +1,4 @@
+import QuantityInput from "@/components/user/forms/Quantity";
 import Item from "@/components/user/render/Item";
 
 type Params = {
@@ -6,11 +7,14 @@ type Params = {
 
 const ItemPage = ({ searchParams }: Params) => {
   const id = searchParams?.id as string;
-  const productVariant = searchParams?.variant as string;
+  const productVariant = searchParams?.variantId as string;
+  const quantity = searchParams?.qty as string;
   return (
     <>
       {id && id !== "undefined" && (
-        <Item id={id} productVariant={productVariant} />
+        <Item id={id} productVariant={productVariant} qty={quantity}>
+          <QuantityInput />
+        </Item>
       )}
     </>
   );
