@@ -66,7 +66,6 @@ const CreateOrderForm = ({ searchParams }: Props) => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
     try {
       const response = await createOrder(formData);
 

@@ -1,7 +1,9 @@
+import CartItem from "@/components/user/render/CartItem";
+
 const CartPage = () => {
   return (
-    <div>CartPage</div>
-  )
-}
+    <CartItem />
+    );
+};
 
-export default CartPage
+export default CartPage;

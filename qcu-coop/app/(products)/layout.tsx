@@ -1,5 +1,7 @@
 import CategoriesSidebar from "@/components/header/Categories";
 import HomeHeader from "@/components/header/Home";
+
+
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
