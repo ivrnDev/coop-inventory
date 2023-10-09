@@ -2,18 +2,23 @@
 import { ItemType } from "@/types/products/products";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const Cart = () => {
-  const cart: ItemType[] = JSON.parse(localStorage.getItem("cart") || "[]");
+  const [cart, setCart] = useState<ItemType[] | undefined>(undefined);
   // localStorage.clear();
-  console.log(cart);
+  useEffect(() => {
+    const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    if (storedCart) setCart(storedCart);
+  }, []);
+
   return (
     <>
       <Link
         href={{
           pathname: "/products/cart",
           query: {
-            cart: JSON.stringify(cart),
+            cart: JSON.stringify(cart || []),
           },
         }}
       >
