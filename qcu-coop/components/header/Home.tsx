@@ -1,6 +1,8 @@
 import styles from "@/styles/ui/header/home.module.css";
 import Image from "next/image";
 import Link from "next/link";
+import QuantityInput from "../user/forms/Quantity";
+import Cart from "../ui/CartData";
 
 const HomeHeader = () => {
   return (
@@ -41,6 +43,9 @@ const HomeHeader = () => {
           <Link href="/products" className={styles.link}>
             PRODUCTS
           </Link>
+        </div>
+        <div>
+          <Cart />
         </div>
       </nav>
     </header>

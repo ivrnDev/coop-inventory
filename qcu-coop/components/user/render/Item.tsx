@@ -2,17 +2,16 @@ import Image from "next/image";
 import { getProductById } from "@/lib/api/products";
 import { ItemType } from "@/types/products/products";
 import Link from "next/link";
+import QuantityInput from "../forms/Quantity";
 
 type Props = {
   id: string;
   productVariant: string;
   qty: string;
-  children: React.ReactNode;
 };
 
-const Item = async ({ id, productVariant, qty, children }: Props) => {
+const Item = async ({ id, productVariant, qty }: Props) => {
   const product: ItemType[] = await getProductById(id);
-
   const order = {
     product_id: id,
     variant_id: productVariant,
@@ -51,7 +50,7 @@ const Item = async ({ id, productVariant, qty, children }: Props) => {
                     )
                 )}
               </div>
-              {children} {/*Quantity Button*/}
+              <QuantityInput />
               <div className="flex gap-10">
                 {product.map((item, index) => (
                   <Link

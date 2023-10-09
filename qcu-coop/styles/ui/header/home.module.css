@@ -12,7 +12,7 @@
 }
 .navbar {
   @apply flex h-[40px] bg-[#3085c3] items-center
-  justify-between px-2;
+  justify-between px-5;
 }
 
 .navbar .link_container {
