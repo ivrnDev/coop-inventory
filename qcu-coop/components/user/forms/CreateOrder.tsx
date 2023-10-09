@@ -1,39 +1,85 @@
 "use client";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { Customer } from "@/types/orders/orders";
-import { createCustomer } from "@/lib/api/customers";
+import { Customer, Order } from "@/types/orders/orders";
+import { createOrder } from "@/lib/api/orders";
 type Props = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
 
+type Data = {
+  customer: Customer;
+  orders: Order[];
+};
+
 const CreateOrderForm = ({ searchParams }: Props) => {
-  const { product_id, variant_id, quantity } = searchParams;
-  const [formData, setFormData] = useState<Customer>({
-    customer_name: "",
-    customer_phone: "",
-    customer_email: "",
-    payment_method: "",
+  const { qty, products } = searchParams;
+  let order: Order | undefined;
+
+  if (typeof products === "string") {
+    try {
+      order = JSON.parse(products);
+      if (order && typeof order.product_id === "string") {
+        order.product_id = parseInt(order.product_id, 10);
+      }
+      if (order && typeof order.quantity === "string") {
+        order.quantity = parseInt(order.quantity, 10);
+      }
+      if (order && typeof order.variant_id === "string") {
+        order.variant_id = parseInt(order.variant_id, 10);
+      }
+    } catch (error) {
+      console.error("Error parsing products:", error);
+    }
+  }
+
+  const initialOrders: Order[] = order
+    ? [
+        {
+          product_id: (order.product_id as number) || 0,
+          variant_id: (order.variant_id as number) || 0,
+          quantity: (order.quantity as number) || 0,
+        },
+      ]
+    : [];
+
+  const [formData, setFormData] = useState<Data>({
+    customer: {
+      customer_name: "",
+      customer_phone: "",
+      customer_email: "",
+      payment_method: "",
+    },
+    orders: initialOrders,
   });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const fieldName = e.target.name;
     const fieldValue = e.target.value;
-    setFormData({ ...formData, [fieldName]: fieldValue });
+    setFormData({
+      ...formData,
+      customer: {
+        ...formData.customer,
+        [fieldName]: fieldValue,
+      },
+    });
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    console.log(formData);
     try {
-      const response = await createCustomer(formData);
+      const response = await createOrder(formData);
 
       if (response.status === 201) {
         console.log("Customer created successfully");
         setFormData({
-          customer_name: "",
-          customer_phone: "",
-          customer_email: "",
-          payment_method: "",
+          ...formData,
+          customer: {
+            customer_name: "",
+            customer_phone: "",
+            customer_email: "",
+            payment_method: "",
+          },
         });
         console.log(response.data);
       } else {
@@ -57,7 +103,7 @@ const CreateOrderForm = ({ searchParams }: Props) => {
             <input
               type="text"
               name="customer_name"
-              value={formData.customer_name}
+              value={formData.customer.customer_name}
               onChange={handleChange}
             />
           </div>
@@ -67,7 +113,7 @@ const CreateOrderForm = ({ searchParams }: Props) => {
             <input
               type="text"
               name="customer_phone"
-              value={formData.customer_phone}
+              value={formData.customer.customer_phone}
               onChange={handleChange}
             />
           </div>
@@ -77,7 +123,16 @@ const CreateOrderForm = ({ searchParams }: Props) => {
             <input
               type="text"
               name="customer_email"
-              value={formData.customer_email}
+              value={formData.customer.customer_email}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label>Payment Method</label>
+            <input
+              type="text"
+              name="payment_method"
+              value={formData.customer.payment_method}
               onChange={handleChange}
             />
           </div>

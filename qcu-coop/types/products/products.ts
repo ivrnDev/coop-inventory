@@ -40,6 +40,24 @@ export type ItemType = {
   category_image: any;
 };
 
+export type CreateProductType = {
+  category_id: number;
+  product_name: string;
+  display_name: string;
+  display_price: string;
+  product_stocks: number;
+  product_description: string;
+  product_sold: number;
+  status: string;
+  isFeatured: number;
+  isDeleted: number;
+  variant_name: string;
+  variant_symbol: string;
+  variant_price: number;
+  variant_stocks: number;
+  display_image?: any;
+};
+
 export type CategoriesType = {
   category_id?: number;
   category_name: string;

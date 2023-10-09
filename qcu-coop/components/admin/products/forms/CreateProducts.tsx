@@ -1,10 +1,10 @@
 "use client";
 import { createProduct } from "@/lib/api/products";
-import { ProductsType } from "@/types/products/products";
+import { CreateProductType } from "@/types/products/products";
 import { useState } from "react";
 
 const CreateProductForm = () => {
-  const [formData, setFormData] = useState<ProductsType>({
+  const [formData, setFormData] = useState<CreateProductType>({
     category_id: 0,
     product_name: "",
     display_name: "",
@@ -52,6 +52,7 @@ const CreateProductForm = () => {
           display_price: "",
           product_stocks: 0,
           product_description: "",
+          product_sold: 0,
           status: "",
           isFeatured: 0,
           isDeleted: 0,

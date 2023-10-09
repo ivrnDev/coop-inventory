@@ -19,7 +19,6 @@ const Item = async ({ id, productVariant, qty, children }: Props) => {
     quantity: qty,
   };
 
-  console.log(order);
   return (
     <>
       {product && (
@@ -84,7 +83,6 @@ const Item = async ({ id, productVariant, qty, children }: Props) => {
                     href={{
                       pathname: `./buy`,
                       query: {
-                        qty: qty,
                         products: JSON.stringify(order),
                       },
                     }}
