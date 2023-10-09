@@ -1,6 +1,8 @@
 import styles from "@/styles/ui/header/home.module.css";
 import Image from "next/image";
 import Link from "next/link";
+import QuantityInput from "../user/forms/Quantity";
+import Cart from "../ui/Cart";
 
 const HomeHeader = () => {
   return (
@@ -40,6 +42,13 @@ const HomeHeader = () => {
           </Link>
           <Link href="/products" className={styles.link}>
             PRODUCTS
+          </Link>
+        </div>
+        <div>
+          <Link href={"/products/cart"}>
+            <div className="relative w-10 h-10 object-contain">
+              <Image src="/icons/cart.svg" alt="cart" fill />
+            </div>
           </Link>
         </div>
       </nav>

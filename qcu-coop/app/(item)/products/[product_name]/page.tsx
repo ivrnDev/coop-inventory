@@ -12,9 +12,7 @@ const ItemPage = ({ searchParams }: Params) => {
   return (
     <>
       {id && id !== "undefined" && (
-        <Item id={id} productVariant={productVariant} qty={quantity}>
-          <QuantityInput />
-        </Item>
+        <Item id={id} productVariant={productVariant} qty={quantity} />
       )}
     </>
   );

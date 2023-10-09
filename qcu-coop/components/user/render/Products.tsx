@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "@/styles/pages/user/render/products.module.css";
 import { ProductsType } from "@/types/products/products";
+import AddtoCartButton from "@/components/ui/AddtoCartButton";
 
 interface Props {
   product: ProductsType;
@@ -29,8 +30,9 @@ const RenderProducts: React.FC<Props> = ({ product }) => {
             </div>
           </div>
           <div className={styles.buttons}>
-            <button>ADD TO CART</button>
+            <AddtoCartButton />
             <Link
+              className="bg-green-900 font-semibold text-[0.9rem] text-white mx-1 rounded-md p-1 shadow-sm;"
               scroll={false}
               href={`/products/${product.product_name.toLowerCase()}?id=${
                 product.product_id
