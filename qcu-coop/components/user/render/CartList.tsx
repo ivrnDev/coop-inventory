@@ -12,23 +12,23 @@ const CartItem = async ({ productId }: Props) => {
 
     try {
       const products: ProductsType[][] = await Promise.all(productPromises);
-      const items: ProductsType[] = products.flat();
+      const items: ProductsType[] = products.flat(1);
       return (
         <section className="flex flex-col gap-5">
-          {items.map((product, index) => (
+          {products.map((product, index) => (
             <div
               key={index}
               className="flex bg-white shadow-lg rounded-md h-fit "
             >
               <div className="relative w-20 h-20 object-contain">
                 <Image
-                  src={`data:image/png;base64,${product.display_image}`}
-                  alt={product.product_name}
+                  src={`data:image/png;base64,${product[0].display_image}`}
+                  alt={product[0].product_name}
                   fill
                 />
               </div>
-              <h2>{product.product_name}</h2>
-              <p>{product.display_price}</p>
+              <h2>{product[0].product_name}</h2>
+              <p>{product[0].display_price}</p>
               {/* Add more product details as needed */}
             </div>
           ))}
