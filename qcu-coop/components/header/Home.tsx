@@ -1,8 +1,7 @@
 import styles from "@/styles/ui/header/home.module.css";
 import Image from "next/image";
 import Link from "next/link";
-import QuantityInput from "../user/forms/Quantity";
-import Cart from "../ui/CartData";
+import Cart from "../ui/Cart";
 
 const HomeHeader = () => {
   return (
@@ -44,7 +43,7 @@ const HomeHeader = () => {
             PRODUCTS
           </Link>
         </div>
-        <div>
+        <div className="relative">
           <Cart />
         </div>
       </nav>
