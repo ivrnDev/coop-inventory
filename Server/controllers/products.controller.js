@@ -4,6 +4,7 @@ const {
   createVariantsDB,
   getAllVariantsDB,
   getVariantByIdDB,
+  getVariantByProductIdDB,
   updateProductsDB,
   updateVariantsDB,
   getAllProductsDB,
@@ -161,7 +162,7 @@ module.exports = {
       const result = await getAllVariantsDB();
       if (!result) return res.status(400).json({ error: "Failed to get all variants" });
       if (result === null) res.status(200).json({ error: `There is no existing variants` });
-      return res.status(201).json({ message: `Successfully get all variants`, result: result })
+      return res.status(200).json({ message: `Successfully get all variants`, result: result })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }
@@ -174,6 +175,17 @@ module.exports = {
       if (result === null) return res.status(404).json({ error: `There is no existing variant with an ID of ${id}` })
       if (!result) return res.status(400).json({ error: `Failed to get variant with an ID of ${id}` });
       return res.status(201).json({ message: `Successfully get variant with an ID of ${id}`, result: result })
+    } catch (error) {
+      return res.status(500).json({ message: "Internal Server Error", error: error })
+    }
+  },
+  getVariantByProductId: async (req, res) => {
+    try {
+      const { product_id } = req.query
+      const result = await getVariantByProductIdDB(product_id);
+      if (result === null) return res.status(404).json({ error: `There is no existing variant with an product ID of ${product_id}` })
+      if (!result) return res.status(400).json({ error: `Failed to get variant with a product ID of ${product_id}` });
+      return res.status(201).json({ message: `Successfully get variant with a product ID of ${product_id}`, result: result })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }

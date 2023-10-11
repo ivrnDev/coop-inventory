@@ -1,18 +1,13 @@
 import CartItem from "@/components/user/render/CartList";
+import Link from "next/link";
 
-type Props = {
-  searchParams: { [key: string]: string | string[] | undefined };
-};
+const CartPage = () => {
 
-const CartPage = ({ searchParams }: Props) => {
-  const { cart } = searchParams;
-  let itemId: number[] | undefined;
-  if (typeof cart === "string") {
-    itemId = JSON.parse(cart);
-  }
   return (
-   <CartItem productId={itemId}/>
-  
+    <>
+      <CartItem />
+
+    </>
   );
 };
 
