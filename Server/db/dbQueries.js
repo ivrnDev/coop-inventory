@@ -54,6 +54,9 @@ module.exports = {
         getVariantByIdQuery: `
             SELECT * FROM variants WHERE id = ?
         `,
+        getVariantByProductIdQuery: `
+            SELECT * FROM variants WHERE product_id = ?
+        `,
         getAllCategoryQuery: `
             SELECT * FROM category
         `,

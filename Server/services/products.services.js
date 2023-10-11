@@ -6,6 +6,7 @@ const {
   getAllVariantsQuery,
   updateVariantQuery,
   getVariantByIdQuery,
+  getVariantByProductIdQuery,
   updateProductQuery,
   getAllProductsQuery,
   getProductByIdQuery,
@@ -95,8 +96,15 @@ module.exports = {
       pool.execute(getVariantByIdQuery, [id], (error, result) => {
         if (error) return reject(error)
         if (result.length === 0) return resolve(null)
-
-
+        return resolve(result)
+      })
+    })
+  },
+  getVariantByProductIdDB: (product_id) => {
+    return new Promise((resolve, reject) => {
+      pool.execute(getVariantByProductIdQuery, [product_id], (error, result) => {
+        if (error) return reject(error)
+        if (result.length === 0) return resolve(null)
         return resolve(result)
       })
     })
