@@ -11,6 +11,8 @@ const CartItem = () => {
     (state: RootState) => state.cart.item
   );
   const [variants, setVariants] = useState<VariantTypes[][]>([]);
+  const [selectedVariants, setSelectedVariants] = useState<VariantTypes[]>([]);
+
   useEffect(() => {
     const fetchVariants = async () => {
       const variantArray = [];
@@ -29,6 +31,24 @@ const CartItem = () => {
 
     fetchVariants();
   }, [cart]);
+
+  const handleVariantClick = (variant: VariantTypes) => {
+    const hasVariant = selectedVariants.some((v) => v.id === variant.id);
+    const hasProduct = selectedVariants.some(
+      (v) => v.product_id === variant.product_id
+    );
+
+    if (!hasVariant) {
+      setSelectedVariants([...selectedVariants, variant]);
+    }
+    if (hasProduct && !hasVariant) {
+      const updatedVariants = selectedVariants.filter(
+        (v) => v.product_id !== variant.product_id
+      );
+      setSelectedVariants([...updatedVariants, variant]);
+    }
+  };
+
   return (
     <section className="flex flex-col gap-5">
       {cart && cart.length > 0 ? (
@@ -49,8 +69,16 @@ const CartItem = () => {
               <p>{product.display_price}</p>
               <div className="flex gap-4">
                 {variants[index] &&
-                  variants[index].map((variant) => (
-                    <button className="bg-yellow-500 p-2 ">
+                  variants[index].map((variant, index) => (
+                    <button
+                      key={index}
+                      className={`p-2 ${
+                        selectedVariants.some((v) => v.id === variant.id)
+                          ? "bg-yellow-300"
+                          : "bg-blue-300"
+                      }`}
+                      onClick={() => handleVariantClick(variant)}
+                    >
                       {variant.variant_symbol}
                     </button>
                   ))}
