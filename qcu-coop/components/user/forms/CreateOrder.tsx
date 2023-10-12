@@ -1,7 +1,9 @@
 "use client";
-import { ChangeEvent, FormEvent, useState } from "react";
+
+import React, { ChangeEvent, FormEvent, useState } from "react";
 import { Customer, Order } from "@/types/orders/orders";
 import { createOrder } from "@/lib/api/orders";
+
 type Props = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
@@ -12,35 +14,45 @@ type Data = {
 };
 
 const CreateOrderForm = ({ searchParams }: Props) => {
-  const { qty, products } = searchParams;
-  let order: Order | undefined;
+  const { products } = searchParams;
 
-  if (typeof products === "string") {
+  let initialOrders: Order[] = [];
+  if (products && typeof products === "string") {
     try {
-      order = JSON.parse(products);
-      if (order && typeof order.product_id === "string") {
-        order.product_id = parseInt(order.product_id, 10);
+      const parsedProducts = JSON.parse(products);
+
+      if (Array.isArray(parsedProducts)) {
+        initialOrders = parsedProducts
+          .map((product) => {
+            if (product.product_id && product.variant_id && product.quantity) {
+              return {
+                product_id: parseInt(product.product_id, 10),
+                variant_id: parseInt(product.variant_id, 10),
+                quantity: parseInt(product.quantity, 10),
+              };
+            }
+            return null;
+          })
+          .filter((order): order is Order => order !== null);
       }
-      if (order && typeof order.quantity === "string") {
-        order.quantity = parseInt(order.quantity, 10);
-      }
-      if (order && typeof order.variant_id === "string") {
-        order.variant_id = parseInt(order.variant_id, 10);
+      // If parsedProducts is a single object, process it accordingly
+      else if (
+        parsedProducts.product_id &&
+        parsedProducts.variant_id &&
+        parsedProducts.quantity
+      ) {
+        initialOrders = [
+          {
+            product_id: parseInt(parsedProducts.product_id, 10),
+            variant_id: parseInt(parsedProducts.variant_id, 10),
+            quantity: parseInt(parsedProducts.quantity, 10),
+          },
+        ];
       }
     } catch (error) {
       console.error("Error parsing products:", error);
     }
   }
-
-  const initialOrders: Order[] = order
-    ? [
-        {
-          product_id: (order.product_id as number) || 0,
-          variant_id: (order.variant_id as number) || 0,
-          quantity: (order.quantity as number) || 0,
-        },
-      ]
-    : [];
 
   const [formData, setFormData] = useState<Data>({
     customer: {
@@ -66,6 +78,17 @@ const CreateOrderForm = ({ searchParams }: Props) => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log(formData)
+
+    if (
+      !formData ||
+      formData.customer.customer_name === "" ||
+      formData.orders.length === 0
+    ) {
+      console.error("Invalid customer or orders data");
+      return;
+    }
+
     try {
       const response = await createOrder(formData);
 
@@ -80,7 +103,6 @@ const CreateOrderForm = ({ searchParams }: Props) => {
             payment_method: "",
           },
         });
-        console.log(response.data);
       } else {
         console.error("Failed to create customer");
       }

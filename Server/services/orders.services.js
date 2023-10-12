@@ -35,7 +35,7 @@ module.exports = {
           resolve(result); 
         });
       }
-    })
+    })  
   },
   getAllOrdersDB: () => {
     return new Promise((resolve, reject) => {
