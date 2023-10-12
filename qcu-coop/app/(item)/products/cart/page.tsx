@@ -1,12 +1,14 @@
-import CartItem from "@/components/user/render/CartList";
-import Link from "next/link";
+import CartItem from "@/components/cart/CartList";
+import { Order } from "@/types/orders/orders";
 
-const CartPage = () => {
+type Props = {
+  searchParams: { [key: string]: string[] | undefined };
+};
 
+const CartPage = ({ searchParams }: Props) => {
   return (
     <>
       <CartItem />
-
     </>
   );
 };

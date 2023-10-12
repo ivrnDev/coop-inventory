@@ -1,7 +1,7 @@
 import styles from "@/styles/ui/header/home.module.css";
 import Image from "next/image";
 import Link from "next/link";
-import Cart from "../ui/Cart";
+import Cart from "../cart/Cart";
 
 const HomeHeader = () => {
   return (

@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "@/styles/pages/user/render/products.module.css";
 import { ProductsType } from "@/types/products/products";
-import AddtoCartButton from "@/components/ui/AddtoCartButton";
+import AddtoCartButton from "@/components/cart/AddtoCartBtn";
 
 type Props = {
   products: ProductsType[];
