@@ -2,7 +2,8 @@
 import { ProductsType } from "@/types/products/products";
 import Image from "next/image";
 import { RootState } from "@/components/redux/store";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { removeItem } from "@/components/redux/features/cartSlice";
 import { useEffect, useState } from "react";
 import { VariantTypes } from "@/variants";
 import { getVariantByProductId } from "@/lib/api/variants";
@@ -10,6 +11,7 @@ const CartItem = () => {
   const cart: ProductsType[] = useSelector(
     (state: RootState) => state.cart.item
   );
+  const dispatch = useDispatch();
   const [variants, setVariants] = useState<VariantTypes[][]>([]);
   const [selectedVariants, setSelectedVariants] = useState<VariantTypes[]>([]);
   const [quantities, setQuantities] = useState<number[]>([]);
@@ -21,7 +23,7 @@ const CartItem = () => {
         try {
           const result = await getVariantByProductId(String(item.product_id));
           variantArray.push(result);
-            setQuantities((quantities) => [...quantities, 1]);
+          setQuantities((quantities) => [...quantities, 1]);
         } catch (e) {
           console.error(e);
         }
@@ -50,19 +52,19 @@ const CartItem = () => {
     }
   };
 
-   const increaseQuantity = (index: number) => {
-     const newQuantities = [...quantities];
-     newQuantities[index] += 1;
-     setQuantities(newQuantities);
-   };
+  const increaseQuantity = (index: number) => {
+    const newQuantities = [...quantities];
+    newQuantities[index] += 1;
+    setQuantities(newQuantities);
+  };
 
-   const decreaseQuantity = (index: number) => {
-     if (quantities[index] > 1) {
-       const newQuantities = [...quantities];
-       newQuantities[index] -= 1;
-       setQuantities(newQuantities);
-     }
-   };
+  const decreaseQuantity = (index: number) => {
+    if (quantities[index] > 1) {
+      const newQuantities = [...quantities];
+      newQuantities[index] -= 1;
+      setQuantities(newQuantities);
+    }
+  };
 
   return (
     <section className="flex flex-col gap-5">
@@ -95,10 +97,24 @@ const CartItem = () => {
                     </button>
                   ))}
               </div>
-              <div>
-                <button onClick={() => increaseQuantity(index)}>+</button>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => increaseQuantity(index)}
+                  className="bg-green-500 p-2 font-medium text-[0.9rem]"
+                >
+                  +
+                </button>
                 <p>{quantities[index]}</p>
-                <button onClick={() => decreaseQuantity(index)}>-</button>
+                <button
+                  onClick={() => decreaseQuantity(index)}
+                  className="bg-green-500 p-2 font-medium text-[0.9rem]"
+                >
+                  -
+                </button>
+              </div>
+
+              <div>
+                <button onClick={()=> dispatch(removeItem(product.product_id))}>REMOVE</button>
               </div>
             </div>
           </div>
