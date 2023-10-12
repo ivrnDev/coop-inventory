@@ -12,7 +12,7 @@ const CartItem = () => {
   );
   const [variants, setVariants] = useState<VariantTypes[][]>([]);
   const [selectedVariants, setSelectedVariants] = useState<VariantTypes[]>([]);
-
+  const [quantities, setQuantities] = useState<number[]>([]);
   useEffect(() => {
     const fetchVariants = async () => {
       const variantArray = [];
@@ -21,6 +21,7 @@ const CartItem = () => {
         try {
           const result = await getVariantByProductId(String(item.product_id));
           variantArray.push(result);
+            setQuantities((quantities) => [...quantities, 1]);
         } catch (e) {
           console.error(e);
         }
@@ -49,14 +50,25 @@ const CartItem = () => {
     }
   };
 
+   const increaseQuantity = (index: number) => {
+     const newQuantities = [...quantities];
+     newQuantities[index] += 1;
+     setQuantities(newQuantities);
+   };
+
+   const decreaseQuantity = (index: number) => {
+     if (quantities[index] > 1) {
+       const newQuantities = [...quantities];
+       newQuantities[index] -= 1;
+       setQuantities(newQuantities);
+     }
+   };
+
   return (
     <section className="flex flex-col gap-5">
       {cart && cart.length > 0 ? (
         cart.map((product, index) => (
-          <div
-            key={index}
-            className="flex bg-white shadow-lg rounded-md h-fit "
-          >
+          <div key={index} className="flex bg-white shadow-lg rounded-md h-fit">
             <div className="relative w-20 h-20 object-contain">
               <Image
                 src={`data:image/png;base64,${product.display_image}`}
@@ -82,6 +94,11 @@ const CartItem = () => {
                       {variant.variant_symbol}
                     </button>
                   ))}
+              </div>
+              <div>
+                <button onClick={() => increaseQuantity(index)}>+</button>
+                <p>{quantities[index]}</p>
+                <button onClick={() => decreaseQuantity(index)}>-</button>
               </div>
             </div>
           </div>
