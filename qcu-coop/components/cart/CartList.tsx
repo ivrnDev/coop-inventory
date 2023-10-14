@@ -19,36 +19,37 @@ const CartItem = () => {
   const [selectedVariants, setSelectedVariants] = useState<VariantTypes[]>([]);
   const [quantities, setQuantities] = useState<number[]>([]);
   const [total, setTotal] = useState<number>(0);
-  const [orderData, setOrderData] = useState<Order[]>([]);
 
   useEffect(() => {
     const fetchVariants = async () => {
       const variantArray = [];
 
-      for (const item of cart) {
-        try {
-          const result = await getVariantByProductId(String(item.product_id));
-          variantArray.push(result);
-          setQuantities((quantities) => [...quantities, 1]);
-        } catch (e) {
-          console.error(e);
-        }
-      }
+     const newQuantities = [];
+     for (const item of cart) {
+       try {
+         const result = await getVariantByProductId(String(item.product_id));
+         variantArray.push(result);
+         newQuantities.push(1);
+       } catch (e) {
+         console.error(e);
+       }
+     }
 
+     setQuantities(newQuantities);
       setVariants(variantArray);
     };
 
     fetchVariants();
   }, [cart]);
 
-  const handleVariantClick = (variant: VariantTypes) => {
+  const handleVariantClick = (variant: VariantTypes, index: number) => {
     const hasVariant = selectedVariants.some((v) => v.id === variant.id);
     const hasProduct = selectedVariants.some(
       (v) => v.product_id === variant.product_id
     );
-
     if (!hasVariant) {
       setSelectedVariants([...selectedVariants, variant]);
+      // setTotal(total + (Number(variant.variant_price) * quantities[index]));
     }
     if (hasProduct && !hasVariant) {
       const updatedVariants = selectedVariants.filter(
@@ -97,15 +98,15 @@ const CartItem = () => {
                 <p>{product.display_price}</p>
                 <div className="flex gap-4">
                   {variants[index] &&
-                    variants[index].map((variant, index) => (
+                    variants[index].map((variant, vIndex) => (
                       <button
-                        key={index}
+                        key={vIndex}
                         className={`p-2 ${
                           selectedVariants.some((v) => v.id === variant.id)
                             ? "bg-yellow-300"
                             : "bg-blue-300"
                         }`}
-                        onClick={() => handleVariantClick(variant)}
+                        onClick={() => handleVariantClick(variant, vIndex)}
                       >
                         {variant.variant_symbol}
                       </button>
@@ -143,7 +144,7 @@ const CartItem = () => {
         )}
       </section>
       <section className="bg-red-400 flex flex-col h-[80%] w-60 absolute top-0 right-0 mt-[124px] p-7">
-        <p className="font-bold text-white text-[1.8rem]">TOTAL: {}</p>
+        <p className="font-bold text-white text-[1.8rem]">TOTAL: {total}</p>
 
         <Link
           href={{
