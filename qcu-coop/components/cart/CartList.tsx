@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 import { VariantTypes } from "@/variants";
 import { getVariantByProductId } from "@/lib/api/variants";
 import Link from "next/link";
-import { Order } from "@/types/orders/orders";
 
 const CartItem = () => {
   const cart: ProductsType[] = useSelector(
@@ -18,7 +17,7 @@ const CartItem = () => {
   const [variants, setVariants] = useState<VariantTypes[][]>([]);
   const [selectedVariants, setSelectedVariants] = useState<VariantTypes[]>([]);
   const [quantities, setQuantities] = useState<number[]>([]);
-  const [variantTotal, setVariantTotal] = useState<number[]>([]);
+  const [previousPrice, setPreviousPrice] = useState<number[]>([]);
   const [total, setTotal] = useState<number>(0);
 
   useEffect(() => {
@@ -30,13 +29,17 @@ const CartItem = () => {
         try {
           const result = await getVariantByProductId(String(item.product_id));
           variantArray.push(result);
-          newQuantities.push(1);
+          if (quantities.length > 0) {
+            setQuantities([...quantities]);
+          } else {
+            newQuantities.push(1);
+            setQuantities(newQuantities);
+          }
         } catch (e) {
           console.error(e);
         }
       }
 
-      setQuantities(newQuantities);
       setVariants(variantArray);
     };
 
@@ -48,44 +51,78 @@ const CartItem = () => {
     const hasProduct = selectedVariants.some(
       (v) => v.product_id === variant.product_id
     );
-
     if (!hasVariant && !hasProduct) {
       setSelectedVariants([...selectedVariants, variant]);
-      setTotal(total + Number(variant.variant_price));
+      const currentPrice =
+        Number(variant.variant_price) * quantities[productIndex];
+      setTotal(total + currentPrice);
+      previousPrice[productIndex] = currentPrice;
     }
     if (hasProduct && !hasVariant) {
-      const updatedVariants = selectedVariants.filter(
-        (v) => v.product_id !== variant.product_id
-      );
-      setSelectedVariants([...updatedVariants, variant]);
-      // setTotal(total + (Number(variant.variant_price) * quantities[productIndex])); improve
+      // const updatedVariants = selectedVariants.filter(
+      //   (v) => v.product_id !== variant.product_id
+      // );
+      // setSelectedVariants([...updatedVariants, variant]);
+      const newSelectedVariants = [...selectedVariants];
+      newSelectedVariants[productIndex] = variant;
+      setSelectedVariants(newSelectedVariants);
+
+      const currentPrice =
+        Number(variant.variant_price) * quantities[productIndex];
+      const subtractPrevPrice = total - previousPrice[productIndex];
+
+      if (previousPrice[productIndex] > 0) {
+        setTotal(subtractPrevPrice + currentPrice);
+        previousPrice[productIndex] = currentPrice;
+      }
     }
   };
   const increaseQuantity = (productIndex: number) => {
     const newQuantities = [...quantities];
     newQuantities[productIndex] += 1;
     setQuantities(newQuantities);
-    if (selectedVariants[productIndex])
-      setTotal(total + Number(selectedVariants[productIndex].variant_price));
+    if (selectedVariants[productIndex]) {
+      const currentPrice = Number(selectedVariants[productIndex].variant_price);
+      setTotal(total + currentPrice);
+      previousPrice[productIndex] = currentPrice * newQuantities[productIndex];
+      console.log(selectedVariants);
+      console.log(quantities);
+    }
   };
   const decreaseQuantity = (productIndex: number) => {
     if (quantities[productIndex] > 1) {
       const newQuantities = [...quantities];
       newQuantities[productIndex] -= 1;
       setQuantities(newQuantities);
-      if (total > 0 && selectedVariants) {
-        setTotal(total - Number(selectedVariants[productIndex].variant_price));
+      const currentPrice = Number(selectedVariants[productIndex].variant_price);
+      if (total > 0 && selectedVariants[productIndex]) {
+        setTotal(total - currentPrice);
+        previousPrice[productIndex] =
+          currentPrice * newQuantities[productIndex];
+        console.log(selectedVariants);
+        console.log(quantities);
       }
     }
   };
 
   const handleRemoveItem = (product: ProductsType, productIndex: number) => {
     dispatch(removeItem(product.product_id));
-    setTotal(
-      total -
-        quantities[productIndex] *
-          Number(selectedVariants[productIndex].variant_price)
-    );
+    if (selectedVariants[productIndex]) {
+      setTotal(
+        total -
+          Number(selectedVariants[productIndex].variant_price) *
+            quantities[productIndex]
+      );
+      setSelectedVariants((prevVariants) => {
+        return prevVariants.filter((v) => v.product_id !== product.product_id);
+      });
+      setQuantities((prevVariants) => {
+        return prevVariants.filter((v, index) => index !== productIndex);
+      });
+      setPreviousPrice((prevVariants) => {
+        return prevVariants.filter((v, index) => index !== productIndex);
+      });
+    }
   };
   const orderArray = selectedVariants.map((variant, orderIndex) => ({
     product_id: variant.product_id,
