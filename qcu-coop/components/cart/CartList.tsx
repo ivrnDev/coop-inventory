@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 import { VariantTypes } from "@/variants";
 import { getVariantByProductId } from "@/lib/api/variants";
 import Link from "next/link";
-import { Order } from "@/types/orders/orders";
 
 const CartItem = () => {
   const cart: ProductsType[] = useSelector(
@@ -18,18 +17,24 @@ const CartItem = () => {
   const [variants, setVariants] = useState<VariantTypes[][]>([]);
   const [selectedVariants, setSelectedVariants] = useState<VariantTypes[]>([]);
   const [quantities, setQuantities] = useState<number[]>([]);
+  const [previousPrice, setPreviousPrice] = useState<number[]>([]);
   const [total, setTotal] = useState<number>(0);
-  const [orderData, setOrderData] = useState<Order[]>([]);
 
   useEffect(() => {
     const fetchVariants = async () => {
       const variantArray = [];
 
+      const newQuantities = [];
       for (const item of cart) {
         try {
           const result = await getVariantByProductId(String(item.product_id));
           variantArray.push(result);
-          setQuantities((quantities) => [...quantities, 1]);
+          if (quantities.length > 0) {
+            setQuantities([...quantities]);
+          } else {
+            newQuantities.push(1);
+            setQuantities(newQuantities);
+          }
         } catch (e) {
           console.error(e);
         }
@@ -41,48 +46,97 @@ const CartItem = () => {
     fetchVariants();
   }, [cart]);
 
-  const handleVariantClick = (variant: VariantTypes) => {
+  const handleVariantClick = (variant: VariantTypes, productIndex: number) => {
     const hasVariant = selectedVariants.some((v) => v.id === variant.id);
     const hasProduct = selectedVariants.some(
       (v) => v.product_id === variant.product_id
     );
-
-    if (!hasVariant) {
+    if (!hasVariant && !hasProduct) {
       setSelectedVariants([...selectedVariants, variant]);
+      const currentPrice =
+        Number(variant.variant_price) * quantities[productIndex];
+      setTotal(total + currentPrice);
+      previousPrice[productIndex] = currentPrice;
     }
     if (hasProduct && !hasVariant) {
-      const updatedVariants = selectedVariants.filter(
-        (v) => v.product_id !== variant.product_id
-      );
-      setSelectedVariants([...updatedVariants, variant]);
+      // const updatedVariants = selectedVariants.filter(
+      //   (v) => v.product_id !== variant.product_id
+      // );
+      // setSelectedVariants([...updatedVariants, variant]);
+      const newSelectedVariants = [...selectedVariants];
+      newSelectedVariants[productIndex] = variant;
+      setSelectedVariants(newSelectedVariants);
+
+      const currentPrice =
+        Number(variant.variant_price) * quantities[productIndex];
+      const subtractPrevPrice = total - previousPrice[productIndex];
+
+      if (previousPrice[productIndex] > 0) {
+        setTotal(subtractPrevPrice + currentPrice);
+        previousPrice[productIndex] = currentPrice;
+      }
     }
   };
-  const increaseQuantity = (index: number) => {
+  const increaseQuantity = (productIndex: number) => {
     const newQuantities = [...quantities];
-    newQuantities[index] += 1;
+    newQuantities[productIndex] += 1;
     setQuantities(newQuantities);
+    if (selectedVariants[productIndex]) {
+      const currentPrice = Number(selectedVariants[productIndex].variant_price);
+      setTotal(total + currentPrice);
+      previousPrice[productIndex] = currentPrice * newQuantities[productIndex];
+      console.log(selectedVariants);
+      console.log(quantities);
+    }
   };
-  const decreaseQuantity = (index: number) => {
-    if (quantities[index] > 1) {
+  const decreaseQuantity = (productIndex: number) => {
+    if (quantities[productIndex] > 1) {
       const newQuantities = [...quantities];
-      newQuantities[index] -= 1;
+      newQuantities[productIndex] -= 1;
       setQuantities(newQuantities);
+      const currentPrice = Number(selectedVariants[productIndex].variant_price);
+      if (total > 0 && selectedVariants[productIndex]) {
+        setTotal(total - currentPrice);
+        previousPrice[productIndex] =
+          currentPrice * newQuantities[productIndex];
+        console.log(selectedVariants);
+        console.log(quantities);
+      }
     }
   };
 
-  const orderArray = selectedVariants.map((variant, index) => ({
+  const handleRemoveItem = (product: ProductsType, productIndex: number) => {
+    dispatch(removeItem(product.product_id));
+    if (selectedVariants[productIndex]) {
+      setTotal(
+        total -
+          Number(selectedVariants[productIndex].variant_price) *
+            quantities[productIndex]
+      );
+      setSelectedVariants((prevVariants) => {
+        return prevVariants.filter((v) => v.product_id !== product.product_id);
+      });
+      setQuantities((prevVariants) => {
+        return prevVariants.filter((v, index) => index !== productIndex);
+      });
+      setPreviousPrice((prevVariants) => {
+        return prevVariants.filter((v, index) => index !== productIndex);
+      });
+    }
+  };
+  const orderArray = selectedVariants.map((variant, orderIndex) => ({
     product_id: variant.product_id,
     variant_id: variant.variant_id,
-    quantity: quantities[index],
+    quantity: quantities[orderIndex],
   }));
 
   return (
     <>
       <section className="flex flex-col gap-5">
         {cart && cart.length > 0 ? (
-          cart.map((product, index) => (
+          cart.map((product, productIndex) => (
             <div
-              key={index}
+              key={productIndex}
               className="flex bg-white shadow-lg rounded-md h-fit"
             >
               <div className="relative w-20 h-20 object-contain">
@@ -96,16 +150,18 @@ const CartItem = () => {
                 <h2>{product.display_name}</h2>
                 <p>{product.display_price}</p>
                 <div className="flex gap-4">
-                  {variants[index] &&
-                    variants[index].map((variant, index) => (
+                  {variants[productIndex] &&
+                    variants[productIndex].map((variant, variantIndex) => (
                       <button
-                        key={index}
+                        key={variantIndex}
                         className={`p-2 ${
                           selectedVariants.some((v) => v.id === variant.id)
                             ? "bg-yellow-300"
                             : "bg-blue-300"
                         }`}
-                        onClick={() => handleVariantClick(variant)}
+                        onClick={() =>
+                          handleVariantClick(variant, productIndex)
+                        }
                       >
                         {variant.variant_symbol}
                       </button>
@@ -113,14 +169,14 @@ const CartItem = () => {
                 </div>
                 <div className="flex gap-3">
                   <button
-                    onClick={() => increaseQuantity(index)}
+                    onClick={() => increaseQuantity(productIndex)}
                     className="bg-green-500 p-2 font-medium text-[0.9rem]"
                   >
                     +
                   </button>
-                  <p>{quantities[index]}</p>
+                  <p>{quantities[productIndex]}</p>
                   <button
-                    onClick={() => decreaseQuantity(index)}
+                    onClick={() => decreaseQuantity(productIndex)}
                     className="bg-green-500 p-2 font-medium text-[0.9rem]"
                   >
                     -
@@ -129,7 +185,7 @@ const CartItem = () => {
 
                 <div>
                   <button
-                    onClick={() => dispatch(removeItem(product.product_id))}
+                    onClick={() => handleRemoveItem(product, productIndex)}
                     className="bg-red-400 p-2"
                   >
                     REMOVE
@@ -143,7 +199,7 @@ const CartItem = () => {
         )}
       </section>
       <section className="bg-red-400 flex flex-col h-[80%] w-60 absolute top-0 right-0 mt-[124px] p-7">
-        <p className="font-bold text-white text-[1.8rem]">TOTAL: {}</p>
+        <p className="font-bold text-white text-[1.8rem]">TOTAL: {total}</p>
 
         <Link
           href={{

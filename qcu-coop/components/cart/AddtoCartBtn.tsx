@@ -4,6 +4,7 @@ import { ProductsType } from "@/types/products/products";
 import { setItem } from "../redux/features/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
+import { Button } from "../ui/button";
 type Props = {
   product: ProductsType;
 };
@@ -22,12 +23,9 @@ const AddtoCartButton = ({ product }: Props) => {
   };
   return (
     <>
-      <button
-        className="bg-blue-700 font-semibold text-[0.9rem] text-white mx-1 rounded-md p-1 shadow-sm;"
-        onClick={handleAddToCart}
-      >
+      <Button variant="default" size="sm" onClick={handleAddToCart}>
         ADD TO CART
-      </button>
+      </Button>
 
       {itemAdded === 1 && (
         <div className="bg-gray-100 shadow-lg fixed top-1/2 w-[20%] h-[20%] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center cursor-default p-5 rounded-lg">
