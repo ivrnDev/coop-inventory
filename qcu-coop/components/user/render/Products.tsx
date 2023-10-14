@@ -3,6 +3,7 @@ import Link from "next/link";
 import styles from "@/styles/pages/user/render/products.module.css";
 import { ProductsType } from "@/types/products/products";
 import AddtoCartButton from "@/components/cart/AddtoCartBtn";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   products: ProductsType[];
@@ -33,14 +34,14 @@ const RenderProducts = ({ products }: Props) => {
             </div>
             <div className={styles.buttons}>
               <AddtoCartButton product={product} />
+
               <Link
-                className="bg-green-900 font-semibold text-[0.9rem] text-white mx-1 rounded-md p-1 shadow-sm;"
                 scroll={false}
                 href={`/products/${product.product_name.toLowerCase()}?id=${
                   product.product_id
                 }`}
               >
-                BUY NOW
+                <Button size="sm">BUY NOW</Button>
               </Link>
             </div>
           </div>

@@ -2,6 +2,39 @@
 @tailwind components;
 @tailwind utilities;
  
+
+*,
+::before,
+::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+body {
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+.home-main {
+  padding-top: 124px;
+  min-height: inherit;
+  background-color: #ebebeb;
+}
+
+.admin-main {
+  padding-left: 150px;
+  min-height: 100vh;
+  min-width: 100vw;
+  background-color: #ebebeb;
+}
+
+.item-main {
+  display: flex;
+  padding-top: 124px;
+  min-height: inherit;
+}
+
+
 @layer base {
   :root {
     --background: 0 0% 100%;
