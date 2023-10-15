@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { ProductsType } from "@/types/products/products";
 import { getAllProducts } from "@/lib/api/products";
-import RenderProductsAdmin from "@/components/admin/products/render/Product";
+import AdminRenderProducts from "@/components/admin/products/render/Products";
 
 const AdminProducts = async () => {
   const products: ProductsType[] = await getAllProducts();
@@ -24,10 +24,9 @@ const AdminProducts = async () => {
         </Link>
       </section>
 
-      <section className="bg-blue-200 h-fit px-9">
-        <h1 className=" text-[2rem] text-center font-bold">PRODUCTS</h1>
+      <section className="h-fit px-9">
         <div className="flex flex-col gap-6">
-          <RenderProductsAdmin products={products} />
+          <AdminRenderProducts products={products}/>
         </div>
       </section>
     </>

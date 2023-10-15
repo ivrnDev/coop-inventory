@@ -158,7 +158,6 @@ module.exports = {
           return resolve(null)
         } else {
           const products = result.map((product) => ({
-            category_id: product.category_id,
             product_id: product.product_id,
             product_name: product.product_name,
             display_name: product.display_name,
@@ -171,6 +170,9 @@ module.exports = {
             isDeleted: product.isDeleted,
             date_created: product.date_created,
             display_image: product.display_image.toString('base64'),
+            category_id: product.category_id,
+            category_name: product.category_name,
+            category_image: product.category_image.toString('base64'),
           }))
           return resolve(products)
         }
