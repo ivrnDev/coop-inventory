@@ -8,7 +8,7 @@ const AdminProducts = async () => {
   const products: ProductsType[] = await getAllProducts();
   return (
     <>
-      <section className="bg-yellow-200 h-48 w-full flex flex-row p-3 gap-3">
+      <section className="h-48 w-full flex flex-row p-3 gap-3">
         <Link
           href="products/new"
           className="bg-green-600 text-white text-lg p-5 flex align-middle justify-center w-fit h-fit"
@@ -26,7 +26,7 @@ const AdminProducts = async () => {
 
       <section className="h-fit px-9">
         <div className="flex flex-col gap-6">
-          <AdminRenderProducts products={products}/>
+          <AdminRenderProducts products={products} />
         </div>
       </section>
     </>

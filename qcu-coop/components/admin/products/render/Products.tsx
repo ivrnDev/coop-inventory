@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/table";
 import { ProductsType } from "@/types/products/products";
 import Image from "next/image";
+import Link from "next/link";
 
 type Props = {
   products: ProductsType[];
@@ -31,28 +32,35 @@ const AdminRenderProducts = ({ products }: Props) => {
 
       <TableBody>
         {products && products.length > 0 ? (
-          products.map((product) => (
-            <TableRow key={product.id} className="">
+          products.map((product, index) => (
+            <TableRow key={index}>
               <TableCell>
                 <Image
                   src={`data:image/png;base64,${product.display_image}`}
                   alt={product.product_name}
                   width="70"
                   height="70"
-                ></Image>
+                />
               </TableCell>
               <TableCell>{product.product_id}</TableCell>
               <TableCell>{product.product_name}</TableCell>
               <TableCell>{product.category_name}</TableCell>
-              <TableCell>
-                {product.product_stocks}
-              </TableCell>
-              <TableCell>
-                ${product.display_price}
-              </TableCell>
+              <TableCell>{product.product_stocks}</TableCell>
+              <TableCell>${product.display_price}</TableCell>
               <TableCell>{product.status}</TableCell>
+              <TableCell>{product.isFeatured === 1 ? "Yes" : "No"}</TableCell>
               <TableCell>
-                {product.isFeatured === 1 ? "Yes" : "No"}
+                <Link
+                  href={`./products/update/${
+                    product.product_name.toLowerCase()
+                  }?${new URLSearchParams({
+                    id: String(product.product_id),
+                  })}
+                  
+                  `}
+                >
+                  EDIT
+                </Link>
               </TableCell>
             </TableRow>
           ))
