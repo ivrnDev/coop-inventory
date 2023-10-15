@@ -1,4 +1,5 @@
-import AdminHeader from "@/components/header/Admin";
+import AdminHeader from "@/components/header/AdminHeader";
+import AdminNavBar from "@/components/header/AdminNavbar";
 import "@/styles/globals.css";
 
 import type { Metadata } from "next";
@@ -15,7 +16,9 @@ export default function AdminLayout({
 }) {
   return (
     <>
+      <AdminNavBar />
       <AdminHeader />
+      
       <main className="admin-main">{children}</main>
     </>
   );
