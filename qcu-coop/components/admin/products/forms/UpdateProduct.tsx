@@ -40,7 +40,7 @@ type Props = {
 const UpdateProductForm = ({ id }: Props) => {
   const [productData, setProductData] = useState<any>();
   const [categories, setCategories] = useState<CategoriesType[]>([]);
-
+ 
   useEffect(() => {
     const getProductData = async () => {
       try {
@@ -55,7 +55,6 @@ const UpdateProductForm = ({ id }: Props) => {
           product_description,
           status,
           isFeatured,
-          display_image,
           category_id,
         } = result[0];
 
@@ -67,7 +66,6 @@ const UpdateProductForm = ({ id }: Props) => {
           product_description: product_description || "",
           status: String(status) == "Active" ? "Active" : "Inactive",
           isFeatured: String(isFeatured) == "1" ? "1" : "0",
-          display_image: display_image || "",
           category_id: category_id || "",
           variants:
             result &&
@@ -181,29 +179,6 @@ const UpdateProductForm = ({ id }: Props) => {
                   id="product_description"
                   placeholder="Description"
                   autoComplete="off"
-                />
-              </div>
-              <div className="flex flex-col space-y-1.5">
-                <Controller
-                  name="display_image"
-                  control={control}
-                  render={({ field: { value, onChange, ...field } }) => (
-                    <>
-                      <Label htmlFor="display_image">Image</Label>
-                      <Input
-                        {...field}
-                        value={value?.fileName}
-                        onChange={(event) => {
-                          const selectedFile = event.target.files?.[0];
-                          if (selectedFile) {
-                            onChange(selectedFile);
-                          }
-                        }}
-                        type="file"
-                        id="picture"
-                      />
-                    </>
-                  )}
                 />
               </div>
 
@@ -380,6 +355,7 @@ const UpdateProductForm = ({ id }: Props) => {
             </div>
             <Button type="submit">SUBMIT</Button>
           </form>
+          
         </CardContent>
       </Card>
     </div>
