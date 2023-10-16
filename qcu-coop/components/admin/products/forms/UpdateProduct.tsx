@@ -47,7 +47,6 @@ const UpdateProductForm = ({ id }: Props) => {
       display_price: "",
       product_stocks: "",
       product_description: "",
-      product_sold: "",
       status: "0",
       isFeatured: "0",
       display_image: "any",
@@ -68,22 +67,24 @@ const UpdateProductForm = ({ id }: Props) => {
   });
 
   const submitForm = async (data: ProductFormValues) => {
-    console.log(data);
-    // const form = new FormData();
-    // for (const key of Object.keys(data) as (keyof typeof data)[]) {
-    //   form.append(key, data[key]);
-    // }
-    // try {
-    //   const response = await updateProduct(form, id);
-    //   console.log(data);
-    //   if (response.status === 200) {
-    //     console.log("Product updated successfully");
-    //   } else {
-    //     console.error("Failed to create Product");
-    //   }
-    // } catch (error) {
-    //   console.error("Error:", error);
-    // }
+    const form = new FormData();
+    const { variants, ...dataForm } = data;
+    for (const key of Object.keys(dataForm) as (keyof typeof dataForm)[]) {
+      form.append(key, data[key]);
+    }
+    form.append("variants", JSON.stringify(variants));
+
+    try {
+      const response = await updateProduct(form, id);
+      console.log(data);
+      if (response.status === 200) {
+        console.log("Product updated successfully");
+      } else {
+        console.error("Failed to create Product");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (

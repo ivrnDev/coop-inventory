@@ -113,9 +113,6 @@ module.exports = {
       //Update variant
       const { variants } = req.body;
       const variantArray = JSON.parse(variants)
-
-      console.log(req.body)
-
       const updatedVariants = await updateVariantsDB(req.params.id, variantArray);
 
 
