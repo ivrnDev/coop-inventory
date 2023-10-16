@@ -56,3 +56,22 @@ export async function createProduct(form: FormData) {
     };
   }
 }
+export async function updateProduct(form: FormData, id: string) {
+  console.log(form)
+  try {
+    const res = await fetch(`http://localhost:3000/api/products/${id}`, {
+      method: "PATCH",
+      body: form,
+    });
+    const data = await res.json();
+    return {
+      status: res.status,
+      data,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      data: null,
+    };
+  }
+}

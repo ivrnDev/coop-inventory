@@ -47,23 +47,26 @@ module.exports = {
     })
   },
   //Update products
-  updateProductsDB: async (display_name, display_price, product_stocks, product_description, product_id, imagePath) => {
+  updateProductsDB: async (category_id, display_name, display_price, product_stocks, product_description, status, isFeatured, isDeleted, product_id, imagePath) => {
     return new Promise(async (resolve, reject) => {
       //Check if product with given ID exist
       const findProductByID = await module.exports.getProductByIdDB(product_id);
       if (findProductByID === null) resolve(null);
 
       //Update the product
-      pool.execute(updateProductQuery, [
-        display_name, display_price, product_stocks, product_description, imagePath, product_id
+      pool.execute(updateProductQuery, [category_id,
+        display_name, display_price, product_stocks, product_description, status, isFeatured, isDeleted, imagePath, product_id,
       ], (error, result) => {
         if (error) return reject(error)
         const updatedProduct = {
-          product_id: product_id,
-          display_name: display_name,
-          display_price: display_price,
-          product_stocks: product_stocks,
-          product_description: product_description
+          product_id,
+          display_name,
+          display_price,
+          product_stocks,
+          product_description,
+          status,
+          isFeatured,
+          isDeleted
         }
         return resolve(updatedProduct);
       })

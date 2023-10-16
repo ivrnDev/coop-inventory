@@ -80,7 +80,7 @@ module.exports = {
             WHERE p.product_id = ?
         `,
         updateProductQuery: `
-            UPDATE products SET display_name = ?, display_price = ?, product_stocks = ?, product_description = ?, display_image = ? WHERE product_id = ?
+            UPDATE products SET category_id = ?, display_name = ?, display_price = ?, product_stocks = ?, product_description = ?, status = ?, isFeatured = ?, isDeleted = ?, display_image = ? WHERE product_id = ?
         `,
         updateVariantQuery: `
             UPDATE variants SET variant_name = ?, variant_symbol = ?, variant_price = ?, variant_stocks = ? WHERE product_id = ? AND variant_id = ?

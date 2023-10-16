@@ -11,7 +11,7 @@ const UpdateProductPage = async ({searchParams}: Params) => {
   const product: ProductsType = await getProductById(id)
   return (
     <section className="w-[inherit] h-[calc(100vh-80px)] grid place-items-center">
-      <UpdateProductForm />
+      <UpdateProductForm  id={id}/>
     </section>
   );
 };
