@@ -40,26 +40,50 @@ const UpdateProductForm = ({ id }: Props) => {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<ProductFormValues>();
-  
+  } = useForm<ProductFormValues>({
+    defaultValues: {
+      product_name: "",
+      display_name: "",
+      display_price: "",
+      product_stocks: "",
+      product_description: "",
+      product_sold: "",
+      status: "0",
+      isFeatured: "0",
+      display_image: "any",
+      category_id: "1",
+      variants: [
+        {
+          variant_name: "small",
+          variant_symbol: "s",
+          variant_price: "100",
+          variant_stocks: "200",
+        },
+      ],
+    },
+  });
+  const { fields, append, remove } = useFieldArray({
+    name: "variants",
+    control,
+  });
 
   const submitForm = async (data: ProductFormValues) => {
     console.log(data);
-    const form = new FormData();
-    for (const key of Object.keys(data) as (keyof typeof data)[]) {
-      form.append(key, data[key]);
-    }
-    try {
-      const response = await updateProduct(form, id);
-      console.log(data);
-      if (response.status === 200) {
-        console.log("Product updated successfully");
-      } else {
-        console.error("Failed to create Product");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
+    // const form = new FormData();
+    // for (const key of Object.keys(data) as (keyof typeof data)[]) {
+    //   form.append(key, data[key]);
+    // }
+    // try {
+    //   const response = await updateProduct(form, id);
+    //   console.log(data);
+    //   if (response.status === 200) {
+    //     console.log("Product updated successfully");
+    //   } else {
+    //     console.error("Failed to create Product");
+    //   }
+    // } catch (error) {
+    //   console.error("Error:", error);
+    // }
   };
 
   return (
@@ -171,7 +195,7 @@ const UpdateProductForm = ({ id }: Props) => {
                   control={control}
                   render={({ field }) => (
                     <>
-                      <Label htmlFor="featured">Status</Label>
+                      <Label htmlFor="featured">Featured</Label>
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
@@ -194,7 +218,7 @@ const UpdateProductForm = ({ id }: Props) => {
                   control={control}
                   render={({ field }) => (
                     <>
-                      <Label htmlFor="category_id">Status</Label>
+                      <Label htmlFor="category_id">Category</Label>
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
@@ -222,58 +246,89 @@ const UpdateProductForm = ({ id }: Props) => {
                   <DialogHeader>
                     <DialogTitle>ADD VARIANT</DialogTitle>
                   </DialogHeader>
-
-                  <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <label htmlFor="variant_name" className="text-right">
-                        Name
-                      </label>
-                      <input
-                        {...register("variant_name")}
-                        id="variant_name"
-                        className="col-span-3"
-                        autoComplete="off"
-                      />
+                  {fields.map((field, index) => (
+                    <div key={field.id} className="grid gap-4 py-4">
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <label
+                          htmlFor={`variants.${index}.variant_name`}
+                          className="text-right"
+                        >
+                          Name
+                        </label>
+                        <input
+                          {...register(
+                            `variants.${index}.variant_name` as const
+                          )}
+                          id={`variants${index}.variant_name`}
+                          className="col-span-3"
+                          autoComplete="off"
+                        />
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <label
+                          htmlFor={`variants.${index}.variant_symbol`}
+                          className="text-right"
+                        >
+                          Symbol
+                        </label>
+                        <input
+                          {...register(
+                            `variants.${index}.variant_symbol` as const
+                          )}
+                          id={`variants.${index}.variant_symbol`}
+                          className="col-span-3"
+                          autoComplete="off"
+                        />
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <label
+                          htmlFor={`variants.${index}.variant_price`}
+                          className="text-right"
+                        >
+                          Price
+                        </label>
+                        <input
+                          {...register(
+                            `variants.${index}.variant_price` as const
+                          )}
+                          id={`variants.${index}.variant_price`}
+                          className="col-span-3"
+                          autoComplete="off"
+                        />
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <label
+                          htmlFor={`variants.${index}.variant_stocks`}
+                          className="text-right"
+                        >
+                          Stocks
+                        </label>
+                        <input
+                          {...register(
+                            `variants.${index}.variant_stocks` as const
+                          )}
+                          id={`variants.${index}.variant_stocks`}
+                          className="col-span-3"
+                          autoComplete="off"
+                        />
+                      </div>
                     </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <label htmlFor="variant_symbol" className="text-right">
-                        Symbol
-                      </label>
-                      <input
-                        {...register("variant_symbol")}
-                        id="variant_symbol"
-                        className="col-span-3"
-                        autoComplete="off"
-                      />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <label htmlFor="variant_price" className="text-right">
-                        Price
-                      </label>
-                      <input
-                        {...register("variant_price")}
-                        id="variant_price"
-                        className="col-span-3"
-                        autoComplete="off"
-                      />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <label htmlFor="variant_stocks" className="text-right">
-                        Stocks
-                      </label>
-                      <input
-                        {...register("variant_stocks")}
-                        id="variant_stocks"
-                        className="col-span-3"
-                        autoComplete="off"
-                      />
-                    </div>
-                  </div>
+                  ))}
 
                   <DialogFooter>
-                    {/* <Button type="button" onClick={() => append({})}>
+                    <Button
+                      type="button"
+                      onClick={() =>
+                        append({
+                          variant_name: "",
+                          variant_symbol: "",
+                          variant_price: "",
+                          variant_stocks: "",
+                        })
+                      }
+                    >
                       Add Variant
-                    </Button> */}
+                    </Button>
                     <Button type="submit">Save changes</Button>
                   </DialogFooter>
                 </DialogContent>
