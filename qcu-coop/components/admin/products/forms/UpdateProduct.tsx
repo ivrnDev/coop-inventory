@@ -124,13 +124,20 @@ const UpdateProductForm = ({ id }: Props) => {
                 <Controller
                   name="display_image"
                   control={control}
-                  render={({ field }) => (
+                  render={({ field: {value, onChange, ...field} }) => (
                     <>
                       <Label htmlFor="display_image">Image</Label>
                       <Input
-                        
+                        {...field}
+                        value={value?.fileName}
+                        onChange={(event) => {
+                           const selectedFile = event.target.files?.[0];
+                           if (selectedFile) {
+                             onChange(selectedFile);
+                           }
+                        }}
                         type="file"
-                        id="display_image"
+                        id="picture"
                       />
                     </>
                   )}
@@ -141,12 +148,12 @@ const UpdateProductForm = ({ id }: Props) => {
                 <Controller
                   name="status"
                   control={control}
-                  render={({ field }) => (
+                  render={({ field: {onChange, value} }) => (
                     <>
                       <Label htmlFor="status">Status</Label>
                       <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
+                        onValueChange={onChange}
+                        value={value}
                       >
                         <SelectTrigger id="status">
                           <SelectValue placeholder="Select" />
