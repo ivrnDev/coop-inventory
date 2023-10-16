@@ -146,7 +146,7 @@ const UpdateProductForm = ({ id }: Props) => {
                       <Label htmlFor="status">Status</Label>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
                       >
                         <SelectTrigger id="status">
                           <SelectValue placeholder="Select" />
@@ -169,7 +169,7 @@ const UpdateProductForm = ({ id }: Props) => {
                       <Label htmlFor="featured">Status</Label>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
                       >
                         <SelectTrigger id="featured">
                           <SelectValue placeholder="Select" />
