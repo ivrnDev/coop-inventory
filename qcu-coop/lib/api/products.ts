@@ -1,4 +1,5 @@
 import { ProductFormValues } from "@/types/form/products";
+import { ProductsType } from "@/types/products/products";
 
 export async function getAllProducts() {
   try {
@@ -59,12 +60,14 @@ export async function createProduct(form: FormData) {
   }
 }
 
-export async function updateProduct(form: FormData, id: string) {
-  console.log(form)
+export async function updateProduct(form: ProductFormValues, id: string) {
   try {
     const res = await fetch(`http://localhost:3000/api/products/${id}`, {
       method: "PATCH",
-      body: form,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(form),
     });
     const data = await res.json();
     return {

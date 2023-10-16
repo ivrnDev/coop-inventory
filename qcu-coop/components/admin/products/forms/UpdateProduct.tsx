@@ -101,15 +101,8 @@ const UpdateProductForm = ({ id }: Props) => {
   });
 
   const submitForm = async (data: ProductFormValues) => {
-    const form = new FormData();
-    const { variants, ...dataForm } = data;
-    for (const key of Object.keys(dataForm) as (keyof typeof dataForm)[]) {
-      form.append(key, data[key]);
-    }
-    form.append("variants", JSON.stringify(variants));
-
     try {
-      const response = await updateProduct(form, id);
+      const response = await updateProduct(data, id);
       console.log(data);
       if (response.status === 200) {
         console.log("Product updated successfully");

@@ -2,7 +2,7 @@ const UpdateImageModal = () => {
   return (
     <>
       <form>
-        <div className="flex flex-col space-y-1.5">
+        {/* <div className="flex flex-col space-y-1.5">
           <Controller
             name="display_image"
             control={control}
@@ -24,7 +24,7 @@ const UpdateImageModal = () => {
               </>
             )}
           />
-        </div>
+        </div> */}
       </form>
     </>
   );

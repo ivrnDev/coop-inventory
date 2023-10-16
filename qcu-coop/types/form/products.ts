@@ -8,7 +8,7 @@ export type ProductFormValues = {
   status: string;
   isFeatured: string;
   isDeleted?: string;
-  display_image: any;
+  display_image?: any;
   category_id: string;
   variants: {
     variant_name: string;
