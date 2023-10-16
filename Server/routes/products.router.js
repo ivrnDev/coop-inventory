@@ -12,7 +12,8 @@ const {
   getAllCategory,
   getCategoryById,
   createNewCategory,
-  updateCategoryById
+  updateCategoryById,
+  updateProductImage
 } = require('../controllers/products.controller')
 const express = require('express');
 const router = express.Router();
@@ -21,7 +22,8 @@ const upload = require('../middleware/multer');
 router.get('/', getAllProducts);
 router.post('/', upload.single('display_image'), createProduct);
 router.get('/:id', getProductById)
-router.patch('/:id', upload.single('display_image'), updateProducts);
+router.patch('/:id', updateProducts);
+router.patch('/image/:id', upload.single('display_image'), updateProductImage);
 
 router.patch('/:id/sold', updateProductSold);  //Receive query and params `action=add/value=15` e.g
 

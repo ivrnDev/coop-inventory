@@ -16,6 +16,7 @@ const {
   getCategoryByIdDB,
   createNewCategoryDB,
   updateCategoryByIdDB,
+  updateProductImageDB
 } = require('../services/products.services')
 
 module.exports = {
@@ -89,32 +90,17 @@ module.exports = {
   //Update product by ID
   updateProducts: async (req, res) => {
     try {
-      let imagePath;
-      //Check if there is an image
-      if (req.file) {
-        imagePath = req.file.buffer;
-      } else {
-        const defaultImagePath = './public/default-image.jpg';
-        try {
-          imagePath = await fs.readFile(defaultImagePath); // Read default image as buffer
-        } catch (error) {
-          return res.status(500).json({ message: "Error reading default image" });
-        }
-      };
-
       //Get requested product
       const { category_id, display_name, display_price, product_stocks, product_description, status, isFeatured } = req.body
 
       //Update product
-      const updatedProduct = await updateProductsDB(category_id, display_name, display_price, product_stocks, product_description, status, isFeatured, req.params.id, imagePath)
+      const updatedProduct = await updateProductsDB(category_id, display_name, display_price, product_stocks, product_description, status, isFeatured, req.params.id)
       if (updatedProduct === null) return res.status(404).json({ message: `There is no product with an ID of ${req.params.id}` });
       if (!updatedProduct) return res.status(400).json({ message: "Failed to update product" });
 
       //Update variant
       const { variants } = req.body;
-      const variantArray = JSON.parse(variants)
-      const updatedVariants = await updateVariantsDB(req.params.id, variantArray);
-
+      const updatedVariants = await updateVariantsDB(req.params.id, variants);
 
       const result = {
         product: updatedProduct,
@@ -254,6 +240,28 @@ module.exports = {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }
   },
+  updateProductImage: async (req, res) => {
+    try {
+      let imagePath;
+      if (req.file) {
+        imagePath = req.file.buffer;
+      } else {
+        const defaultImagePath = './public/default-image.jpg';
+        try {
+          imagePath = await fs.readFile(defaultImagePath);
+        } catch (error) {
+          return res.status(500).json({ message: "Error reading default image" });
+        }
+      };
+      const id = req.params.id
+      const result = await updateProductImageDB(imagePath, id)
+      if (!result) return res.status(400).json({ message: "Failed to update product image" });
+      return res.status(200).json({ message: `Successfully update image with ID of ${id}` })
+    } catch (error) {
+      return res.status(500).json({ message: "Internal Server Error", error: error })
+    }
+  },
+
 
 }
 

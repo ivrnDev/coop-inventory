@@ -20,6 +20,7 @@ const {
   getCategoryByIdQuery,
   createNewCategoryQuery,
   updateCategoryByIdQuery,
+  updateProductImageQuery
 } = productQueries
 
 module.exports = {
@@ -47,7 +48,7 @@ module.exports = {
     })
   },
   //Update products
-  updateProductsDB: async (category_id, display_name, display_price, product_stocks, product_description, status, isFeatured, product_id, imagePath) => {
+  updateProductsDB: async (category_id, display_name, display_price, product_stocks, product_description, status, isFeatured, product_id) => {
     return new Promise(async (resolve, reject) => {
       //Check if product with given ID exist
       const findProductByID = await module.exports.getProductByIdDB(product_id);
@@ -55,7 +56,7 @@ module.exports = {
 
       //Update the product
       pool.execute(updateProductQuery, [category_id,
-        display_name, display_price, product_stocks, product_description, status, isFeatured, imagePath, product_id,
+        display_name, display_price, product_stocks, product_description, status, isFeatured, product_id,
       ], (error, result) => {
         if (error) return reject(error)
         const updatedProduct = {
@@ -113,7 +114,6 @@ module.exports = {
   },
   updateVariantsDB: (product_id, variants) => {
     return new Promise((resolve, reject) => {
-      console.log(variants)
       variants.map((variant, index) => {
         const { variant_name, variant_symbol, variant_price, variant_stocks } = variant;
         pool.execute(updateVariantQuery, [variant_name, variant_symbol, variant_price, variant_stocks, product_id, index + 1], (error, result) => {
@@ -252,6 +252,14 @@ module.exports = {
   updateCategoryByIdDB: (category_name, category_image, id) => {
     return new Promise((resolve, reject) => {
       pool.execute(updateCategoryByIdQuery, [category_name, category_image, id], (error, result) => {
+        if (error) return reject(error)
+        return resolve(result)
+      })
+    })
+  },
+  updateProductImageDB: (image, product_id) => {
+    return new Promise((resolve, reject) => {
+      pool.execute(updateProductImageQuery, [image, product_id], (error, result) => {
         if (error) return reject(error)
         return resolve(result)
       })
