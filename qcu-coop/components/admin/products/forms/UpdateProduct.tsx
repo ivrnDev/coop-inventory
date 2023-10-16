@@ -69,14 +69,14 @@ const UpdateProductForm = ({ id }: Props) => {
           isFeatured: String(isFeatured) == "1" ? "1" : "0",
           display_image: display_image || "",
           category_id: category_id || "",
-          variants: [
-            {
-              variant_name: "small",
-              variant_symbol: "s",
-              variant_price: "100",
-              variant_stocks: "200",
-            },
-          ],
+          variants:
+            result &&
+            result.map((value: any, index: number) => ({
+              variant_name: value.variant_name,
+              variant_symbol: value.variant_symbol,
+              variant_price: value.variant_price,
+              variant_stocks: value.variant_stocks,
+            })),
         };
         setCategories(getCategories);
         setProductData(defaultFormValues);
@@ -333,6 +333,7 @@ const UpdateProductForm = ({ id }: Props) => {
                           {...register(
                             `variants.${index}.variant_price` as const
                           )}
+                          type="number"
                           id={`variants.${index}.variant_price`}
                           className="col-span-3"
                           autoComplete="off"
@@ -349,6 +350,7 @@ const UpdateProductForm = ({ id }: Props) => {
                           {...register(
                             `variants.${index}.variant_stocks` as const
                           )}
+                          type="number"
                           id={`variants.${index}.variant_stocks`}
                           className="col-span-3"
                           autoComplete="off"
