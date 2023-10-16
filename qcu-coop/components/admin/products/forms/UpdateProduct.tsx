@@ -33,6 +33,7 @@ import { ProductFormValues } from "@/types/form/products";
 import { useEffect, useState } from "react";
 import { CategoriesType, ProductsType } from "@/types/products/products";
 import { getAllCategories } from "@/lib/api/categories";
+import UpdateImageModal from "./UpdateImage";
 type Props = {
   id: string;
 };
@@ -40,7 +41,7 @@ type Props = {
 const UpdateProductForm = ({ id }: Props) => {
   const [productData, setProductData] = useState<any>();
   const [categories, setCategories] = useState<CategoriesType[]>([]);
- 
+
   useEffect(() => {
     const getProductData = async () => {
       try {
@@ -247,10 +248,10 @@ const UpdateProductForm = ({ id }: Props) => {
               </div>
             </div>
 
-            <div>
+            <div className="flex space-x-5">
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="outline">Variant 1</Button>
+                  <Button variant="outline">Variants</Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                   <DialogHeader>
@@ -328,29 +329,29 @@ const UpdateProductForm = ({ id }: Props) => {
                   ))}
 
                   <DialogFooter>
-                    <Button
-                      type="button"
-                      onClick={() =>
-                        append({
-                          variant_name: "",
-                          variant_symbol: "",
-                          variant_price: "",
-                          variant_stocks: "",
-                        })
-                      }
-                    >
-                      Add Variant
-                    </Button>
                     <Button type="submit">Save changes</Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
+              <Button
+                type="button"
+                onClick={() =>
+                  append({
+                    variant_name: "",
+                    variant_symbol: "",
+                    variant_price: "",
+                    variant_stocks: "",
+                  })
+                }
+              >
+                Add Variant
+              </Button>
+              <Button type="submit">SUBMIT</Button>
             </div>
-            <Button type="submit">SUBMIT</Button>
           </form>
-          
         </CardContent>
       </Card>
+      <UpdateImageModal productId={id} />
     </div>
   );
 };
