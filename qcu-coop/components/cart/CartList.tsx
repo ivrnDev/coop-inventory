@@ -5,7 +5,7 @@ import { RootState } from "@/components/redux/store";
 import { useSelector, useDispatch } from "react-redux";
 import { removeItem } from "@/components/redux/features/cartSlice";
 import { useEffect, useState } from "react";
-import { VariantTypes } from "@/variants";
+import { VariantTypes } from "@/types/variants";
 import { getVariantByProductId } from "@/lib/api/variants";
 import Link from "next/link";
 

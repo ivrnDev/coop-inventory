@@ -1,3 +1,5 @@
+import { ProductFormValues } from "@/types/form/products";
+
 export async function getAllProducts() {
   try {
     const res = await fetch("http://localhost:3000/api/products", {
@@ -56,12 +58,12 @@ export async function createProduct(form: FormData) {
     };
   }
 }
-export async function updateProduct(form: FormData, id: string) {
-  console.log(form)
+
+export async function updateProduct(form: ProductFormValues, id: string) {
   try {
     const res = await fetch(`http://localhost:3000/api/products/${id}`, {
       method: "PATCH",
-      body: form,
+      // body: form,
     });
     const data = await res.json();
     return {
