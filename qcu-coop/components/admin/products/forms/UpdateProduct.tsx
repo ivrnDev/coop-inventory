@@ -41,24 +41,25 @@ const UpdateProductForm = ({ id }: Props) => {
     control,
     formState: { errors },
   } = useForm<ProductFormValues>();
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "variants",
-  });
+  
 
   const submitForm = async (data: ProductFormValues) => {
     console.log(data);
-    // try {
-    //   const response = await updateProduct(data, id);
-    //   console.log(data);
-    //   if (response.status === 201) {
-    //     console.log("Product updated successfully");
-    //   } else {
-    //     console.error("Failed to create Product");
-    //   }
-    // } catch (error) {
-    //   console.error("Error:", error);
-    // }
+    const form = new FormData();
+    for (const key of Object.keys(data) as (keyof typeof data)[]) {
+      form.append(key, data[key]);
+    }
+    try {
+      const response = await updateProduct(form, id);
+      console.log(data);
+      if (response.status === 200) {
+        console.log("Product updated successfully");
+      } else {
+        console.error("Failed to create Product");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
@@ -76,10 +77,10 @@ const UpdateProductForm = ({ id }: Props) => {
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="product_name">Name</Label>
                 <Input
-                  {...register("product_name")}
                   id="product_name"
                   placeholder="Product Name"
                   autoComplete="off"
+                  disabled
                 />
               </div>
               <div className="flex flex-col space-y-1.5">
@@ -124,17 +125,17 @@ const UpdateProductForm = ({ id }: Props) => {
                 <Controller
                   name="display_image"
                   control={control}
-                  render={({ field: {value, onChange, ...field} }) => (
+                  render={({ field: { value, onChange, ...field } }) => (
                     <>
                       <Label htmlFor="display_image">Image</Label>
                       <Input
                         {...field}
                         value={value?.fileName}
                         onChange={(event) => {
-                           const selectedFile = event.target.files?.[0];
-                           if (selectedFile) {
-                             onChange(selectedFile);
-                           }
+                          const selectedFile = event.target.files?.[0];
+                          if (selectedFile) {
+                            onChange(selectedFile);
+                          }
                         }}
                         type="file"
                         id="picture"
@@ -148,13 +149,10 @@ const UpdateProductForm = ({ id }: Props) => {
                 <Controller
                   name="status"
                   control={control}
-                  render={({ field: {onChange, value} }) => (
+                  render={({ field: { onChange, value } }) => (
                     <>
                       <Label htmlFor="status">Status</Label>
-                      <Select
-                        onValueChange={onChange}
-                        value={value}
-                      >
+                      <Select onValueChange={onChange} value={value}>
                         <SelectTrigger id="status">
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
@@ -190,10 +188,33 @@ const UpdateProductForm = ({ id }: Props) => {
                   )}
                 />
               </div>
+              <div className="flex flex-col space-y-1.5">
+                <Controller
+                  name="category_id"
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <Label htmlFor="category_id">Status</Label>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <SelectTrigger id="category_id">
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent position="popper">
+                          <SelectItem value="1">1</SelectItem>
+                          <SelectItem value="2">2</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </>
+                  )}
+                />
+              </div>
             </div>
 
             <div>
-              {/* <Dialog>
+              <Dialog>
                 <DialogTrigger asChild>
                   <Button variant="outline">Variant 1</Button>
                 </DialogTrigger>
@@ -202,68 +223,61 @@ const UpdateProductForm = ({ id }: Props) => {
                     <DialogTitle>ADD VARIANT</DialogTitle>
                   </DialogHeader>
 
-                  {fields.map((variant, index) => (
-                    <div key={variant.id} className="grid gap-4 py-4">
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label
-                          htmlFor={`variants.${index}.variant_name`}
-                          className="text-right"
-                        >
-                          Name
-                        </Label>
-                        <Input
-                          {...register(`variants.${index}.variant_name` as const, {
-                            required: true
-                          })}
-                          id="variant_name"
-                          className="col-span-3"
-                          autoComplete="off"
-                        />
-                      </div>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="variant_symbol" className="text-right">
-                          Symbol
-                        </Label>
-                        <Input
-                          {...register("variant_symbol")}
-                          id="variant_symbol"
-                          className="col-span-3"
-                          autoComplete="off"
-                        />
-                      </div>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="variant_price" className="text-right">
-                          Price
-                        </Label>
-                        <Input
-                          {...register("variant_price")}
-                          id="variant_price"
-                          className="col-span-3"
-                          autoComplete="off"
-                        />
-                      </div>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="variant_stocks" className="text-right">
-                          Stocks
-                        </Label>
-                        <Input
-                          {...register("variant_stocks")}
-                          id="variant_stocks"
-                          className="col-span-3"
-                          autoComplete="off"
-                        />
-                      </div>
+                  <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <label htmlFor="variant_name" className="text-right">
+                        Name
+                      </label>
+                      <input
+                        {...register("variant_name")}
+                        id="variant_name"
+                        className="col-span-3"
+                        autoComplete="off"
+                      />
                     </div>
-                  ))}
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <label htmlFor="variant_symbol" className="text-right">
+                        Symbol
+                      </label>
+                      <input
+                        {...register("variant_symbol")}
+                        id="variant_symbol"
+                        className="col-span-3"
+                        autoComplete="off"
+                      />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <label htmlFor="variant_price" className="text-right">
+                        Price
+                      </label>
+                      <input
+                        {...register("variant_price")}
+                        id="variant_price"
+                        className="col-span-3"
+                        autoComplete="off"
+                      />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <label htmlFor="variant_stocks" className="text-right">
+                        Stocks
+                      </label>
+                      <input
+                        {...register("variant_stocks")}
+                        id="variant_stocks"
+                        className="col-span-3"
+                        autoComplete="off"
+                      />
+                    </div>
+                  </div>
 
                   <DialogFooter>
-                    <Button type="button" onClick={() => append({})}>
+                    {/* <Button type="button" onClick={() => append({})}>
                       Add Variant
-                    </Button>
+                    </Button> */}
                     <Button type="submit">Save changes</Button>
                   </DialogFooter>
                 </DialogContent>
-              </Dialog> */}
+              </Dialog>
             </div>
             <Button type="submit">SUBMIT</Button>
           </form>

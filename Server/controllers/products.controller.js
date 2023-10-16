@@ -103,10 +103,10 @@ module.exports = {
       };
 
       //Get requested product
-      const { category_id, display_name, display_price, product_stocks, product_description, status, isFeatured, isDeleted, } = req.body
+      const { category_id, display_name, display_price, product_stocks, product_description, status, isFeatured } = req.body
 
       //Update product
-      const updatedProduct = await updateProductsDB(category_id, display_name, display_price, product_stocks, product_description, status, isFeatured, isDeleted, req.params.id, imagePath)
+      const updatedProduct = await updateProductsDB(category_id, display_name, display_price, product_stocks, product_description, status, isFeatured, req.params.id, imagePath)
       if (updatedProduct === null) return res.status(404).json({ message: `There is no product with an ID of ${req.params.id}` });
       if (!updatedProduct) return res.status(400).json({ message: "Failed to update product" });
 

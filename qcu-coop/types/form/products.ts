@@ -1,5 +1,5 @@
 export type ProductFormValues = {
-  product_name: string;
+  product_name?: string;
   display_name: string;
   display_price: string;
   product_stocks: number;
@@ -9,7 +9,7 @@ export type ProductFormValues = {
   isFeatured: string;
   isDeleted?: number;
   display_image: any;
-  category_name?: string;
+  category_id: string;
   variant_name: [string];
   variant_symbol: [string];
   variant_price: [number];
