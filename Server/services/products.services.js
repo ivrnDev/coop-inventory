@@ -113,8 +113,9 @@ module.exports = {
   },
   updateVariantsDB: (product_id, variants) => {
     return new Promise((resolve, reject) => {
-      variants.forEach((value, index) => {
-        const { variant_name, variant_symbol, variant_price, variant_stocks } = value;
+      console.log(variants)
+      variants.map((variant, index) => {
+        const { variant_name, variant_symbol, variant_price, variant_stocks } = variant;
         pool.execute(updateVariantQuery, [variant_name, variant_symbol, variant_price, variant_stocks, product_id, index + 1], (error, result) => {
           if (error) return reject(error)
           return resolve(variants)

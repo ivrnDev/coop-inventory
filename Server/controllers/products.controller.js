@@ -111,15 +111,12 @@ module.exports = {
       if (!updatedProduct) return res.status(400).json({ message: "Failed to update product" });
 
       //Update variant
-      const { variant_name, variant_symbol, variant_price, variant_stocks } = req.body;
-      const variant = variant_name.map((name, index) => ({
-        variant_name: name,
-        variant_symbol: variant_symbol[index],
-        variant_price: variant_price[index],
-        variant_stocks: variant_stocks[index]
-      }))
+      const { variants } = req.body;
+      const variantArray = JSON.parse(variants)
 
-      const updatedVariants = await updateVariantsDB(req.params.id, variant);
+      console.log(req.body)
+
+      const updatedVariants = await updateVariantsDB(req.params.id, variantArray);
 
 
       const result = {
