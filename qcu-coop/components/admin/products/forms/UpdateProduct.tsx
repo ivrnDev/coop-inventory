@@ -28,39 +28,75 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { updateProduct } from "@/lib/api/products";
+import { getProductById, updateProduct } from "@/lib/api/products";
 import { ProductFormValues } from "@/types/form/products";
+import { useEffect, useState } from "react";
+import { CategoriesType, ProductsType } from "@/types/products/products";
+import { getAllCategories } from "@/lib/api/categories";
 type Props = {
   id: string;
 };
 
 const UpdateProductForm = ({ id }: Props) => {
+  const [productData, setProductData] = useState<any>();
+  const [categories, setCategories] = useState<CategoriesType[]>([]);
+
+  useEffect(() => {
+    const getProductData = async () => {
+      try {
+        const result = await getProductById(id);
+        const getCategories = await getAllCategories();
+
+        const {
+          product_name,
+          display_name,
+          display_price,
+          product_stocks,
+          product_description,
+          status,
+          isFeatured,
+          display_image,
+          category_id,
+        } = result[0];
+
+        const defaultFormValues = {
+          product_name: product_name || "",
+          display_name: display_name || "",
+          display_price: display_price || "",
+          product_stocks: product_stocks ? String(product_stocks) : "",
+          product_description: product_description || "",
+          status: String(status) == "Active" ? "Active" : "Inactive",
+          isFeatured: String(isFeatured) == "1" ? "1" : "0",
+          display_image: display_image || "",
+          category_id: category_id || "",
+          variants: [
+            {
+              variant_name: "small",
+              variant_symbol: "s",
+              variant_price: "100",
+              variant_stocks: "200",
+            },
+          ],
+        };
+        setCategories(getCategories);
+        setProductData(defaultFormValues);
+        reset(defaultFormValues);
+      } catch (error) {
+        console.error(error, "failed to fetch data");
+      }
+    };
+    getProductData();
+  }, []);
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
+    reset,
   } = useForm<ProductFormValues>({
-    defaultValues: {
-      product_name: "",
-      display_name: "",
-      display_price: "",
-      product_stocks: "",
-      product_description: "",
-      status: "0",
-      isFeatured: "0",
-      display_image: "any",
-      category_id: "1",
-      variants: [
-        {
-          variant_name: "small",
-          variant_symbol: "s",
-          variant_price: "100",
-          variant_stocks: "200",
-        },
-      ],
-    },
+    defaultValues: productData,
   });
+
   const { fields, append, remove } = useFieldArray({
     name: "variants",
     control,
@@ -102,6 +138,7 @@ const UpdateProductForm = ({ id }: Props) => {
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="product_name">Name</Label>
                 <Input
+                  {...register("product_name")}
                   id="product_name"
                   placeholder="Product Name"
                   autoComplete="off"
@@ -182,8 +219,8 @@ const UpdateProductForm = ({ id }: Props) => {
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent position="popper">
-                          <SelectItem value="1">Active</SelectItem>
-                          <SelectItem value="0">Inactive</SelectItem>
+                          <SelectItem value="Active">Active</SelectItem>
+                          <SelectItem value="Inactive">Inactive</SelectItem>
                         </SelectContent>
                       </Select>
                     </>
@@ -227,10 +264,14 @@ const UpdateProductForm = ({ id }: Props) => {
                         <SelectTrigger id="category_id">
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
-                        <SelectContent position="popper">
-                          <SelectItem value="1">1</SelectItem>
-                          <SelectItem value="2">2</SelectItem>
-                        </SelectContent>
+                        {categories.length > 0 &&
+                          categories.map((category, index) => (
+                            <SelectContent key={index} position="popper">
+                              <SelectItem value={`${category.category_id}`}>
+                                {category.category_name}
+                              </SelectItem>
+                            </SelectContent>
+                          ))}
                       </Select>
                     </>
                   )}
