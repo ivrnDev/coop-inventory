@@ -325,6 +325,9 @@ const UpdateProductForm = ({ id }: Props) => {
                           className="col-span-3"
                           autoComplete="off"
                         />
+                        <Button variant="default" onClick={() => remove(index)}>
+                          DELETE
+                        </Button>
                       </div>
                     </div>
                   ))}

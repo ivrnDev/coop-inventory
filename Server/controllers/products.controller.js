@@ -6,6 +6,7 @@ const {
   getAllVariantsDB,
   getVariantByIdDB,
   getVariantByProductIdDB,
+  deleteVariantsDB,
   updateProductsDB,
   updateVariantsDB,
   getAllProductsDB,
@@ -125,6 +126,15 @@ module.exports = {
         variants: updatedVariants
       }
       return res.status(201).json({ message: `Successfully created the variants with the product ID of ${req.params.id}`, result: result })
+    } catch (error) {
+      return res.status(500).json({ message: "Internal Server Error", error: error });
+    }
+  },
+  deleteVariants: async (req, res) => {
+    const { product_id, variant_id } = req.query
+    try {
+      const deletedVariants = await deleteVariantsDB(product_id, variant_id);
+      return res.status(200).json({ message: `Successfully delete variant with the product ID of ${product_id} and variant ID of ${variant_id}`, result: deletedVariants })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error });
     }

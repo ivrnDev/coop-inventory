@@ -6,6 +6,7 @@ const {
   getAllVariants,
   getVariantById,
   getVariantByProductId,
+  deleteVariants,
   createVariants,
   updateProductStocks,
   updateVariantStocks,
@@ -32,6 +33,7 @@ router.get('/variant/list', getAllVariants);
 router.post('/variant/list/new/:id', createVariants);
 router.get('/variant/list/item', getVariantByProductId); //Receive query
 router.get('/variant/list/:id', getVariantById);
+router.delete('/variant/list', deleteVariants); //Receive query params product_id and variat_id
 router.patch('/:id/stock', updateProductStocks);  //Receive query and params `action=add/value=15` e.g
 router.patch('/variant/list/:id/stock', updateVariantStocks);  //Receive query and params action/value
 

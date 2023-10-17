@@ -57,6 +57,9 @@ module.exports = {
         getVariantByProductIdQuery: `
             SELECT * FROM variants WHERE product_id = ?
         `,
+        deleteVariantsQuery: `
+            DELETE FROM variants WHERE product_id = ? AND variant_id = ?
+        `,
         getAllCategoryQuery: `
             SELECT * FROM category
         `,
