@@ -36,6 +36,7 @@ import { CategoriesType, ProductsType } from "@/types/products/products";
 import { getAllCategories } from "@/lib/api/categories";
 import UpdateImageModal from "./UpdateImage";
 import AddVariants from "./AddVariants";
+import { deleteVariant } from "@/lib/api/variants";
 type Props = {
   id: string;
 };
@@ -49,45 +50,63 @@ const UpdateProductForm = ({ id }: Props) => {
       try {
         const result = await getProductById(id);
         const getCategories = await getAllCategories();
+        if (result && result.length > 0) {
+          const {
+            product_name,
+            display_name,
+            display_price,
+            product_stocks,
+            product_description,
+            status,
+            isFeatured,
+            category_id,
+          } = result[0];
 
-        const {
-          product_name,
-          display_name,
-          display_price,
-          product_stocks,
-          product_description,
-          status,
-          isFeatured,
-          category_id,
-        } = result[0];
-
-        const defaultFormValues = {
-          product_name: product_name || "",
-          display_name: display_name || "",
-          display_price: display_price || "",
-          product_stocks: product_stocks ? String(product_stocks) : "",
-          product_description: product_description || "",
-          status: String(status) == "Active" ? "Active" : "Inactive",
-          isFeatured: String(isFeatured) == "1" ? "1" : "0",
-          category_id: category_id || "",
-          variants:
-            result &&
-            result.map((value: any, index: number) => ({
-              variant_name: value.variant_name,
-              variant_symbol: value.variant_symbol,
-              variant_price: value.variant_price,
-              variant_stocks: value.variant_stocks,
-            })),
-        };
-        setCategories(getCategories);
-        setProductData(defaultFormValues);
-        reset(defaultFormValues);
+          const defaultFormValues = {
+            product_name: product_name || "",
+            display_name: display_name || "",
+            display_price: display_price || "",
+            product_stocks: product_stocks ? String(product_stocks) : "",
+            product_description: product_description || "",
+            status: String(status) == "Active" ? "Active" : "Inactive",
+            isFeatured: String(isFeatured) == "1" ? "1" : "0",
+            category_id: category_id || "",
+            variants:
+              result &&
+              result.map((value: any) => ({
+                variant_id: value.variant_id || 0,
+                variant_name: value.variant_name || "",
+                variant_symbol: value.variant_symbol || "",
+                variant_price: value.variant_price || 0,
+                variant_stocks: value.variant_stocks || 0,
+              })),
+          };
+          setCategories(getCategories);
+          setProductData(defaultFormValues);
+          reset(defaultFormValues);
+        }
       } catch (error) {
         console.error(error, "failed to fetch data");
       }
     };
     getProductData();
   }, []);
+
+  const handleRemoveForm = async (index: number, field: any) => {
+    try {
+      if (index > 0) {
+        const response = await deleteVariant(id, field.variant_id);
+        if (response.status === 200) {
+          console.log("Variant deleted successfully");
+        } else {
+          console.error("Failed to delete variant");
+        }
+        remove(index);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
   const {
     register,
     handleSubmit,
@@ -258,79 +277,87 @@ const UpdateProductForm = ({ id }: Props) => {
                   <DialogHeader>
                     <DialogTitle>EDIT VARIANT</DialogTitle>
                   </DialogHeader>
-                  {fields.map((field, index) => (
-                    <div key={field.id} className="grid gap-4 py-4">
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <label
-                          htmlFor={`variants.${index}.variant_name`}
-                          className="text-right"
-                        >
-                          Name
-                        </label>
-                        <input
-                          {...register(
-                            `variants.${index}.variant_name` as const
-                          )}
-                          id={`variants${index}.variant_name`}
-                          className="col-span-3"
-                          autoComplete="off"
-                        />
+                  {fields && fields.length > 0 ? (
+                    fields.map((field, index) => (
+                      <div key={field.id} className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <label
+                            htmlFor={`variants.${index}.variant_name`}
+                            className="text-right"
+                          >
+                            Name
+                          </label>
+                          <input
+                            {...register(
+                              `variants.${index}.variant_name` as const
+                            )}
+                            id={`variants${index}.variant_name`}
+                            className="col-span-3"
+                            autoComplete="off"
+                          />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <label
+                            htmlFor={`variants.${index}.variant_symbol`}
+                            className="text-right"
+                          >
+                            Symbol
+                          </label>
+                          <input
+                            {...register(
+                              `variants.${index}.variant_symbol` as const
+                            )}
+                            id={`variants.${index}.variant_symbol`}
+                            className="col-span-3"
+                            autoComplete="off"
+                          />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <label
+                            htmlFor={`variants.${index}.variant_price`}
+                            className="text-right"
+                          >
+                            Price
+                          </label>
+                          <input
+                            {...register(
+                              `variants.${index}.variant_price` as const
+                            )}
+                            type="number"
+                            id={`variants.${index}.variant_price`}
+                            className="col-span-3"
+                            autoComplete="off"
+                          />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <label
+                            htmlFor={`variants.${index}.variant_stocks`}
+                            className="text-right"
+                          >
+                            Stocks
+                          </label>
+                          <input
+                            {...register(
+                              `variants.${index}.variant_stocks` as const
+                            )}
+                            type="number"
+                            id={`variants.${index}.variant_stocks`}
+                            className="col-span-3"
+                            autoComplete="off"
+                          />
+                          <Button
+                            variant="default"
+                            onClick={() => handleRemoveForm(index, field)}
+                          >
+                            DELETE
+                          </Button>
+                        </div>
                       </div>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <label
-                          htmlFor={`variants.${index}.variant_symbol`}
-                          className="text-right"
-                        >
-                          Symbol
-                        </label>
-                        <input
-                          {...register(
-                            `variants.${index}.variant_symbol` as const
-                          )}
-                          id={`variants.${index}.variant_symbol`}
-                          className="col-span-3"
-                          autoComplete="off"
-                        />
-                      </div>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <label
-                          htmlFor={`variants.${index}.variant_price`}
-                          className="text-right"
-                        >
-                          Price
-                        </label>
-                        <input
-                          {...register(
-                            `variants.${index}.variant_price` as const
-                          )}
-                          type="number"
-                          id={`variants.${index}.variant_price`}
-                          className="col-span-3"
-                          autoComplete="off"
-                        />
-                      </div>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <label
-                          htmlFor={`variants.${index}.variant_stocks`}
-                          className="text-right"
-                        >
-                          Stocks
-                        </label>
-                        <input
-                          {...register(
-                            `variants.${index}.variant_stocks` as const
-                          )}
-                          type="number"
-                          id={`variants.${index}.variant_stocks`}
-                          className="col-span-3"
-                          autoComplete="off"
-                        />
-                        <Button variant="default" onClick={() => remove(index)}>
-                          DELETE
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
+                    ))
+                  ) : (
+                    <div>NO EXISTING VARIANTS</div>
+                  )}
+
                   <DialogFooter>
                     <DialogClose>
                       <div>Save changes</div>
