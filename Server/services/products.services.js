@@ -85,6 +85,20 @@ module.exports = {
       })
     })
   },
+  createNewVariantsDB: (product_id, variants) => {
+    return new Promise((resolve, reject) => {
+      variants.map(async (value, index) => {
+        const checkVariant = await module.exports.getVariantByProductIdDB(product_id)
+        const existingVariantId = checkVariant.length
+        const { variant_name, variant_symbol, variant_price, variant_stocks } = value
+        pool.execute(createVariantQuery, [existingVariantId + 1, product_id, variant_name, variant_symbol, variant_price, variant_stocks], (error, result) => {
+          if (error) return reject(error);
+
+          return resolve(variants)
+        })
+      })
+    })
+  },
   getAllVariantsDB: () => {
     return new Promise((resolve, reject) => {
       pool.execute(getAllVariantsQuery, [], (error, result) => {

@@ -18,4 +18,11 @@ export type ProductFormValues = {
   }[];
 };
 
-
+export type VariantFormValue = {
+  variants: {
+    variant_name: string;
+    variant_symbol: string;
+    variant_price: string;
+    variant_stocks: string;
+  }[];
+};

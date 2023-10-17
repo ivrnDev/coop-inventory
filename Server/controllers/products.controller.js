@@ -2,6 +2,7 @@ const fs = require('fs').promises;
 const {
   createProductDB,
   createVariantsDB,
+  createNewVariantsDB,
   getAllVariantsDB,
   getVariantByIdDB,
   getVariantByProductIdDB,
@@ -112,6 +113,23 @@ module.exports = {
       return res.status(500).json({ message: "Internal Server Error", error: error });
     }
   },
+
+  createVariants: async (req, res) => {
+
+    try {
+      //Update variant
+      const { variants } = req.body;
+      const updatedVariants = await createNewVariantsDB(req.params.id, variants);
+
+      const result = {
+        variants: updatedVariants
+      }
+      return res.status(201).json({ message: `Successfully created the variants with the product ID of ${req.params.id}`, result: result })
+    } catch (error) {
+      return res.status(500).json({ message: "Internal Server Error", error: error });
+    }
+  },
+
   //Get Product by Id
   getProductById: async (req, res) => {
     try {

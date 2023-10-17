@@ -6,6 +6,7 @@ const {
   getAllVariants,
   getVariantById,
   getVariantByProductId,
+  createVariants,
   updateProductStocks,
   updateVariantStocks,
   updateProductSold,
@@ -28,6 +29,7 @@ router.patch('/image/:id', upload.single('display_image'), updateProductImage);
 router.patch('/:id/sold', updateProductSold);  //Receive query and params `action=add/value=15` e.g
 
 router.get('/variant/list', getAllVariants);
+router.post('/variant/list/new/:id', createVariants);
 router.get('/variant/list/item', getVariantByProductId); //Receive query
 router.get('/variant/list/:id', getVariantById);
 router.patch('/:id/stock', updateProductStocks);  //Receive query and params `action=add/value=15` e.g
