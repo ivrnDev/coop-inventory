@@ -76,11 +76,10 @@ module.exports = {
   //Create product variants and prices
   createVariantsDB: (product_id, variants) => {
     return new Promise((resolve, reject) => {
-      variants.forEach((value, index) => {
-        const { variant_name, variant_symbol, variant_price, variant_stocks } = value
+      variants.map((variant, index) => {
+        const { variant_name, variant_symbol, variant_price, variant_stocks } = variant;
         pool.execute(createVariantQuery, [index + 1, product_id, variant_name, variant_symbol, variant_price, variant_stocks], (error, result) => {
           if (error) return reject(error);
-
           return resolve(variants)
         })
       })

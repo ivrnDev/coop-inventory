@@ -23,6 +23,7 @@ const {
 
 module.exports = {
   createProduct: async (req, res) => {
+    console.log(req.body)
     try {
       let imagePath;
       if (req.file) {
@@ -46,28 +47,11 @@ module.exports = {
 
       //Get the id of newly created product
       const { product_id } = createdProduct;
-      //Get requested variant
-      const { variant_name, variant_symbol, variant_price, variant_stocks } = req.body;
-      //Loop through variant and return an array of variants
-
-      let variants;
-      variants = [{
-        variant_name,
-        variant_symbol,
-        variant_price,
-        variant_stocks,
-      }]
-      if (Array.isArray(variant_name)) {
-        variants = variant_name.map((name, index) => ({
-          variant_name: name,
-          variant_symbol: variant_symbol[index],
-          variant_price: variant_price[index],
-          variant_stocks: variant_stocks[index],
-        }));
-      }
+      const { variants } = req.body;
+      const parseVariants = JSON.parse(variants)
 
       //Create Variants
-      const createdVariants = await createVariantsDB(product_id, variants)
+      const createdVariants = await createVariantsDB(product_id, parseVariants)
       if (!createdVariants) return res.status(400).json({ message: `Failed to insert variants in a product with an ID of ${product_id}` })
 
       const result = {
@@ -194,7 +178,7 @@ module.exports = {
       const result = await getVariantByProductIdDB(product_id);
       if (result === null) return res.status(200).json({ error: `There is no existing variant with an product ID of ${product_id}` })
       if (!result) return res.status(400).json({ error: `Failed to get variant with a product ID of ${product_id}` });
-      
+
       return res.status(200).json({ message: `Successfully get variant with a product ID of ${product_id}`, result: result })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })
