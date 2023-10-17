@@ -29,6 +29,7 @@ const AddVariants = ({ productId }: Props) => {
       ],
     },
   });
+
   const { fields, append, remove } = useFieldArray({
     rules: { minLength: 1 },
     name: "variants",
@@ -36,7 +37,6 @@ const AddVariants = ({ productId }: Props) => {
   });
 
   const submitForm = async (data: VariantFormValue) => {
-    console.log(data);
     try {
       const response = await createVariant(data, productId);
       if (response.status === 201) {
