@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -34,6 +35,7 @@ import { useEffect, useState } from "react";
 import { CategoriesType, ProductsType } from "@/types/products/products";
 import { getAllCategories } from "@/lib/api/categories";
 import UpdateImageModal from "./UpdateImage";
+import AddVariants from "./AddVariants";
 type Props = {
   id: string;
 };
@@ -104,7 +106,6 @@ const UpdateProductForm = ({ id }: Props) => {
   const submitForm = async (data: ProductFormValues) => {
     try {
       const response = await updateProduct(data, id);
-      console.log(data);
       if (response.status === 200) {
         console.log("Product updated successfully");
       } else {
@@ -251,11 +252,11 @@ const UpdateProductForm = ({ id }: Props) => {
             <div className="flex space-x-5">
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="outline">Variants</Button>
+                  <Button variant={"outline"}>Edit Variants</Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                   <DialogHeader>
-                    <DialogTitle>ADD VARIANT</DialogTitle>
+                    <DialogTitle>EDIT VARIANT</DialogTitle>
                   </DialogHeader>
                   {fields.map((field, index) => (
                     <div key={field.id} className="grid gap-4 py-4">
@@ -327,28 +328,17 @@ const UpdateProductForm = ({ id }: Props) => {
                       </div>
                     </div>
                   ))}
-
                   <DialogFooter>
-                    <Button type="submit">Save changes</Button>
+                    <DialogClose>
+                      <div>Save changes</div>
+                    </DialogClose>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
-              <Button
-                type="button"
-                onClick={() =>
-                  append({
-                    variant_name: "",
-                    variant_symbol: "",
-                    variant_price: "",
-                    variant_stocks: "",
-                  })
-                }
-              >
-                Add Variant
-              </Button>
-              <Button type="submit">SUBMIT</Button>
             </div>
+            <Button type="submit">SUBMIT</Button>
           </form>
+          <AddVariants productId={id} />
         </CardContent>
       </Card>
       <UpdateImageModal productId={id} />
