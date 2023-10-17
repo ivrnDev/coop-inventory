@@ -88,11 +88,17 @@ module.exports = {
   },
   createNewVariantsDB: (product_id, variants) => {
     return new Promise((resolve, reject) => {
-      variants.map(async (value, index) => {
+      variants.forEach(async (value, index) => {
         const checkVariant = await module.exports.getVariantByProductIdDB(product_id)
-        const existingVariantId = checkVariant.length
+        let existingVariantId;
+        if (checkVariant && checkVariant.length > 0) {
+          existingVariantId = checkVariant.length
+        } else {
+          existingVariantId = 0
+        }
+
         const { variant_name, variant_symbol, variant_price, variant_stocks } = value
-        pool.execute(createVariantQuery, [existingVariantId + 1, product_id, variant_name, variant_symbol, variant_price, variant_stocks], (error, result) => {
+        pool.execute(createVariantQuery, [existingVariantId + (index + 1), product_id, variant_name, variant_symbol, variant_price, variant_stocks], (error, result) => {
           if (error) return reject(error);
 
           return resolve(variants)
@@ -139,7 +145,7 @@ module.exports = {
     })
   },
   deleteVariantsDB: (product_id, variant_id) => {
-   
+
     return new Promise((resolve, reject) => {
       pool.execute(deleteVariantsQuery, [product_id, variant_id], (error, result) => {
         if (error) return reject(error)
