@@ -139,8 +139,7 @@ module.exports = {
     })
   },
   deleteVariantsDB: (product_id, variant_id) => {
-    console.log(product_id)
-    console.log(variant_id)
+   
     return new Promise((resolve, reject) => {
       pool.execute(deleteVariantsQuery, [product_id, variant_id], (error, result) => {
         if (error) return reject(error)
