@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ProductsType } from "@/types/products/products";
 import { getAllProducts } from "@/lib/api/products";
 import AdminRenderProducts from "@/components/admin/products/render/Products";
+import CreateCategoriesForm from "@/components/admin/products/forms/CreateCategories";
 
 const AdminProducts = async () => {
   const products: ProductsType[] = await getAllProducts();
@@ -16,12 +17,13 @@ const AdminProducts = async () => {
           ADD PRODUCT
         </Link>
 
-        <Link
+        {/* <Link
           href="products/categories/new"
           className="bg-blue-600 text-white text-lg p-5 flex align-middle justify-center w-fit h-fit"
         >
           CREATE CATEGORIES
-        </Link>
+        </Link> */}
+        <CreateCategoriesForm />
       </section>
 
       <section className="h-fit px-9">

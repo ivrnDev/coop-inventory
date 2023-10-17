@@ -87,7 +87,6 @@ const CreateProductForm = () => {
   });
 
   const submitForm = async (data: ProductFormValues) => {
-    console.log(data)
     const form = new FormData();
     const {variants, ...newData} = data
     for (const key of Object.keys(newData) as (keyof typeof newData)[]) {

@@ -51,13 +51,13 @@ const AddVariants = ({ productId }: Props) => {
 
   return (
     <>
-      <form onSubmit={handleSubmit(submitForm)}>
-        <div className="flex space-x-5">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="outline">Add Variant</Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+      <div className="flex space-x-5">
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline">Add Variant</Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <form onSubmit={handleSubmit(submitForm)}>
               <DialogHeader>
                 <DialogTitle>ADD VARIANT</DialogTitle>
               </DialogHeader>
@@ -147,13 +147,12 @@ const AddVariants = ({ productId }: Props) => {
                   Add Variant
                 </Button>
 
-                <DialogClose>Save Changes</DialogClose>
+                <Button type="submit">UPDATE</Button>
               </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </div>
-        <Button type="submit">UPDATE</Button>
-      </form>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </div>
     </>
   );
 };

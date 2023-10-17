@@ -1,45 +1,36 @@
 "use client";
-import { ChangeEvent, FormEvent, useState } from "react";
-import { CategoriesType } from "@/types/products/products";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { createCategory } from "@/lib/api/categories";
-
+import { CategoriesFormType } from "@/types/form/categories";
+import { Controller, useForm } from "react-hook-form";
 const CreateCategoriesForm = () => {
-  const [formData, setFormData] = useState<CategoriesType>({
-    category_name: "",
-    category_image: null,
+  const { register, handleSubmit, control } = useForm({
+    defaultValues: {
+      category_name: "",
+      category_image: null,
+    },
   });
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const fieldName = e.target.name;
-    const fieldValue = e.target.value;
-    setFormData({ ...formData, [fieldName]: fieldValue });
-  };
-
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const fieldName = e.target.name;
-    if (e.target.files && e.target.files.length > 0) {
-      const selectedFile = e.target.files[0];
-      setFormData({
-        ...formData,
-        [fieldName]: selectedFile,
-      });
-    }
-  };
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = async (data: CategoriesFormType) => {
+    console.log(data);
     const form = new FormData();
-    form.append("category_name", formData.category_name);
-    form.append("category_image", formData.category_image);
-
+    for (const key of Object.keys(data) as (keyof typeof data)[]) {
+      form.append(key, data[key]);
+    }
     try {
       const response = await createCategory(form);
       if (response.status === 201) {
         console.log("Category created successfully");
-        setFormData({
-          category_name: "",
-          category_image: "",
-        });
-        console.log(response.data);
       } else {
         console.error("Failed to create category");
       }
@@ -49,37 +40,51 @@ const CreateCategoriesForm = () => {
   };
 
   return (
-    <div className="flex place-items-center justify-center h-screen bg-slate-600">
-      <div>
-        <h1 className="text-center">CREATE Category</h1>
-        <form
-          onSubmit={handleSubmit}
-          encType="multipart/form-data"
-          className="bg-orange-300 p-10 flex flex-col gap-5 w-fit h-fit "
-        >
-          <div>
-            <label>Name</label>
-            <input
-              type="text"
-              name="category_name"
-              value={formData.category_name}
-              onChange={handleChange}
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant={"outline"}>Create Variants</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <DialogHeader>
+            <DialogTitle>CREATE VARIANT</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col space-y-1.5">
+            <Label htmlFor="category_name">Display Name</Label>
+            <Input
+              {...register("category_name")}
+              id="category_name"
+              placeholder="Category Name"
+              autoComplete="off"
             />
           </div>
+          <Controller
+            name="category_image"
+            control={control}
+            render={({ field: { value, onChange, ...field } }) => (
+              <>
+                <Label htmlFor="category_image">Category Image</Label>
+                <Input
+                  {...field}
+                  onChange={(event) => {
+                    const selectedFile = event.target.files?.[0];
+                    if (selectedFile) {
+                      onChange(selectedFile);
+                    }
+                  }}
+                  type="file"
+                  id="category_image"
+                />
+              </>
+            )}
+          />
 
-          <div>
-            <label>Image</label>
-            <input
-              type="file"
-              name="category_image"
-              onChange={handleFileChange}
-            />
-          </div>
-
-          <button type="submit">CREATE NOW</button>
+          <DialogFooter>
+            <button type="submit">Save changes</button>
+          </DialogFooter>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 
