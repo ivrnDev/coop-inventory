@@ -15,13 +15,6 @@ module.exports = {
         "2xl": "1400px",
       },
     },
-    screens: {
-      sm: "480px",
-      md: "768px",
-      lg: "1024px",
-      xl: "1200px",
-      "2xl": "1536px",
-    },
     extend: {
       colors: {
         border: "hsl(var(--border))",
@@ -82,6 +75,24 @@ module.exports = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      height: {
+        "admin-header": "5rem",
+        "admin-navbar": "3.5rem",
+        "admin-main": "calc(100vh - 5rem)",
+        "admin-main-mobile": "calc(100vh - (5rem + 3.5rem))",
+      },
+      width: {
+        "admin-header": "calc(100vw - 11rem)",
+        "admin-navbar": "11rem",
+        "admin-main": "calc(100vw - 11rem)",
+      },
+      margin: {
+        "admin-header": "11rem",
+        "admin-main": "11rem",
+      },
+      minHeight: {
+        "admin-main": "calc(100vh - 5rem)",
       },
     },
   },

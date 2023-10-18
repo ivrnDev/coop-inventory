@@ -1,18 +1,18 @@
+import Image from "next/image";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 
 const AdminHeader = () => {
   return (
-    <header className="bg-header-admin ml-[150px] w-[calc(100vw-150px)] px-10 h-20 flex items-center justify-between">
+    <header className="bg-header-admin p-4 flex justify-between items-center h-admin-header w-screen lg:w-admin-header lg:ml-admin-header ">
       <div className="w-fit">
-        <p className="font-bold text-[1.2rem] ">Welcome, Admin</p>
-        <p className=" text-[0.8rem] font-semilight">
+        <p className="font-bold text-lg">Welcome, Admin</p>
+        <p className=" font-semilight text-xs">
           7 October 2023 | 11:59 GMT
         </p>
       </div>
-      <div className="flex w-full max-w-sm items-center space-x-2">
-        <Input type="text" placeholder="Search" />
-        <Button type="submit">Search</Button>
+      <div className="w-30 sm:w-60">
+        <Input type="text" placeholder="Search" className="w-full" />
       </div>
     </header>
   );
