@@ -15,11 +15,11 @@ body {
   min-height: 100vh;
 }
 
-.home-main {
+/* .home-main {
   padding-top: 124px;
   min-height: inherit;
   background-color: #ebebeb;
-}
+} */
 /* 
 .admin-main {
   padding-left: 150px;
@@ -37,6 +37,16 @@ body {
 
 @layer base {
   :root {
+    --h-admin-header: 5rem;
+    --h-admin-navbar: 3.5rem;
+    --w-admin-navbar: 11rem;
+    --h-user-header: 5rem;
+    --h-user-navbar: 5rem;
+    --m-admin-header: 11rem;
+    --m-admin-main: 11rem;
+    
+
+    
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 

@@ -1,13 +1,12 @@
-import styles from "@/styles/ui/header/home.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import Cart from "../cart/Cart";
+import "@/styles/globals.css";
 
 const HomeHeader = () => {
   return (
-    <header className={styles.header}>
-      <div className={styles.top_header}>
-        <div className={styles.logo_container}>
+    <header className="bg-header-admin flex justify-between items-center p-3 px-5 h-user-headerz">
+        <div className="flex space-x-3 items-center">
           <Link href="/">
             <Image
               src="/images/qcu-logo.png"
@@ -16,7 +15,7 @@ const HomeHeader = () => {
               height={60}
             />
           </Link>
-          <h1>QCU COOP STORE</h1>
+          <h1 className="font-bold text-lg">QCU COOP STORE</h1>
         </div>
 
         <div>
@@ -29,25 +28,23 @@ const HomeHeader = () => {
             />
           </Link>
         </div>
-      </div>
-
-      <nav className={styles.navbar}>
-        <div className={styles.link_container}>
-          <Link href="/" className={styles.link}>
-            HOME
-          </Link>
-          <Link href="/about" className={styles.link}>
-            ABOUT
-          </Link>
-          <Link href="/products" className={styles.link}>
-            PRODUCTS
-          </Link>
-        </div>
-        <div className="relative">
-          <Cart />
-        </div>
-      </nav>
-    </header>
+      </header>
+      // <nav className="">
+      //   <div className="">
+      //     <Link href="/" className="">
+      //       HOME
+      //     </Link>
+      //     <Link href="/about" className={styles.link}>
+      //       ABOUT
+      //     </Link>
+      //     <Link href="/products" className={styles.link}>
+      //       PRODUCTS
+      //     </Link>
+      //   </div>
+      //   <div className="relative">
+      //     <Cart />
+      //   </div>
+      // </nav>
   );
 };
 

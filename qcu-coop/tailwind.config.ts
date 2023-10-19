@@ -77,22 +77,28 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       height: {
-        "admin-header": "5rem",
-        "admin-navbar": "3.5rem",
-        "admin-main": "calc(100vh - 5rem)",
-        "admin-main-mobile": "calc(100vh - (5rem + 3.5rem))",
+        "admin-header": "var(--h-admin-header)",
+        "admin-navbar": "var(--h-admin-navbar)",
+        "admin-main": "calc(100vh - var(--h-admin-header))",
+        "admin-main-mobile":
+          "calc(100vh - (var(--h-admin-header) + var(--h-admin-navbar)))",
+        "user-header": "var(--h-user-header)",
+        "user-navbar": "var(--h-user-navbar)",
+        "user-main": "calc(100vh - var(--h-user-header))",
       },
       width: {
-        "admin-header": "calc(100vw - 11rem)",
-        "admin-navbar": "11rem",
-        "admin-main": "calc(100vw - 11rem)",
+        "admin-header": "calc(100vw - var(--w-admin-navbar))",
+        "admin-navbar": "var(--w-admin-navbar)",
+        "admin-main": "calc(100vw - var(--w-admin-navbar))",
       },
       margin: {
-        "admin-header": "11rem",
-        "admin-main": "11rem",
+        "admin-header": "var(--m-admin-header)",
+        "admin-main": "var(--m-admin-main)",
       },
       minHeight: {
-        "admin-main": "calc(100vh - 5rem)",
+        "admin-main": "calc(100vh - var(--h-admin-header))",
+        "admin-main-mobile":
+          "calc(100vh - (var(--h-admin-header) + var(--h-admin-navbar)))",
       },
     },
   },
