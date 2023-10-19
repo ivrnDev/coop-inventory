@@ -14,7 +14,7 @@ const Cart = () => {
         </div>
       </Link>
 
-      <div className="text-white font-semibold text-[1.1rem] absolute top-0 left-4">
+      <div className="text-white font-semibold text-[0.9rem] absolute top-0 left-4">
         {cartNumber}
       </div>
     </>

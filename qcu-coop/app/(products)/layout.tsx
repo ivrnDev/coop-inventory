@@ -18,7 +18,9 @@ export default function HomeLayout({
     <>
       <HomeHeader />
       <CategoriesSidebar />
-      <main className="">{children}</main>
+      <main className="bg-gray-700 h-user-main md:h-user-main-mobile">
+        {children}
+      </main>
     </>
   );
 }

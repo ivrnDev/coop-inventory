@@ -14,7 +14,7 @@ export default function HomeLayout({
   return (
     <>
       <HomeHeader />
-      <main className=" bg-gray-700 h-admin-main">{children}</main>
+      <main className=" bg-gray-700 h-user-main md:h-user-main-mobile">{children}</main>
     </>
   );
 }
