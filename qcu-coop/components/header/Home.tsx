@@ -20,9 +20,15 @@ const HomeHeader = () => {
     <>
       <header className="max-md:bg-header-admin bg-white flex justify-between items-center p-2 md:py-3 md:px-6  h-user-header">
         <div className="flex space-x-3 items-center">
-          <div className="relative w-12 h-12 md:w-18 md:h-18">
+          <div className="relative w-12 h-12 md:w-18 md:h-18 object-fill">
             <Link href="/">
-              <Image src="/images/qcu-logo.png" alt="QCU-Logo" fill />
+              <Image
+                src="/images/qcu-logo.png"
+                alt="QCU-Logo"
+                width={50}
+                height={50}
+                loading="lazy"
+              />
             </Link>
           </div>
           <h1 className="font-bold text-lg md:text-xl text-white md:text-black">
