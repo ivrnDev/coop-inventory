@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import styles from "@/styles/pages/user/render/products.module.css";
 import { ProductsType } from "@/types/products/products";
 import AddtoCartButton from "@/components/cart/AddtoCartBtn";
 import { Button } from "@/components/ui/button";
@@ -14,24 +13,29 @@ const RenderProducts = ({ products }: Props) => {
     <>
       {products && products.length > 0 ? (
         products.map((product, index) => (
-          <div key={index} className={styles.card}>
-            <div className={styles.image_container}>
-              <Image
-                src={`data:image/png;base64,${product.display_image}`}
-                alt={product.product_name}
-                fill
-                className={styles.image}
-              />
-            </div>
-            <div className={styles.product_info}>
-              <h1>{product.display_name}</h1>
-              <p className={styles.display_price}>₱ {product.display_price}</p>
-              <div className={styles.sub_info}>
-                <p className={styles.sold}>Sold {product.product_sold}</p>
-                <p className={styles.stocks}>Stocks {product.product_stocks}</p>
+          <Link
+            href={`/products/${product.product_name.toLowerCase()}?id=${
+              product.product_id
+            }`}
+            key={index}
+            className="w-fit"
+          >
+            <div className="bg-white h-60 w-40 shadow-xl rounded-lg flex flex-col items-center p-2">
+              <div className="relative w-full h-28 object-contain object-center border border-black">
+                <Image
+                  src={`data:image/png;base64,${product.display_image}`}
+                  alt={product.product_name}
+                  fill
+                />
               </div>
-            </div>
-            <div className={styles.buttons}>
+              <div className="">
+                <h1>{product.display_name}</h1>
+                <p className="text-custom-orange">₱ {product.display_price}</p>
+                <div className="">
+                  <p className="">{product.product_sold} sold</p>
+                </div>
+              </div>
+              {/* <div className="">
               <AddtoCartButton product={product} />
 
               <Link
@@ -42,8 +46,9 @@ const RenderProducts = ({ products }: Props) => {
               >
                 <Button size="sm">BUY NOW</Button>
               </Link>
+            </div> */}
             </div>
-          </div>
+          </Link>
         ))
       ) : (
         <div className="absolute top-48">

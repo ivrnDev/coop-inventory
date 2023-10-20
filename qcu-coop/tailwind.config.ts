@@ -50,6 +50,9 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        custom: {
+          orange: "#D71313",
+        },
         header: {
           admin: "#3085C3",
         },
@@ -101,8 +104,7 @@ module.exports = {
         "admin-header": "var(--w-admin-navbar)",
         "admin-main": "var(--w-admin-navbar)",
         "user-header-mobile": "var(--h-user-header)",
-        "user-header":
-          "calc((var(--h-user-header) + var(--h-user-navbar)))",
+        "user-header": "calc((var(--h-user-header) + var(--h-user-navbar)))",
         "products-section": "var(--m-product-section))",
       },
       minHeight: {
@@ -113,8 +115,7 @@ module.exports = {
           "calc(100vh - (var(--h-user-header) + var(--h-user-navbar-mobile)))",
         "user-main":
           "calc(100vh - (var(--h-user-header) + var(--h-user-navbar)))",
-        "products-section":
-          "calc(100vh / 2 )",
+        "products-section": "calc(100vh / 2 )",
       },
     },
   },

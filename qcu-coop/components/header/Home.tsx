@@ -9,6 +9,7 @@ const HomeHeader = () => {
     { name: "products", link: "/products", src: "/icons/cube-icon.png" },
     { name: "home", link: "/", src: "/icons/home1-icon.png" },
     { name: "about", link: "/about", src: "/icons/about-icon.png" },
+    { name: "user", link: "/login", src: "/icons/user-icon.svg" },
   ];
   const navigation = [
     { name: "home", link: "/", src: "/icons/home1-icon.png" },

@@ -3,6 +3,7 @@ import { getProductById } from "@/lib/api/products";
 import { ItemType } from "@/types/products/products";
 import Link from "next/link";
 import QuantityInput from "../forms/Quantity";
+import AddtoCartButton from "@/components/cart/AddtoCartBtn";
 
 type Props = {
   id: string;
@@ -71,9 +72,7 @@ const Item = async ({ id, productVariant, qty }: Props) => {
                 ))}
               </div>
               <div>
-                <button className="bg-yellow-500 p-3 rounded-xl">
-                  Add to Cart
-                </button>
+                <AddtoCartButton product={product[0]} />
                 {order &&
                 order.product_id &&
                 order.variant_id &&
