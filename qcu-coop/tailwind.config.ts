@@ -86,8 +86,6 @@ module.exports = {
         "user-header": "var(--h-user-header)",
         "user-navbar": "var(--h-user-navbar)",
         "user-navbar-mobile": "var(--h-user-navbar-mobile)",
-        "user-main": "calc(100vh - var(--h-user-header))",
-        "user-main-mobile": "calc(100vh - (var(--h-user-header) + var(--h-user-navbar)))",
       },
       width: {
         "admin-header": "calc(100vw - var(--w-admin-navbar))",
@@ -102,6 +100,10 @@ module.exports = {
         "admin-main": "calc(100vh - var(--h-admin-header))",
         "admin-main-mobile":
           "calc(100vh - (var(--h-admin-header) + var(--h-admin-navbar)))",
+        "user-main-mobile":
+          "calc(100vh - (var(--h-user-header) + var(--h-user-navbar-mobile)))",
+        "user-main":
+          "calc(100vh - (var(--h-user-header) + var(--h-user-navbar)))",
       },
     },
   },

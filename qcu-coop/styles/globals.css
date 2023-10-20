@@ -39,10 +39,12 @@ body {
   :root {
     --h-admin-header: 5rem;
     --h-admin-navbar: 3.5rem;
-    --w-admin-navbar: 11rem;
     --h-user-header: 5rem;
     --h-user-navbar: 3rem;
     --h-user-navbar-mobile: 2.5rem;
+    
+    --w-admin-navbar: 11rem;
+
     --m-admin-header: 11rem;
     --m-admin-main: 11rem;
     
