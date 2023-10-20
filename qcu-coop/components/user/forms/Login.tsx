@@ -1,14 +1,13 @@
 import Link from "next/link";
-import styles from "@/styles/pages/user/forms/login.module.css";
 
 const LoginForm = () => {
   return (
-    <form className={styles.form}>
+    <form className="">
       <label htmlFor="username">Username</label>
-      <input type="text" name="username" className={styles.input} />
+      <input type="text" name="username" className="" />
       <label htmlFor="password">Password</label>
-      <input type="text" name="password" className={styles.input} />
-      <Link href="./admin/dashboard" className={styles.link}>
+      <input type="text" name="password" className="" />
+      <Link href="./admin/dashboard" className="">
         GO TO ADMIN
       </Link>
     </form>

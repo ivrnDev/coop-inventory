@@ -1,10 +1,8 @@
-import Image from "next/image";
-import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 
 const AdminHeader = () => {
   return (
-    <header className="bg-header-admin p-4 flex justify-between items-center h-admin-header w-screen lg:w-admin-header lg:ml-admin-header ">
+    <header className="bg-header-admin p-4 flex justify-between items-center h-admin-header w-screen md:w-admin-header md:ml-admin-header ">
       <div className="w-fit">
         <p className="font-bold text-lg">Welcome, Admin</p>
         <p className=" font-semilight text-xs">

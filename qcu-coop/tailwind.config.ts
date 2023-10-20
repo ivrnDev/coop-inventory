@@ -57,6 +57,10 @@ module.exports = {
           admin: "#085C9A",
           user: "#3085C3",
         },
+        main: {
+          user: "#D9D9D9",
+          admin: "#D9D9D9",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -91,10 +95,15 @@ module.exports = {
         "admin-header": "calc(100vw - var(--w-admin-navbar))",
         "admin-navbar": "var(--w-admin-navbar)",
         "admin-main": "calc(100vw - var(--w-admin-navbar))",
+        "products-section": "calc(100vw - var(--m-product-section))",
       },
       margin: {
-        "admin-header": "var(--m-admin-header)",
-        "admin-main": "var(--m-admin-main)",
+        "admin-header": "var(--w-admin-navbar)",
+        "admin-main": "var(--w-admin-navbar)",
+        "user-header-mobile": "var(--h-user-header)",
+        "user-header":
+          "calc((var(--h-user-header) + var(--h-user-navbar)))",
+        "products-section": "var(--m-product-section))",
       },
       minHeight: {
         "admin-main": "calc(100vh - var(--h-admin-header))",
@@ -104,6 +113,8 @@ module.exports = {
           "calc(100vh - (var(--h-user-header) + var(--h-user-navbar-mobile)))",
         "user-main":
           "calc(100vh - (var(--h-user-header) + var(--h-user-navbar)))",
+        "products-section":
+          "calc(100vh / 2 )",
       },
     },
   },

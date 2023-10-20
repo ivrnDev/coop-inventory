@@ -42,12 +42,12 @@ const CreateCategoriesForm = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant={"outline"}>Create Variants</Button>
+        <Button variant={"outline"}>Create Category</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
-            <DialogTitle>CREATE VARIANT</DialogTitle>
+            <DialogTitle>CREATE CATEGORY</DialogTitle>
           </DialogHeader>
           <div className="flex flex-col space-y-1.5">
             <Label htmlFor="category_name">Display Name</Label>

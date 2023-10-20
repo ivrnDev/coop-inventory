@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { ProductsType } from "@/types/products/products";
 import { getAllProducts } from "@/lib/api/products";

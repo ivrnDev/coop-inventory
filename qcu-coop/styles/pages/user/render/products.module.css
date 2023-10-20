@@ -1,4 +1,4 @@
-.section {
+/* .section {
   @apply ml-[35%] p-[30px] grid grid-cols-3 gap-12;
 }
 
@@ -39,4 +39,4 @@
 
 .no_available_products {
   @apply font-extrabold text-[3rem] w-fit h-fit whitespace-nowrap mx-[50%] my-[50%] translate-y-1/2;
-}
+} */

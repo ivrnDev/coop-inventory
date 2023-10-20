@@ -12,8 +12,7 @@ type Props = {
 const RenderProducts = ({ products }: Props) => {
   return (
     <>
-      {products &&
-        products.length > 0 &&
+      {products && products.length > 0 ? (
         products.map((product, index) => (
           <div key={index} className={styles.card}>
             <div className={styles.image_container}>
@@ -45,7 +44,12 @@ const RenderProducts = ({ products }: Props) => {
               </Link>
             </div>
           </div>
-        ))}
+        ))
+      ) : (
+        <div className="absolute top-48">
+          <p className="font-bold text-xl">NO PRODUCTS AVAILABLE</p>
+        </div>
+      )}
     </>
   );
 };
