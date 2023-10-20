@@ -3,7 +3,6 @@ import Link from "next/link";
 import Cart from "../cart/Cart";
 import "@/styles/globals.css";
 import { Input } from "../ui/input";
-import { NavigationOff } from "lucide-react";
 
 const HomeHeader = () => {
   const navigationMobile = [
@@ -26,9 +25,9 @@ const HomeHeader = () => {
               <Image src="/images/qcu-logo.png" alt="QCU-Logo" fill />
             </Link>
           </div>
-          <h1 className="font-bold text-lg md:text-xl lg:text-black">
+          <h1 className="font-bold text-lg md:text-xl text-white md:text-black">
             QCU COOP STORE
-          </h1> 
+          </h1>
         </div>
 
         <div className="flex justify-center items-center space-x-4">
