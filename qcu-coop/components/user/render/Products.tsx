@@ -32,21 +32,9 @@ const RenderProducts = ({ products }: Props) => {
                 <h1>{product.display_name}</h1>
                 <p className="text-custom-orange">₱ {product.display_price}</p>
                 <div className="">
-                  <p className="">{product.product_sold} sold</p>
+                  <p className="">{product.product_stocks} stocks</p>
                 </div>
               </div>
-              {/* <div className="">
-              <AddtoCartButton product={product} />
-
-              <Link
-                scroll={false}
-                href={`/products/${product.product_name.toLowerCase()}?id=${
-                  product.product_id
-                }`}
-              >
-                <Button size="sm">BUY NOW</Button>
-              </Link>
-            </div> */}
             </div>
           </Link>
         ))

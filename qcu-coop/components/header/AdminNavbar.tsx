@@ -65,21 +65,6 @@ const AdminNavBar = () => {
             </div>
           </div>
         </Link>
-        <Link href="/admin/payments">
-          <div className="flex flex-row-reverse gap-3 items-center">
-            <p className="hidden md:inline font-bold text-lg uppercase">
-              Payments
-            </p>
-            <div className="relative w-10 h-10 ">
-              <Image
-                src="/icons/payments-icon.png"
-                alt="payments-icon"
-                fill
-                className="hover:animate-bounce md:hover:animate-none"
-              />
-            </div>
-          </div>
-        </Link>
         <Link href="/admin/analytics">
           <div className="flex flex-row-reverse gap-3 items-center">
             <p className="hidden md:inline font-bold text-lg uppercase">

@@ -1,9 +1,12 @@
-import React from 'react'
+import AdminRenderOrders from "@/components/admin/products/render/Payments";
+import React from "react";
 
 const Orders = () => {
   return (
-    <div>Orders</div>
-  )
-}
+    <>
+      <AdminRenderOrders />
+    </>
+  );
+};
 
-export default Orders
+export default Orders;
