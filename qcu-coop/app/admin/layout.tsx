@@ -17,7 +17,7 @@ export default function AdminLayout({
   return (
     <>
       <AdminHeader />
-      <main className="bg-main-admin min-h-admin-main-mobile md:min-h-admin-main md:w-admin-main md:ml-admin-main ">{children}</main>
+      <main className="bg-main-admin min-h-admin-main-mobile md:min-h-admin-main md:w-admin-main md:ml-admin-main md:p-5">{children}</main>
       <AdminNavBar />
     </>
   );

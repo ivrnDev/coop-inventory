@@ -10,17 +10,17 @@ import Link from "next/link";
 import { TransactionsType } from "@/types/transactions/transactions";
 import { getAllTransactions } from "@/lib/api/transaction";
 
-const AdminRenderOrders = async () => {
+const AdminRenderTransactions = async () => {
   const transactions: TransactionsType[] = await getAllTransactions();
   return (
     <>
-      <Table>
+      <Table className="w-[70%] border border-black">
         <TableHeader>
           <TableRow>
             <TableHead>Transaction ID</TableHead>
             <TableHead>Customer Name</TableHead>
             <TableHead>Customer Email</TableHead>
-            <TableHead>Custome Phone</TableHead>
+            <TableHead>Customer Phone</TableHead>
             <TableHead>Payment Method</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Options</TableHead>
@@ -61,4 +61,4 @@ const AdminRenderOrders = async () => {
   );
 };
 
-export default AdminRenderOrders;
+export default AdminRenderTransactions;

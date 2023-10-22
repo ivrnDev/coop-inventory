@@ -35,12 +35,13 @@ module.exports = {
     }
   },
   getOrderbyTransactionId: async (req, res) => {
+    const { transaction_id } = req.query;
     try {
-      const result = await getOrderbyTransactionIdDB(req.query.transaction_id);
-      if (result === null) return res.status(200).json({ message: `There is no available orders for ID ${req.query.transaction_id}` })
-      return res.status(200).json({ message: `Successfully get order with transaction ID of ${req.params.id}`, result: result })
+      const result = await getOrderbyTransactionIdDB(transaction_id);
+      if (result === null) return res.status(200).json({ message: `There is no available orders for ID ${transaction_id}` })
+      return res.status(200).json({ message: `Successfully get order with transaction ID of ${transaction_id}`, result: result })
     } catch (error) {
-      return res.status(500).json({ message: "Internal Server Error", error: erro })
+      return res.status(500).json({ message: "Internal Server Error", error: error })
     }
   },
   getOrderbyId: async (req, res) => {

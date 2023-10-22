@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const AdminHeader = () => {
   return (
-    <header className="bg-header-admin p-4 flex justify-between items-center h-admin-header w-screen md:w-admin-header md:ml-admin-header ">
+    <header className="bg-header-admin p-4 flex justify-between items-center h-admin-header w-screen md:w-admin-header md:ml-admin-header-x">
       <div className="flex space-x-2">
         <Link href="/">
           <Image

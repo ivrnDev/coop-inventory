@@ -8,3 +8,7 @@ export type TransactionsType = {
   order_status: string;
   transaction_date: string;
 };
+
+export type TransactionOrdersType = {
+
+}

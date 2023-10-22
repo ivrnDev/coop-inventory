@@ -1,10 +1,14 @@
-import AdminRenderOrders from "@/components/admin/products/render/Payments";
+import AdminRenderOrders from "@/components/admin/products/render/Orders";
+import AdminRenderTransactions from "@/components/admin/products/render/Payments";
 import React from "react";
 
 const Orders = () => {
   return (
     <>
-      <AdminRenderOrders />
+      <section>
+        <AdminRenderTransactions />
+      </section>
+      <AdminRenderOrders/>
     </>
   );
 };
