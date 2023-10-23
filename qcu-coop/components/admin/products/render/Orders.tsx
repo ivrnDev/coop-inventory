@@ -1,11 +1,15 @@
-import { Button } from "@/components/ui/button";
-import { TransactionOrdersType } from "@/types/transactions/transactions";
+import {
+  TransactionOrdersType,
+  TransactionsType,
+} from "@/types/transactions/transactions";
 import { format } from "date-fns";
+import { UpdateTransactionStatus } from "./transactions/UpdateTransactionStatus";
 type Props = {
   orders: TransactionOrdersType[];
+  transactionById: TransactionsType;
 };
 
-const AdminRenderOrders = ({ orders }: Props) => {
+const AdminRenderOrders = async ({ orders, transactionById }: Props) => {
   return (
     orders &&
     orders.length > 0 && (
@@ -44,6 +48,9 @@ const AdminRenderOrders = ({ orders }: Props) => {
         <div>
           <h2 className="float-left">Total Amount: </h2>
           <p className="float-right text-sm">{orders[0].overall_total}</p>
+        </div>
+        <div>
+          <UpdateTransactionStatus transactionById={transactionById} />
         </div>
       </section>
     )

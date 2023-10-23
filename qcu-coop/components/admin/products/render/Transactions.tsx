@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { TransactionsType } from "@/types/transactions/transactions";
-import ViewButton from "./view";
+import ViewButton from "./transactions/ViewOrder";
 
 type Params = {
   transactions: TransactionsType[] | undefined;
