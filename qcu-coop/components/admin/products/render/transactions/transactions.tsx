@@ -6,13 +6,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import Link from "next/link";
 import { TransactionsType } from "@/types/transactions/transactions";
-import { getAllTransactions } from "@/lib/api/transaction";
 import ViewButton from "./view";
 
-const AdminRenderTransactions = async () => {
-  const transactions: TransactionsType[] = await getAllTransactions();
+type Params = {
+  transactions: TransactionsType[] | undefined;
+};
+
+const AdminRenderTransactions = async ({ transactions }: Params) => {
   return (
     <div className="border border-black w-[70%]">
       <Table className="">
@@ -33,7 +34,9 @@ const AdminRenderTransactions = async () => {
             transactions.map((transaction, index) => (
               <TableRow key={index} className="">
                 <TableCell>{transaction.transaction_id}</TableCell>
-                <TableCell className="capitalize">{transaction.customer_name}</TableCell>
+                <TableCell className="capitalize">
+                  {transaction.customer_name}
+                </TableCell>
                 <TableCell>{transaction.customer_email}</TableCell>
                 <TableCell>{transaction.customer_phone}</TableCell>
                 <TableCell>
@@ -41,9 +44,11 @@ const AdminRenderTransactions = async () => {
                     ? "Over the Counter"
                     : "Online Payment"}
                 </TableCell>
-                <TableCell className="capitalize">{transaction.order_status}</TableCell>
+                <TableCell className="capitalize">
+                  {transaction.order_status}
+                </TableCell>
                 <TableCell>
-                  <ViewButton transactionId={transaction.transaction_id}/>
+                  <ViewButton transactionId={transaction.transaction_id} />
                 </TableCell>
               </TableRow>
             ))

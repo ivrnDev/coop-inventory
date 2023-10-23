@@ -1,6 +1,6 @@
 const pool = require('../db/database')
 const { transactionQueries, orderQueries } = require('../db/dbQueries.js')
-const { createTransactionQuery, getAllTransactionsQuery, updateTransactionAmountQuery, updateTransactionStatusQuery, getTransactionByIdQuery } = transactionQueries;
+const { createTransactionQuery, getAllTransactionsQuery, updateTransactionAmountQuery, updateTransactionStatusQuery, getTransactionByIdQuery, getAllFilteredTransactionsQuery } = transactionQueries;
 const { updateOrderStatusByIDQuery, updateOrderStatusByTransactionIDQuery } = orderQueries
 
 module.exports = {
@@ -28,6 +28,20 @@ module.exports = {
         return resolve(result);
       })
     })
+  },
+  getAllFilteredTransactionsDB: async (filter) => {
+    if (filter !== 'all') {
+      return new Promise((resolve, reject) => {
+        pool.execute(getAllFilteredTransactionsQuery, [filter], (error, result) => {
+          if (error) return reject(error);
+          if (result.length === 0) return resolve(null)
+          return resolve(result);
+        })
+      })
+    } else {
+      return await module.exports.getAllTransactionsDB();
+    }
+
   },
   getTransactionByIdDB: (transaction_id) => {
     return new Promise((resolve, reject) => {
@@ -64,17 +78,17 @@ module.exports = {
   },
   updateTransactionStatusDB: (transaction_id, transaction_status) => {
 
-      return new Promise(async (resolve, reject) => {
-        let status;
-        status = (transaction_status === 'completed') ? 'paid' : (transaction_status === 'pending') ? 'pending' : 'cancelled';
-        await module.exports.updateOrderStatusDB(null, null, transaction_id, status); //Update all
-        pool.execute(updateTransactionStatusQuery, [transaction_status, transaction_id], (error, result) => {
-          if (error) return reject(error);
-          return resolve(result)
-        })
+    return new Promise(async (resolve, reject) => {
+      let status;
+      status = (transaction_status === 'completed') ? 'paid' : (transaction_status === 'pending') ? 'pending' : 'cancelled';
+      await module.exports.updateOrderStatusDB(null, null, transaction_id, status); //Update all
+      pool.execute(updateTransactionStatusQuery, [transaction_status, transaction_id], (error, result) => {
+        if (error) return reject(error);
+        return resolve(result)
       })
-  
-   
+    })
+
+
 
   },
   updateOrderStatusDB: (order_id, order_status, transaction_id, setAllStatus) => {

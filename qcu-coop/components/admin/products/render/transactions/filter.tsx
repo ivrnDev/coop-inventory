@@ -45,9 +45,9 @@ const TransactionFilter = () => {
       <Button
         variant="default"
         className="rounded-xl"
-        onClick={() => handleFilter("rejected")}
+        onClick={() => handleFilter("cancelled")}
       >
-        Rejected
+        Cancelled
       </Button>
     </div>
   );
