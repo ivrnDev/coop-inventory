@@ -155,7 +155,7 @@ module.exports = {
             WHERE t.status = ?
         `,
         getTransactionByIdQuery: `
-            SELECT t.transaction_id, c.customer_name, t.transaction_amount, t.payment_method, t.status as order_status, t.transaction_date
+            SELECT t.transaction_id, c.customer_name, c.customer_phone, c.customer_email, t.transaction_amount, t.payment_method, t.status as order_status, t.transaction_date
             FROM transactions as t
             JOIN customers AS c ON t.customer_id = c.customer_id
             WHERE transaction_id = ?
