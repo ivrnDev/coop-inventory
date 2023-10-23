@@ -14,10 +14,10 @@ const Orders = async ({ searchParams }: Params) => {
   const transactions = filter && (await getTransactionByFilter(filter));
   return (
     <>
-      <section>
+      <section className="">
         <TransactionFilter />
       </section>
-      <section>
+      <section className="mt-10">
         <AdminRenderTransactions transactions={transactions} />
       </section>
       <section>
