@@ -10,5 +10,13 @@ export type TransactionsType = {
 };
 
 export type TransactionOrdersType = {
-
-}
+  order_id: number;
+  transaction_id: number;
+  product_name: string;
+  variant_name: string;
+  order_quantity: number;
+  order_status: string;
+  order_total: string;
+  date: string;
+  overall_total: string;
+};

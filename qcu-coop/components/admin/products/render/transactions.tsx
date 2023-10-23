@@ -13,8 +13,8 @@ import { getAllTransactions } from "@/lib/api/transaction";
 const AdminRenderTransactions = async () => {
   const transactions: TransactionsType[] = await getAllTransactions();
   return (
-    <>
-      <Table className="w-[70%] border border-black">
+    <div className="border border-black w-[70%]">
+      <Table className="">
         <TableHeader>
           <TableRow>
             <TableHead>Transaction ID</TableHead>
@@ -42,7 +42,7 @@ const AdminRenderTransactions = async () => {
                 </TableCell>
                 <TableCell>{transaction.order_status}</TableCell>
                 <TableCell>
-                  <Link href={`./orders/${transaction.transaction_id}`}>
+                  <Link href={`./orders?${new URLSearchParams({id: String(transaction.transaction_id)})}`}> 
                     View
                   </Link>
                 </TableCell>
@@ -57,7 +57,7 @@ const AdminRenderTransactions = async () => {
           )}
         </TableBody>
       </Table>
-    </>
+    </div>
   );
 };
 

@@ -101,11 +101,15 @@ module.exports = {
         "products-section": "calc(100vw - var(--m-product-section))",
       },
       margin: {
-        "admin-header": "var(--w-admin-navbar)",
+        "admin-header-x": "var(--w-admin-navbar)",
+        "admin-header-y": "var(--h-admin-header)",
         "admin-main": "var(--w-admin-navbar)",
         "user-header-mobile": "var(--h-user-header)",
         "user-header": "calc((var(--h-user-header) + var(--h-user-navbar)))",
         "products-section": "var(--m-product-section))",
+      },
+      padding: {
+        "admin-main": "var(--p-admin-main)",
       },
       minHeight: {
         "admin-main": "calc(100vh - var(--h-admin-header))",
