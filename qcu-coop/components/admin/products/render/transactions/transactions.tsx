@@ -9,6 +9,7 @@ import {
 import Link from "next/link";
 import { TransactionsType } from "@/types/transactions/transactions";
 import { getAllTransactions } from "@/lib/api/transaction";
+import ViewButton from "./view";
 
 const AdminRenderTransactions = async () => {
   const transactions: TransactionsType[] = await getAllTransactions();
@@ -42,9 +43,7 @@ const AdminRenderTransactions = async () => {
                 </TableCell>
                 <TableCell className="capitalize">{transaction.order_status}</TableCell>
                 <TableCell>
-                  <Link href={`./orders?${new URLSearchParams({id: String(transaction.transaction_id)})}`}> 
-                    View
-                  </Link>
+                  <ViewButton transactionId={transaction.transaction_id}/>
                 </TableCell>
               </TableRow>
             ))

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 20, 2023 at 08:23 AM
+-- Generation Time: Oct 23, 2023 at 08:05 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -97,7 +97,7 @@ CREATE TABLE `orders` (
   `quantity` int(11) NOT NULL,
   `order_total` decimal(10,2) NOT NULL,
   `order_status` varchar(255) NOT NULL DEFAULT 'unpaid',
-  `date_created` date NOT NULL DEFAULT current_timestamp()
+  `date_created` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -115,7 +115,7 @@ CREATE TABLE `products` (
   `product_stocks` int(10) UNSIGNED NOT NULL DEFAULT 0,
   `product_sold` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `product_description` varchar(255) NOT NULL,
-  `display_image` blob NOT NULL,
+  `display_image` longblob NOT NULL,
   `status` varchar(255) NOT NULL DEFAULT 'Inactive',
   `isFeatured` tinyint(1) NOT NULL DEFAULT 0,
   `isDeleted` tinyint(4) NOT NULL DEFAULT 0,
@@ -134,7 +134,7 @@ CREATE TABLE `transactions` (
   `transaction_amount` decimal(10,2) DEFAULT 0.00,
   `payment_method` varchar(255) NOT NULL DEFAULT 'cash',
   `status` varchar(255) NOT NULL DEFAULT 'pending',
-  `transaction_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `transaction_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
