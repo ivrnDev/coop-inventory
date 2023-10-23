@@ -25,10 +25,19 @@ module.exports = {
             WHERE id = ?
         `,
         getOrderbyTransactionIdQuery: `
-            SELECT o.id as order_id, o.transaction_id, p.product_name, o.variant_name, o.quantity as order_quantity, o.order_status, o.order_total
+            SELECT
+            o.id as order_id,
+            o.transaction_id,
+            p.product_name,
+            o.variant_name,
+            o.quantity as order_quantity,
+            o.order_status,
+            o.order_total,
+            o.date_created as date,
+            SUM(o.order_total) OVER () as overall_total
             FROM orders as o
             JOIN products AS p ON o.product_id = p.product_id
-            WHERE transaction_id = ?
+            WHERE transaction_id = ?;
         `,
         getVariantPriceQuery: `
             SELECT variant_price, variant_name FROM variants WHERE product_id = ? AND variant_id = ?
@@ -127,7 +136,7 @@ module.exports = {
         getProductAlbumByIDQuery: `
             SELECT * FROM albums WHERE product_id = ?
         `,
-       
+
 
     },
     transactionQueries: {
