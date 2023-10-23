@@ -32,7 +32,7 @@ const AdminRenderTransactions = async () => {
             transactions.map((transaction, index) => (
               <TableRow key={index} className="">
                 <TableCell>{transaction.transaction_id}</TableCell>
-                <TableCell>{transaction.customer_name}</TableCell>
+                <TableCell className="capitalize">{transaction.customer_name}</TableCell>
                 <TableCell>{transaction.customer_email}</TableCell>
                 <TableCell>{transaction.customer_phone}</TableCell>
                 <TableCell>
@@ -40,7 +40,7 @@ const AdminRenderTransactions = async () => {
                     ? "Over the Counter"
                     : "Online Payment"}
                 </TableCell>
-                <TableCell>{transaction.order_status}</TableCell>
+                <TableCell className="capitalize">{transaction.order_status}</TableCell>
                 <TableCell>
                   <Link href={`./orders?${new URLSearchParams({id: String(transaction.transaction_id)})}`}> 
                     View
