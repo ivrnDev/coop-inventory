@@ -2,24 +2,22 @@
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import classNames from "classnames";
-import { useState } from "react";
 
 const TransactionFilter = () => {
   const searchParams = useSearchParams();
-  const parameters = searchParams.get("id");
+  const currentId = searchParams?.get("id");
+  const currentFilter = searchParams.get("filter");
   const router = useRouter();
   const pathname = usePathname();
-  const [selectedFilter, setSelectedFilter] = useState("");
 
   const handleFilter = (filter: string) => {
     const params = new URLSearchParams({ filter });
 
-    if (parameters !== null) {
-      params.append("id", parameters);
+    if (currentId !== null) {
+      params.append("id", currentId);
     }
 
     router.push(`${pathname}?${params.toString()}`);
-    setSelectedFilter(filter);
   };
 
   return (
@@ -28,7 +26,7 @@ const TransactionFilter = () => {
         onClick={() => handleFilter("all")}
         className={classNames({
           "rounded-xl": true,
-          "bg-green-600": selectedFilter === "all",
+          "bg-green-600": currentFilter === "all",
         })}
       >
         All
@@ -37,7 +35,7 @@ const TransactionFilter = () => {
         onClick={() => handleFilter("pending")}
         className={classNames({
           "rounded-xl": true,
-          "bg-green-600": selectedFilter === "pending",
+          "bg-green-600": currentFilter === "pending",
         })}
       >
         Pending
@@ -46,7 +44,7 @@ const TransactionFilter = () => {
         onClick={() => handleFilter("completed")}
         className={classNames({
           "rounded-xl": true,
-          "bg-green-600": selectedFilter === "completed",
+          "bg-green-600": currentFilter === "completed",
         })}
       >
         Completed
@@ -55,7 +53,7 @@ const TransactionFilter = () => {
         onClick={() => handleFilter("cancelled")}
         className={classNames({
           "rounded-xl": true,
-          "bg-green-600": selectedFilter === "cancelled",
+          "bg-green-600": currentFilter === "cancelled",
         })}
       >
         Cancelled
