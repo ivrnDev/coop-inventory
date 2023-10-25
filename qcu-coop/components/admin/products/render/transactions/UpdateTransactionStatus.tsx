@@ -29,17 +29,10 @@ type Props = {
 };
 export const UpdateTransactionStatus = ({ transactionById }: Props) => {
   const router = useRouter();
-  const { handleSubmit, control } = useForm({
-    defaultValues: {
-      status: transactionById.order_status,
-    },
-  });
-  const [status, setstatus] = useState("");
+  // const [status, setstatus] = useState("");
 
   const onSubmit = (status: string) => {
-    setstatus(status);
-  };
-  useEffect(() => {
+    // setstatus(status);
     const updateStatus = async () => {
       if (status) {
         try {
@@ -59,13 +52,15 @@ export const UpdateTransactionStatus = ({ transactionById }: Props) => {
     };
     updateStatus();
     router.refresh();
-  }, [handleSubmit]);
+  };
+
+  useEffect(() => {}, [onSubmit]);
   return (
     <>
-      {/* {transactionById.order_status === "cancelled" && (
+      {transactionById.order_status === "cancelled" && (
         <Button onClick={() => onSubmit("pending")}>RESTORE</Button>
       )}
-       {transactionById.order_status !== "cancelled" && (
+      {transactionById.order_status !== "cancelled" && (
         <AlertDialog>
           <AlertDialogTrigger className="capitalize bg-green-400  p-4 rounded-md">
             {transactionById.order_status}
@@ -85,48 +80,8 @@ export const UpdateTransactionStatus = ({ transactionById }: Props) => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-      )} 
+      )}
 
-      <div className="flex flex-col space-y-1.5">
-        <Controller
-          name="status"
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <>
-              <AlertDialog>
-                <AlertDialogTrigger className="" ref={}>
-                  <Select onValueChange={onChange} value={value}>
-                    <SelectTrigger id="status">
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                    <SelectContent position="popper">
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="completed">Completed</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Do you want to make changes?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action will update the transaction status to
-                      completed.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => onSubmit("completed")}>
-                      Confirm
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </>
-          )}
-        />
-      </div>
       {transactionById.order_status !== "cancelled" && (
         <AlertDialog>
           <AlertDialogTrigger className="capitalize bg-red-400 p-3 rounded-md">
@@ -147,7 +102,7 @@ export const UpdateTransactionStatus = ({ transactionById }: Props) => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-      )} */}
+      )}
     </>
   );
 };
