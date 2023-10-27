@@ -60,8 +60,7 @@ const CreateProductForm = () => {
     register,
     handleSubmit,
     control,
-    formState: { errors },
-    reset,
+    formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm<ValidationProduct>({
     resolver: zodResolver(ProductSchema),
   });
@@ -471,7 +470,7 @@ const CreateProductForm = () => {
                 </DialogContent>
               </Dialog>
             </div>
-            <Button type="submit">SUBMIT</Button>
+            <Button type="submit" disabled={isSubmitSuccessful}>{isSubmitting ? "Submitting" : "Submit"}</Button>
           </form>
         </CardContent>
       </Card>
