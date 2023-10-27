@@ -15,14 +15,18 @@ import { createCategory } from "@/lib/api/categories";
 import { CategoriesFormType } from "@/types/form/categories";
 import { Controller, useForm } from "react-hook-form";
 const CreateCategoriesForm = () => {
-  const { register, handleSubmit, control } = useForm({
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       category_name: "",
       category_image: null,
     },
   });
   const onSubmit = async (data: CategoriesFormType) => {
-    console.log(data);
     const form = new FormData();
     for (const key of Object.keys(data) as (keyof typeof data)[]) {
       form.append(key, data[key]);
@@ -52,15 +56,19 @@ const CreateCategoriesForm = () => {
           <div className="flex flex-col space-y-1.5">
             <Label htmlFor="category_name">Display Name</Label>
             <Input
-              {...register("category_name")}
+              {...register("category_name", { required: true })}
               id="category_name"
               placeholder="Category Name"
               autoComplete="off"
             />
+            {errors.category_name && <p className="text-red-600 text-sm mt-2">Category name is required*</p>}
           </div>
           <Controller
             name="category_image"
             control={control}
+            rules={{
+              required: true,
+            }}
             render={({ field: { value, onChange, ...field } }) => (
               <>
                 <Label htmlFor="category_image">Category Image</Label>
@@ -78,6 +86,7 @@ const CreateCategoriesForm = () => {
               </>
             )}
           />
+          {errors.category_image && <p className="text-red-600 text-sm mt-2">Image is required*</p>}
 
           <DialogFooter>
             <button type="submit">Save changes</button>
