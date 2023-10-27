@@ -30,7 +30,7 @@ const VariantSchema = z.object({
       message: "Variant stocks is required",
     }),
 });
-export const UpdateProductSchema = z.object({
+export const ProductSchema = z.object({
   product_name: z
     .string()
     .trim()
@@ -102,16 +102,19 @@ export const UpdateProductSchema = z.object({
     .any()
     .refine((value) => !!value, {
       message: "Category image is required",
-      path: ["category_image"],
+
     })
     .refine(
       (file) => {
+        if (!file) {
+          return false;
+        }
         const allowedFileTypes = ["image/jpeg", "image/png"];
         return allowedFileTypes.includes(file.type);
       },
       {
         message: "Invalid file type. Only JPEG and PNG images are allowed.",
-        path: ["category_image"],
+
       }
     ),
   variants: z.array(VariantSchema),

@@ -32,11 +32,16 @@ import { Button } from "@/components/ui/button";
 import { createProduct } from "@/lib/api/products";
 import { ProductFormValues } from "@/types/form/products";
 import { useEffect, useState } from "react";
-import { CategoriesType, ProductsType } from "@/types/products/products";
+import { CategoriesType } from "@/types/products/products";
 import { getAllCategories } from "@/lib/api/categories";
+import { z } from "zod";
+import { ProductSchema } from "@/middleware/zod/products";
+import { zodResolver } from "@hookform/resolvers/zod";
+import classNames from "classnames";
+
+type ValidationProduct = z.infer<typeof ProductSchema>;
 
 const CreateProductForm = () => {
-  const [productData, setProductData] = useState<any>();
   const [categories, setCategories] = useState<CategoriesType[]>([]);
 
   useEffect(() => {
@@ -57,25 +62,8 @@ const CreateProductForm = () => {
     control,
     formState: { errors },
     reset,
-  } = useForm<ProductFormValues>({
-    defaultValues: {
-      product_name: "",
-      display_name: "",
-      display_price: "",
-      product_stocks: "",
-      product_description: "",
-      status: "",
-      isFeatured: "",
-      category_id: "",
-      variants: [
-        {
-          variant_name: "",
-          variant_symbol: "",
-          variant_price: "0",
-          variant_stocks: "0",
-        },
-      ],
-    },
+  } = useForm<ValidationProduct>({
+    resolver: zodResolver(ProductSchema),
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -118,9 +106,6 @@ const CreateProductForm = () => {
                 <Controller
                   name="display_image"
                   control={control}
-                  rules={{
-                    required: true,
-                  }}
                   render={({ field: { value, onChange, ...field } }) => (
                     <>
                       <Label htmlFor="display_image">Image</Label>
@@ -134,22 +119,35 @@ const CreateProductForm = () => {
                         }}
                         type="file"
                         id="display_image"
+                        className={classNames({
+                          "border-red-600": errors.display_image,
+                        })}
                       />
                     </>
                   )}
                 />
+                {errors.display_image && (
+                  <p className="text-red-600 text-sm mt-2">
+                    <>{errors.display_image?.message}</>
+                  </p>
+                )}
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="product_name">Name</Label>
                 <Input
-                  {...register("product_name", {
-                    required: true,
-                    maxLength: 20,
-                  })}
+                  {...register("product_name")}
                   id="product_name"
                   placeholder="Product Name"
                   autoComplete="off"
+                  className={classNames({
+                    "border-red-600": errors.product_name,
+                  })}
                 />
+                {errors.product_name && (
+                  <p className="text-red-600 text-sm mt-2">
+                    <>{errors.product_name?.message}</>
+                  </p>
+                )}
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="display_name">Display Name</Label>
@@ -158,7 +156,15 @@ const CreateProductForm = () => {
                   id="display_name"
                   placeholder="Display Name"
                   autoComplete="off"
+                  className={classNames({
+                    "border-red-600": errors.display_name,
+                  })}
                 />
+                {errors.display_name && (
+                  <p className="text-red-600 text-sm mt-2">
+                    <>{errors.display_name?.message}</>
+                  </p>
+                )}
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="display_price">Display Price</Label>
@@ -167,7 +173,15 @@ const CreateProductForm = () => {
                   id="display_price"
                   placeholder="Display Price"
                   autoComplete="off"
+                  className={classNames({
+                    "border-red-600": errors.display_price,
+                  })}
                 />
+                {errors.display_price && (
+                  <p className="text-red-600 text-sm mt-2">
+                    <>{errors.display_price?.message}</>
+                  </p>
+                )}
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="product_stocks">Stocks</Label>
@@ -178,7 +192,15 @@ const CreateProductForm = () => {
                   placeholder="0"
                   min="0"
                   autoComplete="off"
+                  className={classNames({
+                    "border-red-600": errors.product_stocks,
+                  })}
                 />
+                {errors.product_stocks && (
+                  <p className="text-red-600 text-sm mt-2">
+                    <>{errors.product_stocks?.message}</>
+                  </p>
+                )}
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="product_description">Description</Label>
@@ -187,7 +209,15 @@ const CreateProductForm = () => {
                   id="product_description"
                   placeholder="Description"
                   autoComplete="off"
+                  className={classNames({
+                    "border-red-600": errors.product_description,
+                  })}
                 />
+                {errors.product_description && (
+                  <p className="text-red-600 text-sm mt-2">
+                    <>{errors.product_description?.message}</>
+                  </p>
+                )}
               </div>
 
               <div className="flex flex-col space-y-1.5">
@@ -198,7 +228,12 @@ const CreateProductForm = () => {
                     <>
                       <Label htmlFor="status">Status</Label>
                       <Select onValueChange={onChange} value={value}>
-                        <SelectTrigger id="status">
+                        <SelectTrigger
+                          id="status"
+                          className={classNames({
+                            "border-red-600": errors.status,
+                          })}
+                        >
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent position="popper">
@@ -209,6 +244,11 @@ const CreateProductForm = () => {
                     </>
                   )}
                 />
+                {errors.status && (
+                  <p className="text-red-600 text-sm mt-2">
+                    <>{errors.status?.message}</>
+                  </p>
+                )}
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Controller
@@ -216,12 +256,17 @@ const CreateProductForm = () => {
                   control={control}
                   render={({ field }) => (
                     <>
-                      <Label htmlFor="featured">Featured</Label>
+                      <Label htmlFor="isFeatured">Featured</Label>
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
                       >
-                        <SelectTrigger id="featured">
+                        <SelectTrigger
+                          id="isFeatured"
+                          className={classNames({
+                            "border-red-600": errors.isFeatured,
+                          })}
+                        >
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent position="popper">
@@ -232,6 +277,11 @@ const CreateProductForm = () => {
                     </>
                   )}
                 />
+                {errors.isFeatured && (
+                  <p className="text-red-600 text-sm mt-2">
+                    <>{errors.isFeatured?.message}</>
+                  </p>
+                )}
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Controller
@@ -244,7 +294,12 @@ const CreateProductForm = () => {
                         onValueChange={field.onChange}
                         value={field.value}
                       >
-                        <SelectTrigger id="category_id">
+                        <SelectTrigger
+                          id="category_id"
+                          className={classNames({
+                            "border-red-600": errors.category_id,
+                          })}
+                        >
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         {categories.length > 0 &&
@@ -259,6 +314,11 @@ const CreateProductForm = () => {
                     </>
                   )}
                 />
+                {errors.category_id && (
+                  <p className="text-red-600 text-sm mt-2">
+                    <>{errors.category_id?.message}</>
+                  </p>
+                )}
               </div>
             </div>
 
@@ -280,15 +340,26 @@ const CreateProductForm = () => {
                         >
                           Name
                         </label>
-                        <input
+                        <Input
                           {...register(
                             `variants.${index}.variant_name` as const
                           )}
                           id={`variants${index}.variant_name`}
-                          className="col-span-3"
                           autoComplete="off"
+                          className={classNames({
+                            "border-red-600":
+                              errors.variants &&
+                              errors.variants[index]?.variant_name,
+                            "col-span-3": true,
+                          })}
                         />
+                        {errors.variants && (
+                          <p className="text-red-600 text-sm mt-2">
+                            <>{errors.variants[index]?.variant_name?.message}</>
+                          </p>
+                        )}
                       </div>
+
                       <div className="grid grid-cols-4 items-center gap-4">
                         <label
                           htmlFor={`variants.${index}.variant_symbol`}
@@ -296,14 +367,26 @@ const CreateProductForm = () => {
                         >
                           Symbol
                         </label>
-                        <input
+                        <Input
                           {...register(
                             `variants.${index}.variant_symbol` as const
                           )}
                           id={`variants.${index}.variant_symbol`}
-                          className="col-span-3"
                           autoComplete="off"
+                          className={classNames({
+                            "border-red-600":
+                              errors.variants &&
+                              errors.variants[index]?.variant_symbol,
+                            "col-span-3": true,
+                          })}
                         />
+                        {errors.variants && (
+                          <p className="text-red-600 text-sm mt-2">
+                            <>
+                              {errors.variants[index]?.variant_symbol?.message}
+                            </>
+                          </p>
+                        )}
                       </div>
                       <div className="grid grid-cols-4 items-center gap-4">
                         <label
@@ -312,15 +395,27 @@ const CreateProductForm = () => {
                         >
                           Price
                         </label>
-                        <input
+                        <Input
                           {...register(
                             `variants.${index}.variant_price` as const
                           )}
                           type="number"
                           id={`variants.${index}.variant_price`}
-                          className="col-span-3"
                           autoComplete="off"
+                          className={classNames({
+                            "border-red-600":
+                              errors.variants &&
+                              errors.variants[index]?.variant_price,
+                            "col-span-3": true,
+                          })}
                         />
+                        {errors.variants && (
+                          <p className="text-red-600 text-sm mt-2">
+                            <>
+                              {errors.variants[index]?.variant_price?.message}
+                            </>
+                          </p>
+                        )}
                       </div>
                       <div className="grid grid-cols-4 items-center gap-4">
                         <label
@@ -329,15 +424,27 @@ const CreateProductForm = () => {
                         >
                           Stocks
                         </label>
-                        <input
+                        <Input
                           {...register(
                             `variants.${index}.variant_stocks` as const
                           )}
                           type="number"
                           id={`variants.${index}.variant_stocks`}
-                          className="col-span-3"
                           autoComplete="off"
+                          className={classNames({
+                            "border-red-600":
+                              errors.variants &&
+                              errors.variants[index]?.variant_stocks,
+                            "col-span-3": true,
+                          })}
                         />
+                        {errors.variants && (
+                          <p className="text-red-600 text-sm mt-2">
+                            <>
+                              {errors.variants[index]?.variant_stocks?.message}
+                            </>
+                          </p>
+                        )}
                         <Button variant="default" onClick={() => remove(index)}>
                           DELETE
                         </Button>
