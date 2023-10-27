@@ -12,21 +12,24 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createCategory } from "@/lib/api/categories";
-import { CategoriesFormType } from "@/types/form/categories";
 import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CategorySchema } from "@/middleware/zod/categories";
+import classNames from "classnames";
+
+type ValidationCategorySchema = z.infer<typeof CategorySchema>;
+
 const CreateCategoriesForm = () => {
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm({
-    defaultValues: {
-      category_name: "",
-      category_image: null,
-    },
+  } = useForm<ValidationCategorySchema>({
+    resolver: zodResolver(CategorySchema),
   });
-  const onSubmit = async (data: CategoriesFormType) => {
+  const onSubmit = async (data: ValidationCategorySchema) => {
     const form = new FormData();
     for (const key of Object.keys(data) as (keyof typeof data)[]) {
       form.append(key, data[key]);
@@ -56,19 +59,27 @@ const CreateCategoriesForm = () => {
           <div className="flex flex-col space-y-1.5">
             <Label htmlFor="category_name">Display Name</Label>
             <Input
-              {...register("category_name", { required: true })}
+              {...register("category_name", {
+                required: true,
+                maxLength: 20,
+                minLength: 3,
+              })}
               id="category_name"
               placeholder="Category Name"
               autoComplete="off"
+              className={classNames({
+                "border-red-600": errors.category_name,
+              })}
             />
-            {errors.category_name && <p className="text-red-600 text-sm mt-2">Category name is required*</p>}
+            {errors.category_name && (
+              <p className="text-red-600 text-sm mt-2">
+                {errors.category_name?.message}
+              </p>
+            )}
           </div>
           <Controller
             name="category_image"
             control={control}
-            rules={{
-              required: true,
-            }}
             render={({ field: { value, onChange, ...field } }) => (
               <>
                 <Label htmlFor="category_image">Category Image</Label>
@@ -86,7 +97,11 @@ const CreateCategoriesForm = () => {
               </>
             )}
           />
-          {errors.category_image && <p className="text-red-600 text-sm mt-2">Image is required*</p>}
+          {errors.category_image && (
+            <p className="text-red-600 text-sm mt-2">
+              <>{errors.category_image?.message}</>
+            </p>
+          )}
 
           <DialogFooter>
             <button type="submit">Save changes</button>

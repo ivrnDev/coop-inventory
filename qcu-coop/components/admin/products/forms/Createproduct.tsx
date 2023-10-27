@@ -29,14 +29,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import {
-  createProduct,
-} from "@/lib/api/products";
+import { createProduct } from "@/lib/api/products";
 import { ProductFormValues } from "@/types/form/products";
 import { useEffect, useState } from "react";
 import { CategoriesType, ProductsType } from "@/types/products/products";
 import { getAllCategories } from "@/lib/api/categories";
-
 
 const CreateProductForm = () => {
   const [productData, setProductData] = useState<any>();
@@ -88,11 +85,11 @@ const CreateProductForm = () => {
 
   const submitForm = async (data: ProductFormValues) => {
     const form = new FormData();
-    const {variants, ...newData} = data
+    const { variants, ...newData } = data;
     for (const key of Object.keys(newData) as (keyof typeof newData)[]) {
       form.append(key, newData[key]);
     }
-   form.append("variants", JSON.stringify(variants));
+    form.append("variants", JSON.stringify(variants));
     try {
       const response = await createProduct(form);
       if (response.status === 201) {
@@ -121,6 +118,9 @@ const CreateProductForm = () => {
                 <Controller
                   name="display_image"
                   control={control}
+                  rules={{
+                    required: true,
+                  }}
                   render={({ field: { value, onChange, ...field } }) => (
                     <>
                       <Label htmlFor="display_image">Image</Label>
@@ -142,7 +142,10 @@ const CreateProductForm = () => {
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="product_name">Name</Label>
                 <Input
-                  {...register("product_name")}
+                  {...register("product_name", {
+                    required: true,
+                    maxLength: 20,
+                  })}
                   id="product_name"
                   placeholder="Product Name"
                   autoComplete="off"
