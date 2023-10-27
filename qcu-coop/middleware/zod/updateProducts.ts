@@ -1,5 +1,6 @@
 import { z } from "zod";
 const VariantSchema = z.object({
+  variant_id: z.any(),
   variant_name: z
     .string()
     .toLowerCase()
@@ -24,9 +25,9 @@ const VariantSchema = z.object({
       message: "Variant price is required",
     }),
   variant_stocks: z
-    .string()
-    .max(6, { message: "Variant stocks cannot exceed 6 digits" })
-    .refine((value) => value.length >= 0, {
+    .number()
+    .max(100000, { message: "Variant stocks cannot exceed 6 digits" })
+    .refine((value) => value >= 0, {
       message: "Variant stocks is required",
     }),
 });

@@ -84,7 +84,7 @@ const UpdateProductForm = ({ id }: Props) => {
                 variant_name: value.variant_name || "",
                 variant_symbol: value.variant_symbol || "",
                 variant_price: value.variant_price || 0,
-                variant_stocks: String(value.variant_stocks) || 0,
+                variant_stocks: value.variant_stocks || 0,
               })),
           };
           setCategories(getCategories);

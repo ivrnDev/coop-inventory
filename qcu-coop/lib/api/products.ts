@@ -1,5 +1,6 @@
 import { ProductFormValues } from "@/types/form/products";
 import { ProductsType } from "@/types/products/products";
+import { UpdateProductSchema } from "@/middleware/zod/updateProducts";
 
 export async function getAllProducts() {
   try {
@@ -60,8 +61,11 @@ export async function createProduct(form: FormData) {
   }
 }
 
-export async function updateProduct(form: ProductFormValues, id: string) {
-  console.log(form)
+export async function updateProduct(
+  form: any,
+  id: string
+) {
+  console.log(form);
   try {
     const res = await fetch(`http://localhost:3000/api/products/${id}`, {
       method: "PATCH",
