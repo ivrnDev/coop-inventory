@@ -30,9 +30,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { getProductById, updateProduct } from "@/lib/api/products";
-import { ProductFormValues } from "@/types/form/products";
 import { useEffect, useState } from "react";
-import { CategoriesType, ProductsType } from "@/types/products/products";
+import { CategoriesType} from "@/types/products/products";
 import { getAllCategories } from "@/lib/api/categories";
 import UpdateImageModal from "./UpdateImage";
 import AddVariants from "./AddVariants";
