@@ -301,14 +301,17 @@ const CreateProductForm = () => {
                         >
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
-                        {categories.length > 0 &&
-                          categories.map((category, index) => (
-                            <SelectContent key={index} position="popper">
-                              <SelectItem value={`${category.category_id}`}>
+                        <SelectContent position="popper">
+                          {categories.length > 0 &&
+                            categories.map((category, index) => (
+                              <SelectItem
+                                value={`${category.category_id}`}
+                                key={index}
+                              >
                                 {category.category_name}
                               </SelectItem>
-                            </SelectContent>
-                          ))}
+                            ))}
+                        </SelectContent>
                       </Select>
                     </>
                   )}
@@ -470,7 +473,9 @@ const CreateProductForm = () => {
                 </DialogContent>
               </Dialog>
             </div>
-            <Button type="submit" disabled={isSubmitSuccessful}>{isSubmitting ? "Submitting" : "Submit"}</Button>
+            <Button type="submit" disabled={isSubmitSuccessful}>
+              {isSubmitting ? "Submitting" : "Submit"}
+            </Button>
           </form>
         </CardContent>
       </Card>

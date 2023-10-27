@@ -37,12 +37,18 @@ import { getAllCategories } from "@/lib/api/categories";
 import UpdateImageModal from "./UpdateImage";
 import AddVariants from "./AddVariants";
 import { deleteVariant } from "@/lib/api/variants";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import classNames from "classnames";
+import { UpdateProductSchema } from "@/middleware/zod/updateProducts";
+
 type Props = {
   id: string;
 };
 
+type ValidateProduct = z.infer<typeof UpdateProductSchema>;
+
 const UpdateProductForm = ({ id }: Props) => {
-  const [productData, setProductData] = useState<any>();
   const [categories, setCategories] = useState<CategoriesType[]>([]);
 
   useEffect(() => {
@@ -78,11 +84,10 @@ const UpdateProductForm = ({ id }: Props) => {
                 variant_name: value.variant_name || "",
                 variant_symbol: value.variant_symbol || "",
                 variant_price: value.variant_price || 0,
-                variant_stocks: value.variant_stocks || 0,
+                variant_stocks: String(value.variant_stocks) || 0,
               })),
           };
           setCategories(getCategories);
-          setProductData(defaultFormValues);
           reset(defaultFormValues);
         }
       } catch (error) {
@@ -111,18 +116,18 @@ const UpdateProductForm = ({ id }: Props) => {
     register,
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isSubmitSuccessful, isSubmitting },
     reset,
-  } = useForm<ProductFormValues>({
-    defaultValues: productData,
+  } = useForm<ValidateProduct>({
+    resolver: zodResolver(UpdateProductSchema),
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, remove } = useFieldArray({
     name: "variants",
     control,
   });
 
-  const submitForm = async (data: ProductFormValues) => {
+  const submitForm = async (data: ValidateProduct) => {
     try {
       const response = await updateProduct(data, id);
       if (response.status === 200) {
@@ -164,7 +169,15 @@ const UpdateProductForm = ({ id }: Props) => {
                   id="display_name"
                   placeholder="Display Name"
                   autoComplete="off"
+                  className={classNames({
+                    "border-red-600": errors.display_name,
+                  })}
                 />
+                {errors.display_name && (
+                  <p className="text-red-600 text-sm mt-2">
+                    <>{errors.display_name?.message}</>
+                  </p>
+                )}
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="display_price">Display Price</Label>
@@ -173,7 +186,15 @@ const UpdateProductForm = ({ id }: Props) => {
                   id="display_price"
                   placeholder="Display Price"
                   autoComplete="off"
+                  className={classNames({
+                    "border-red-600": errors.display_price,
+                  })}
                 />
+                {errors.display_price && (
+                  <p className="text-red-600 text-sm mt-2">
+                    <>{errors.display_price?.message}</>
+                  </p>
+                )}
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="product_stocks">Stocks</Label>
@@ -184,7 +205,15 @@ const UpdateProductForm = ({ id }: Props) => {
                   placeholder="0"
                   min="0"
                   autoComplete="off"
+                  className={classNames({
+                    "border-red-600": errors.product_stocks,
+                  })}
                 />
+                {errors.product_stocks && (
+                  <p className="text-red-600 text-sm mt-2">
+                    <>{errors.product_stocks?.message}</>
+                  </p>
+                )}
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="product_description">Description</Label>
@@ -193,7 +222,15 @@ const UpdateProductForm = ({ id }: Props) => {
                   id="product_description"
                   placeholder="Description"
                   autoComplete="off"
+                  className={classNames({
+                    "border-red-600": errors.product_description,
+                  })}
                 />
+                {errors.product_description && (
+                  <p className="text-red-600 text-sm mt-2">
+                    <>{errors.product_description?.message}</>
+                  </p>
+                )}
               </div>
 
               <div className="flex flex-col space-y-1.5">
@@ -204,7 +241,12 @@ const UpdateProductForm = ({ id }: Props) => {
                     <>
                       <Label htmlFor="status">Status</Label>
                       <Select onValueChange={onChange} value={value}>
-                        <SelectTrigger id="status">
+                        <SelectTrigger
+                          id="status"
+                          className={classNames({
+                            "border-red-600": errors.status,
+                          })}
+                        >
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent position="popper">
@@ -215,6 +257,11 @@ const UpdateProductForm = ({ id }: Props) => {
                     </>
                   )}
                 />
+                {errors.status && (
+                  <p className="text-red-600 text-sm mt-2">
+                    <>{errors.status?.message}</>
+                  </p>
+                )}
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Controller
@@ -227,7 +274,12 @@ const UpdateProductForm = ({ id }: Props) => {
                         onValueChange={field.onChange}
                         value={field.value}
                       >
-                        <SelectTrigger id="featured">
+                        <SelectTrigger
+                          id="featured"
+                          className={classNames({
+                            "border-red-600": errors.isFeatured,
+                          })}
+                        >
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent position="popper">
@@ -238,6 +290,11 @@ const UpdateProductForm = ({ id }: Props) => {
                     </>
                   )}
                 />
+                {errors.isFeatured && (
+                  <p className="text-red-600 text-sm mt-2">
+                    <>{errors.isFeatured?.message}</>
+                  </p>
+                )}
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Controller
@@ -250,21 +307,34 @@ const UpdateProductForm = ({ id }: Props) => {
                         onValueChange={field.onChange}
                         value={field.value}
                       >
-                        <SelectTrigger id="category_id">
+                        <SelectTrigger
+                          id="category_id"
+                          className={classNames({
+                            "border-red-600": errors.category_id,
+                          })}
+                        >
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
-                        {categories.length > 0 &&
-                          categories.map((category, index) => (
-                            <SelectContent key={index} position="popper">
-                              <SelectItem value={`${category.category_id}`}>
+                        <SelectContent position="popper">
+                          {categories.length > 0 &&
+                            categories.map((category, index) => (
+                              <SelectItem
+                                value={`${category.category_id}`}
+                                key={index}
+                              >
                                 {category.category_name}
                               </SelectItem>
-                            </SelectContent>
-                          ))}
+                            ))}
+                        </SelectContent>
                       </Select>
                     </>
                   )}
                 />
+                {errors.category_id && (
+                  <p className="text-red-600 text-sm mt-2">
+                    <>{errors.category_id?.message}</>
+                  </p>
+                )}
               </div>
             </div>
 
@@ -292,9 +362,21 @@ const UpdateProductForm = ({ id }: Props) => {
                               `variants.${index}.variant_name` as const
                             )}
                             id={`variants${index}.variant_name`}
-                            className="col-span-3"
                             autoComplete="off"
+                            className={classNames({
+                              "border-red-600":
+                                errors.variants &&
+                                errors.variants[index]?.variant_name,
+                              "col-span-3": true,
+                            })}
                           />
+                          {errors.variants && (
+                            <p className="text-red-600 text-sm mt-2">
+                              <>
+                                {errors.variants[index]?.variant_name?.message}
+                              </>
+                            </p>
+                          )}
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                           <label
@@ -308,9 +390,24 @@ const UpdateProductForm = ({ id }: Props) => {
                               `variants.${index}.variant_symbol` as const
                             )}
                             id={`variants.${index}.variant_symbol`}
-                            className="col-span-3"
                             autoComplete="off"
+                            className={classNames({
+                              "border-red-600":
+                                errors.variants &&
+                                errors.variants[index]?.variant_symbol,
+                              "col-span-3": true,
+                            })}
                           />
+                          {errors.variants && (
+                            <p className="text-red-600 text-sm mt-2">
+                              <>
+                                {
+                                  errors.variants[index]?.variant_symbol
+                                    ?.message
+                                }
+                              </>
+                            </p>
+                          )}
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                           <label
@@ -325,9 +422,21 @@ const UpdateProductForm = ({ id }: Props) => {
                             )}
                             type="number"
                             id={`variants.${index}.variant_price`}
-                            className="col-span-3"
                             autoComplete="off"
+                            className={classNames({
+                              "border-red-600":
+                                errors.variants &&
+                                errors.variants[index]?.variant_price,
+                              "col-span-3": true,
+                            })}
                           />
+                          {errors.variants && (
+                            <p className="text-red-600 text-sm mt-2">
+                              <>
+                                {errors.variants[index]?.variant_price?.message}
+                              </>
+                            </p>
+                          )}
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                           <label
@@ -342,9 +451,24 @@ const UpdateProductForm = ({ id }: Props) => {
                             )}
                             type="number"
                             id={`variants.${index}.variant_stocks`}
-                            className="col-span-3"
                             autoComplete="off"
+                            className={classNames({
+                              "border-red-600":
+                                errors.variants &&
+                                errors.variants[index]?.variant_stocks,
+                              "col-span-3": true,
+                            })}
                           />
+                          {errors.variants && (
+                            <p className="text-red-600 text-sm mt-2">
+                              <>
+                                {
+                                  errors.variants[index]?.variant_stocks
+                                    ?.message
+                                }
+                              </>
+                            </p>
+                          )}
                           <Button
                             variant="default"
                             onClick={() => handleRemoveForm(index, field)}
@@ -366,7 +490,9 @@ const UpdateProductForm = ({ id }: Props) => {
                 </DialogContent>
               </Dialog>
             </div>
-            <Button type="submit">SUBMIT</Button>
+            <Button type="submit" disabled={isSubmitSuccessful}>
+              {isSubmitting ? "Submitting" : "Submit"}
+            </Button>
           </form>
           <AddVariants productId={id} />
         </CardContent>

@@ -25,7 +25,7 @@ const CreateCategoriesForm = () => {
     register,
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isSubmitSuccessful, isSubmitting },
   } = useForm<ValidationCategorySchema>({
     resolver: zodResolver(CategorySchema),
   });
@@ -104,7 +104,9 @@ const CreateCategoriesForm = () => {
           )}
 
           <DialogFooter>
-            <button type="submit">Save changes</button>
+            <Button type="submit" disabled={isSubmitSuccessful}>
+              {isSubmitting ? "Submitting" : "Submit"}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

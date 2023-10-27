@@ -61,6 +61,7 @@ export async function createProduct(form: FormData) {
 }
 
 export async function updateProduct(form: ProductFormValues, id: string) {
+  console.log(form)
   try {
     const res = await fetch(`http://localhost:3000/api/products/${id}`, {
       method: "PATCH",
