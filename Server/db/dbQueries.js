@@ -189,6 +189,20 @@ module.exports = {
         getBannerByIdQuery: `
             SELECT * FROM banner WHERE banner_id = ?
         `
+    },
+    adminQueries: {
+        createNewAdminQuery: `
+            INSERT INTO admin (admin_name, admin_username, admin_password, profile_picture) VALUES(?, ?, ?, ?)
+        `,
+        updateBannerQuery: `
+            UPDATE banner SET banner_image = ? WHERE banner_Id = ?
+        `,
+        getAllBannersQuery: `
+            SELECT * FROM banner
+        `,
+        getBannerByIdQuery: `
+            SELECT * FROM banner WHERE banner_id = ?
+        `
     }
 }
 

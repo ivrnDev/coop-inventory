@@ -1,7 +1,6 @@
 const { createProductAlbumDB, getAlbumByIdDB, getAllAlbumsDB, getProductAlbumByIdDB, updateProductAlbumImageDB } = require('../services/albums.services');
 module.exports = {
   createProductAlbum: async (req, res) => {
-    console.log(req.files)
     const album = req.files
     const { productId } = req.query
     try {
