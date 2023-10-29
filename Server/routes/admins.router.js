@@ -7,7 +7,7 @@ router.post('/', upload.single('profile_picture'), createNewAdmin);
 router.patch('/:id', upload.single('profile_picture'), updateAdmin);
 router.get('/', getAllAdmins);
 router.get('/list/:id', getAdminById);
-router.get('/permission/list', getAdminPermission); // Admin Roles and Permissions(id, role)
+router.post('/permission/list', getAdminPermission); // Admin Roles and Permissions(id, role)
 
 
 
