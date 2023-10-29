@@ -4,9 +4,9 @@ const upload = require('../middleware/multer');
 const { createNewAdmin, updateAdmin, getAllAdmins, getAdminById } = require('../controllers/admins.controller');
 createNewAdmin
 router.post('/', upload.single('profile_picture'), createNewAdmin);
-router.patch('/:id', updateAdmin);
+router.patch('/:id', upload.single('profile_picture'), updateAdmin);
 router.get('/', getAllAdmins);
-router.get('/list/1', getAdminById);
+router.get('/list/:id', getAdminById);
 
 
 

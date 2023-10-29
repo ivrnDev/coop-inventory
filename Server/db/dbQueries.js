@@ -192,16 +192,16 @@ module.exports = {
     },
     adminQueries: {
         createNewAdminQuery: `
-            INSERT INTO admin (admin_name, admin_username, admin_password, profile_picture) VALUES(?, ?, ?, ?)
+            INSERT INTO admin (admin_name, admin_username, admin_password, role, profile_picture) VALUES(?, ?, ?, ?, ?)
         `,
-        updateBannerQuery: `
-            UPDATE banner SET banner_image = ? WHERE banner_Id = ?
+        updateAdminQuery: `
+            UPDATE admin SET admin_name = ?, admin_username = ?, admin_password = ?, role = ?, profile_picture = ? WHERE admin_id = ?
         `,
-        getAllBannersQuery: `
-            SELECT * FROM banner
+        getAllAdminsQuery: `
+            SELECT * FROM admin
         `,
-        getBannerByIdQuery: `
-            SELECT * FROM banner WHERE banner_id = ?
+        getAdminByIdQuery: `
+           SELECT * FROM admin WHERE admin_id = ?
         `
     }
 }
