@@ -1,4 +1,4 @@
-const { createNewAdminDB, updateAdminDB, getAllAdminsDB, getAdminByIdDB } = require("../services/admins.services");
+const { createNewAdminDB, updateAdminDB, getAllAdminsDB, getAdminByIdDB, getAdminPermissionDB, getIdByPasswordDB } = require("../services/admins.services");
 
 module.exports = {
   createNewAdmin: async (req, res) => {
@@ -57,7 +57,6 @@ module.exports = {
     } catch (error) {
       res.status(500).json({ message: 'Internal Server Error', error: error })
     }
-
   },
   getAdminById: async (req, res) => {
     const { id } = req.params;
@@ -69,7 +68,20 @@ module.exports = {
     } catch (error) {
       res.status(500).json({ message: 'Internal Server Error', error: error })
     }
-
   },
+  getAdminPermission: async (req, res) => {
+    const { password } = req.query;
+    const { roles } = req.body;
+    try {
+      const result = await getAdminPermissionDB(password, roles);
+      if (result === null) return res.status(400).json({ message: `There is no available` })
+      if (result === 0) return res.status(403).json({ message: `Admin has no permission` })
+      if (!result) return res.status(400).json({ message: 'Failed to get admin' })
+      return res.status(200).json({ message: `Access granted`, result: result })
+    } catch (error) {
+      res.status(500).json({ message: 'Internal Server Error', error: error })
+    }
+  },
+
 
 }

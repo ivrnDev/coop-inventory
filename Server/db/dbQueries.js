@@ -202,6 +202,12 @@ module.exports = {
         `,
         getAdminByIdQuery: `
            SELECT * FROM admin WHERE admin_id = ?
+        `,
+        getAdminPermissionQuery: `
+           SELECT * FROM admin WHERE admin_id = ? and role = ?
+        `,
+        getIdByPasswordQuery: `
+           SELECT admin_id, role FROM admin WHERE admin_password = ?
         `
     }
 }
