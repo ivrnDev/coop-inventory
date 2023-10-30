@@ -1,39 +1,60 @@
+"use client";
 import { useForm } from "react-hook-form";
-import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
+
+import { adminPermission } from "@/lib/api/admin";
+import { useRef } from "react";
 
 type Props = {
-  handlePermission: (password: string) => Promise<boolean | undefined> ,
-}
+  roles: string[];
+  handlePermission: (permission: boolean) => void;
+};
 
-const Permission = ({handlePermission}: Props) => {
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm<any>({
+const Permission = ({ roles, handlePermission }: Props) => {
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const { toast } = useToast();
+  const { register: register2, handleSubmit: handleSubmit2 } = useForm<any>({
     defaultValues: {
       password: "",
     },
   });
 
   const onSubmit = async (data: any) => {
-    const isAllowed = await handlePermission(data.password);
-    if(!isAllowed) {
-      console.log("Not allowed boi")
-    } else {
-      console.log('allowed ka')
+    try {
+      const response = await adminPermission(roles, data.password);
+      if (response.status === 200) {
+        toast({
+          title: "Access Granted!",
+          description: "You have successfully grant a permission!",
+        });
+        handlePermission(true);
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Access Denied!!!",
+          description: "You don't have a permission in this request!",
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        });
+        handlePermission(false);
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Something went wrong!",
+        description: "There was a problem with your request",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
     }
-
   };
 
   return (
     <>
       Please type your password:
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Input {...register("password")} id="password" type="password" />
-          <Button type="submit">Submit</Button>
-        </form>
+      <form onSubmit={handleSubmit2(onSubmit)}>
+        <Input {...register2("password")} id="password" type="password" />
+      </form>
     </>
   );
 };
