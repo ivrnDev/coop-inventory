@@ -14,13 +14,20 @@ import { Label } from "@/components/ui/label";
 import { createCategory } from "@/lib/api/categories";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
+import classNames from "classnames";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CategorySchema } from "@/middleware/zod/categories";
-import classNames from "classnames";
-
-type ValidationCategorySchema = z.infer<typeof CategorySchema>;
+import { rolePermissions } from "@/lib/permission";
+import { useState } from "react";
+import { adminPermission } from "@/lib/api/admin";
+import { useRouter } from "next/navigation";
+import Permission from "../../Permission";
 
 const CreateCategoriesForm = () => {
+  type ValidationCategorySchema = z.infer<typeof CategorySchema>;
+  const [isAllowed, setIsAllowed] = useState(false);
+  const { unrestricted, moderate, restricted } = rolePermissions;
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -29,6 +36,23 @@ const CreateCategoriesForm = () => {
   } = useForm<ValidationCategorySchema>({
     resolver: zodResolver(CategorySchema),
   });
+
+  const handlePermission = async (password: string) => {
+    try {
+      const response = await adminPermission(unrestricted, password);
+      if (response.status === 200) {
+        setIsAllowed(true);
+      
+        return true
+      } else if (response.status === 403) {
+        setIsAllowed(false);
+        
+        return false
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
   const onSubmit = async (data: ValidationCategorySchema) => {
     const form = new FormData();
     for (const key of Object.keys(data) as (keyof typeof data)[]) {
@@ -59,11 +83,7 @@ const CreateCategoriesForm = () => {
           <div className="flex flex-col space-y-1.5">
             <Label htmlFor="category_name">Display Name</Label>
             <Input
-              {...register("category_name", {
-                required: true,
-                maxLength: 20,
-                minLength: 3,
-              })}
+              {...register("category_name")}
               id="category_name"
               placeholder="Category Name"
               autoComplete="off"
@@ -104,9 +124,16 @@ const CreateCategoriesForm = () => {
           )}
 
           <DialogFooter>
-            <Button type="submit" disabled={isSubmitSuccessful}>
-              {isSubmitting ? "Submitting" : "Submit"}
-            </Button>
+            <Dialog>
+              <DialogTrigger>
+                <Button type="submit" disabled={isSubmitSuccessful}>
+                  {isSubmitting ? "Submitting" : "Submit"}
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <Permission handlePermission={handlePermission}/>
+              </DialogContent>
+            </Dialog>
           </DialogFooter>
         </form>
       </DialogContent>

@@ -72,6 +72,7 @@ module.exports = {
   getAdminPermission: async (req, res) => {
     const { password } = req.query;
     const { roles } = req.body;
+
     try {
       const result = await getAdminPermissionDB(password, roles);
       if (result === null) return res.status(400).json({ message: `There is no available` })

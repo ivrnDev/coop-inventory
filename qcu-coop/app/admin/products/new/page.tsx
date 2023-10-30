@@ -1,13 +1,10 @@
-import CreateProductForm from "@/components/admin/products/forms/Createproduct"
+import CreateProductForm from "@/components/admin/products/forms/Createproduct";
 const CreateProductPage = () => {
-  
   return (
-  <>
-  <CreateProductForm />
+    <>
+      <CreateProductForm />
+    </>
+  );
+};
 
-
-  </>
-    )
-}
-
-export default CreateProductPage
+export default CreateProductPage;

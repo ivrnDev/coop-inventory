@@ -15,13 +15,6 @@ const AdminProducts = async () => {
         >
           ADD PRODUCT
         </Link>
-
-        {/* <Link
-          href="products/categories/new"
-          className="bg-blue-600 text-white text-lg p-5 flex align-middle justify-center w-fit h-fit"
-        >
-          CREATE CATEGORIES
-        </Link> */}
         <CreateCategoriesForm />
       </section>
 

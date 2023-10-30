@@ -1,7 +1,7 @@
-export async function adminPermission(roles: string[], password: any) {
+export async function adminPermission(roles: string[], password: string) {
   try {
     const res = await fetch(
-      `http://localhost:3000/api/admin/permission/list?password=${password.password}`,
+      `http://localhost:3000/api/admin/permission/list?password=${password}`,
       {
         method: "POST", 
         headers: {
@@ -13,9 +13,15 @@ export async function adminPermission(roles: string[], password: any) {
 
     if (!res.ok) throw new Error("Failed to fetch Data");
     const data = await res.json();
-    return data;
+    return {
+      status: res.status,
+      data
+    };
   } catch (error) {
     console.error("Error fetching data", error);
-    return [];
+    return {
+      status: 500,
+      data: null,
+    };
   }
 }
