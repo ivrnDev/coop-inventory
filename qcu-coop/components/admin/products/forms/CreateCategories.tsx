@@ -73,9 +73,9 @@ const CreateCategoriesForm = () => {
           toast({
             description: "You have successfully created a category!",
           });
-        } else {
+        } else if (newCategory.status === 400) {
           toast({
-            description: "Failed to create category",
+            description: `${category_name} already exist`,
           });
         }
       } catch (error) {
