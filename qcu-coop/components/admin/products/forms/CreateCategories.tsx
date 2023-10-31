@@ -75,7 +75,7 @@ const CreateCategoriesForm = () => {
           });
         } else if (newCategory.status === 400) {
           toast({
-            description: `${category_name} already exist`,
+            description: `Category ${category_name} already exist`,
           });
         }
       } catch (error) {
@@ -139,11 +139,15 @@ const CreateCategoriesForm = () => {
                 <>{errors.category_image?.message}</>
               </p>
             )}
-
             <DialogFooter>
               <Dialog>
                 <DialogTrigger>
-                  <div ref={buttonRef}>
+                  <div
+                    ref={buttonRef}
+                    className={classNames({
+                      "bg-green-500 text-white rounded-md p-2": true,
+                    })}
+                  >
                     {isSubmitting ? "Submitting" : "Submit"}
                   </div>
                 </DialogTrigger>
