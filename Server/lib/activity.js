@@ -30,7 +30,6 @@ class Phrases {
     if (this.target in this.phrases) return this.phrases[this.target];
     return null;
   }
-
 }
 
 

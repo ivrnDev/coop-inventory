@@ -7,7 +7,8 @@ const {
   getAllAdmins, 
   getAdminById, 
   getAdminPermission,
-  createNewActivity
+  createNewActivity,
+  getAllActivities
 } = require('../controllers/admins.controller');
 router.post('/', upload.single('profile_picture'), createNewAdmin);
 router.patch('/:id', upload.single('profile_picture'), updateAdmin);
@@ -16,7 +17,7 @@ router.get('/list/:id', getAdminById);
 router.post('/permission/list', getAdminPermission); // Admin Roles and Permissions(id, role)
 
 router.post('/activity/recent/list', createNewActivity);
-// router.get('/activity/recent/list', getAllActivities);
+router.get('/activity/recent/list', getAllActivities);
 // router.get('/activity/recent/list/:id', getActivityById);
 // router.post('/activity/recent/list', createNewActivity);
 

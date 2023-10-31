@@ -212,6 +212,12 @@ module.exports = {
         createNewActivityQuery: `
            INSERT INTO activity (admin_id, action, target, object, message) VALUES (?, ?, ?, ?, ?)
         `,
+        getAllActivitiesSearchQuery: `
+           SELECT * FROM activity WHERE CONCAT(id, admin_id, message, date) REGEXP ?;
+        `,
+        getAllActivitiesQuery: `
+           SELECT * FROM activity;
+        `,
     }
 }
 

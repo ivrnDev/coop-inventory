@@ -5,7 +5,9 @@ const {
   getAllAdminsDB,
   getAdminByIdDB,
   getAdminPermissionDB,
-  createNewActivityDB
+  createNewActivityDB,
+  getAllActivitiesDB,
+  getAllActivitiesSearchDB
 } = require("../services/admins.services");
 
 
@@ -114,6 +116,25 @@ module.exports = {
 
       if (!result) return res.status(400).json({ message: 'Failed to create new activity' })
       return res.status(201).json({ message: 'Successfully created a new activity', result: result })
+    } catch (error) {
+      res.status(500).json({ message: 'Internal Server Error', error: error })
+    }
+  },
+  getAllActivities: async (req, res) => {
+    const { search } = req.query;
+    try {
+      if (search) {
+        const searchActivity = await getAllActivitiesSearchDB(search);
+        if (searchActivity === null) return res.status(404).json({ message: 'There is no available activities' })
+        if (!searchActivity) return res.status(400).json({ message: 'Failed to get all activities' })
+        return res.status(200).json({ message: `Successfully get admins with filter ${search}`, result: searchActivity })
+      } else {
+        const getActivities = await getAllActivitiesDB();
+        if (getActivities === null) return res.status(404).json({ message: 'There is no available activities' })
+        if (!getActivities) return res.status(400).json({ message: 'Failed to get all activities' })
+        return res.status(200).json({ message: 'Successfully get all admins', result: getActivities })
+      }
+
     } catch (error) {
       res.status(500).json({ message: 'Internal Server Error', error: error })
     }
