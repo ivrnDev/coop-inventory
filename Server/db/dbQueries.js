@@ -218,6 +218,9 @@ module.exports = {
         getAllActivitiesQuery: `
            SELECT * FROM activity;
         `,
+        getActivityByIdQuery: `
+           SELECT * FROM activity WHERE id = ?
+        `,
     }
 }
 

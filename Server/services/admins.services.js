@@ -8,7 +8,8 @@ const {
   getAdminPermissionQuery,
   createNewActivityQuery,
   getAllActivitiesQuery,
-  getAllActivitiesSearchQuery
+  getAllActivitiesSearchQuery,
+  getActivityByIdQuery
 } = adminQueries;
 const pool = require('../db/database');
 
@@ -169,6 +170,16 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       pool.execute(getAllActivitiesSearchQuery,
         [search], (error, result) => {
+          if (error) return reject(error);
+          return resolve(result);
+        }
+      )
+    })
+  },
+  getActivityByIdDB: (id) => {
+    return new Promise(async (resolve, reject) => {
+      pool.execute(getActivityByIdQuery,
+        [id], (error, result) => {
           if (error) return reject(error);
           return resolve(result);
         }
