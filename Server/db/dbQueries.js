@@ -75,6 +75,9 @@ module.exports = {
         getCategoryByIdQuery: `
             SELECT * FROM category WHERE category_id = ?
         `,
+        getCategoryByNameQuery: `
+            SELECT category_name FROM category WHERE category_name = ?
+        `,
         createNewCategoryQuery: `
           INSERT INTO category (category_name, category_image) VALUES (?, ?) 
         `,

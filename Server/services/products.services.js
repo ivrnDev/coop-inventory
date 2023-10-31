@@ -19,9 +19,10 @@ const {
   subtractProductSoldQuery,
   getAllCategoryQuery,
   getCategoryByIdQuery,
+  getCategoryByNameQuery,
   createNewCategoryQuery,
   updateCategoryByIdQuery,
-  updateProductImageQuery
+  updateProductImageQuery,
 } = productQueries
 
 module.exports = {
@@ -270,8 +271,19 @@ module.exports = {
       })
     })
   },
-  createNewCategoryDB: (category_name, category_image) => {
+  getCategoryByNameDB: (name) => {
     return new Promise((resolve, reject) => {
+      pool.execute(getCategoryByNameQuery, [name], (error, result) => {
+        if (error) return reject(error)
+        if (result.length === 0) return resolve(null)
+        return resolve(result)
+      })
+    })
+  },
+  createNewCategoryDB: (category_name, category_image) => {
+    return new Promise(async (resolve, reject) => {
+      const isExist = await module.exports.getCategoryByNameDB(category_name)
+      if (isExist) return resolve(1)
       pool.execute(createNewCategoryQuery, [category_name, category_image], (error, result) => {
         if (error) return reject(error)
         return resolve(result)

@@ -235,6 +235,7 @@ module.exports = {
       const { category_name } = req.body;
       const category_image = req.file.buffer;
       const result = await createNewCategoryDB(category_name, category_image);
+      if(result === 1) return res.status(400).json({message: `${category_name} already exist!`})
       if (!result) return res.status(400).json({ message: "Failed to create a new category" });
       return res.status(201).json({ message: `Successfully added new category ${category_name}` })
     } catch (error) {
