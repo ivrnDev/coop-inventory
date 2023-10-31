@@ -10,35 +10,57 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { createCategory } from "@/lib/api/categories";
+import {
+  createCategory,
+  getAllCategories,
+  updateCategory,
+} from "@/lib/api/categories";
 import { createActivity } from "@/lib/api/activity";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import classNames from "classnames";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CategorySchema } from "@/middleware/zod/categories";
+import { UpdateCategorySchema } from "@/middleware/zod/categories";
 import { rolePermissions } from "@/lib/permission";
 import { useEffect, useState } from "react";
 import Permission from "../../Permission";
 import { useToast } from "@/components/ui/use-toast";
 import { useRef } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { CategoriesType } from "@/types/products/products";
 
-const CreateCategoriesForm = () => {
+const UpdateCategoriesForm = () => {
   const { toast } = useToast();
-  const buttonRef = useRef<HTMLDivElement | null>(null);
   const { unrestricted, moderate, restricted } = rolePermissions;
-  type ValidationCategorySchema = z.infer<typeof CategorySchema>;
+  type ValidationCategorySchema = z.infer<typeof UpdateCategorySchema>;
+  const buttonRef = useRef<HTMLDivElement | null>(null);
   const [isAllowed, setIsAllowed] = useState(false);
   const [adminId, setadminId] = useState(0);
-
+  const [categories, setCategories] = useState<CategoriesType[]>();
   const {
     register,
     handleSubmit,
     control,
     formState: { errors, isSubmitSuccessful, isSubmitting },
   } = useForm<ValidationCategorySchema>({
-    resolver: zodResolver(CategorySchema),
+    resolver: zodResolver(UpdateCategorySchema),
   });
+
+  useEffect(() => {
+    const getCategories = async () => {
+      const result = await getAllCategories();
+      setCategories(result);
+    };
+    getCategories();
+  }, []);
 
   useEffect(() => {
     if (isAllowed) {
@@ -56,23 +78,21 @@ const CreateCategoriesForm = () => {
   };
 
   const onSubmit = async (data: ValidationCategorySchema) => {
-    const { category_name } = data;
-
+    const { category_name, category_id } = data;
     if (isAllowed) {
       const form = new FormData();
       for (const key of Object.keys(data) as (keyof typeof data)[]) {
         form.append(key, data[key]);
       }
-
       try {
-        const newCategory = await createCategory(form);
+        const newCategory = await updateCategory(form, category_id);
         const activity = await createActivity(
-          { action: "created", target: "category", object: category_name },
+          { action: "updated", target: "category", object: category_name },
           adminId
         );
         if (newCategory.status === 201 && activity.status === 201) {
           toast({
-            description: "You have successfully created a category!",
+            description: "You have successfully updated a category!",
           });
         } else if (newCategory.status === 400) {
           toast({
@@ -90,13 +110,50 @@ const CreateCategoriesForm = () => {
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant={"outline"}>Create Category</Button>
+          <Button variant={"outline"}>Update Category</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <form onSubmit={handleSubmit(onSubmit)}>
             <DialogHeader>
-              <DialogTitle>CREATE CATEGORY</DialogTitle>
+              <DialogTitle>Update Category</DialogTitle>
             </DialogHeader>
+            <Controller
+              name="category_id"
+              control={control}
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger
+                    className={classNames({
+                      "border-red-600": errors.category_id,
+                      "w-[180px]": true,
+                    })}
+                  >
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Categories</SelectLabel>
+                      {categories &&
+                        categories.map((category, index) => (
+                          <>
+                            <SelectItem
+                              key={index}
+                              value={`${category.category_id}`}
+                            >
+                              {category.category_name}
+                            </SelectItem>
+                          </>
+                        ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {errors.category_id && (
+              <p className="text-red-600 text-sm mt-2">
+                <>{errors.category_id?.message}</>
+              </p>
+            )}
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="category_name">Display Name</Label>
               <Input
@@ -153,7 +210,7 @@ const CreateCategoriesForm = () => {
                 </DialogTrigger>
                 <DialogContent>
                   <Permission
-                    roles={moderate}
+                    roles={unrestricted}
                     handlePermission={handlePermission}
                   />
                 </DialogContent>
@@ -166,4 +223,4 @@ const CreateCategoriesForm = () => {
   );
 };
 
-export default CreateCategoriesForm;
+export default UpdateCategoriesForm;

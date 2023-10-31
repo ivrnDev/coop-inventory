@@ -3,6 +3,7 @@ import { ProductsType } from "@/types/products/products";
 import { getAllProducts } from "@/lib/api/products";
 import AdminRenderProducts from "@/components/admin/products/render/Products";
 import CreateCategoriesForm from "@/components/admin/products/forms/CreateCategories";
+import UpdateCategoriesForm from "@/components/admin/products/forms/UpdateCategories";
 
 const AdminProducts = async () => {
   const products: ProductsType[] = await getAllProducts();
@@ -16,6 +17,7 @@ const AdminProducts = async () => {
           ADD PRODUCT
         </Link>
         <CreateCategoriesForm />
+        <UpdateCategoriesForm />
       </section>
 
       <section className="h-fit px-9">

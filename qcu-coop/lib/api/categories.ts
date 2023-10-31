@@ -16,6 +16,24 @@ export async function createCategory(form: FormData) {
     };
   }
 }
+export async function updateCategory(form: FormData, id: number) {
+  try {
+    const res = await fetch(`http://localhost:3000/api/products/category/${id}`, {
+      method: "PATCH",
+      body: form,
+    });
+    const data = await res.json();
+    return {
+      status: res.status,
+      data,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      data: null,
+    };
+  }
+}
 
 export async function getAllCategories() {
   try {
