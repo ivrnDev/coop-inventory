@@ -8,7 +8,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createCategory } from "@/lib/api/categories";
@@ -22,14 +21,17 @@ import { rolePermissions } from "@/lib/permission";
 import { useEffect, useState } from "react";
 import Permission from "../../Permission";
 import { useToast } from "@/components/ui/use-toast";
+import { useRef } from "react";
 
 const CreateCategoriesForm = () => {
   type ValidationCategorySchema = z.infer<typeof CategorySchema>;
   const { toast } = useToast();
   const [isAllowed, setIsAllowed] = useState(false);
   const [adminId, setadminId] = useState(0);
+  const [modal, setmodal] = useState(0);
   const { unrestricted, moderate, restricted } = rolePermissions;
 
+  const buttonRef = useRef<HTMLDivElement | null>(null);
   const {
     register,
     handleSubmit,
@@ -38,6 +40,7 @@ const CreateCategoriesForm = () => {
   } = useForm<ValidationCategorySchema>({
     resolver: zodResolver(CategorySchema),
   });
+
   useEffect(() => {
     if (isAllowed) {
       handleSubmit(onSubmit)();
@@ -51,8 +54,9 @@ const CreateCategoriesForm = () => {
       id && setadminId(id);
     }
   };
+
   const onSubmit = async (data: ValidationCategorySchema) => {
-    const {category_name} = data;
+    const { category_name } = data;
     if (isAllowed) {
       const form = new FormData();
       for (const key of Object.keys(data) as (keyof typeof data)[]) {
@@ -61,7 +65,10 @@ const CreateCategoriesForm = () => {
 
       try {
         const newCategory = await createCategory(form);
-        const activity = await createActivity({ action: "created", target: "category", object: category_name }, adminId);
+        const activity = await createActivity(
+          { action: "created", target: "category", object: category_name },
+          adminId
+        );
         if (newCategory.status === 201 && activity.status === 201) {
           toast({
             description: "You have successfully created a category!",
@@ -75,7 +82,7 @@ const CreateCategoriesForm = () => {
         console.error("Error:", error);
       }
     }
-
+    !isAllowed && buttonRef.current && buttonRef.current.click();
     return;
   };
 
@@ -136,7 +143,7 @@ const CreateCategoriesForm = () => {
             <DialogFooter>
               <Dialog>
                 <DialogTrigger>
-                  <div onKeyDown={(e) => e.code === "Enter" && console.log(e)}>
+                  <div ref={buttonRef}>
                     {isSubmitting ? "Submitting" : "Submit"}
                   </div>
                 </DialogTrigger>
