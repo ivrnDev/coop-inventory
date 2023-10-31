@@ -99,9 +99,7 @@ module.exports = {
   createNewActivity: async (req, res) => {
     const { action, target, object } = req.body;
     const { id } = req.query;
-
-    console.log(req.body)
-    console.log(id)
+    
     const Validation = new Validate();
 
     if (!Validation.action(action)) return res.status(400).json({ message: "Invalid action type" })

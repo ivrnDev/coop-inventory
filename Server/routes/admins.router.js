@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const upload = require('../middleware/multer');
-const { 
-  createNewAdmin, 
-  updateAdmin, 
-  getAllAdmins, 
-  getAdminById, 
+const {
+  createNewAdmin,
+  updateAdmin,
+  getAllAdmins,
+  getAdminById,
   getAdminPermission,
   createNewActivity,
-  getAllActivities, 
+  getAllActivities,
   getActivityById
 } = require('../controllers/admins.controller');
 router.post('/', upload.single('profile_picture'), createNewAdmin);
