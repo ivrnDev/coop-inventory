@@ -15,7 +15,7 @@ export async function adminPermission(roles: string[], password: string) {
     const data = await res.json();
     return {
       status: res.status,
-      data
+      data: data.result
     };
   } catch (error) {
     console.error("Error fetching data", error);

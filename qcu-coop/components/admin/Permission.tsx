@@ -3,17 +3,14 @@ import { useForm } from "react-hook-form";
 import { Input } from "../ui/input";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
-
 import { adminPermission } from "@/lib/api/admin";
-import { useRef } from "react";
 
 type Props = {
   roles: string[];
-  handlePermission: (permission: boolean) => void;
+  handlePermission: (permission: boolean, id?: number) => void;
 };
 
 const Permission = ({ roles, handlePermission }: Props) => {
-  const formRef = useRef<HTMLFormElement | null>(null);
   const { toast } = useToast();
   const { register: register2, handleSubmit: handleSubmit2 } = useForm<any>({
     defaultValues: {
@@ -24,12 +21,14 @@ const Permission = ({ roles, handlePermission }: Props) => {
   const onSubmit = async (data: any) => {
     try {
       const response = await adminPermission(roles, data.password);
+      const {admin_id} = response.data[0]; 
+      console.log();
       if (response.status === 200) {
         toast({
           title: "Access Granted!",
           description: "You have successfully grant a permission!",
         });
-        handlePermission(true);
+        handlePermission(true, admin_id);
       } else {
         toast({
           variant: "destructive",

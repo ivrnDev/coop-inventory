@@ -12,6 +12,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createCategory } from "@/lib/api/categories";
+import { createActivity } from "@/lib/api/activity";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import classNames from "classnames";
@@ -20,15 +21,15 @@ import { CategorySchema } from "@/middleware/zod/categories";
 import { rolePermissions } from "@/lib/permission";
 import { useEffect, useState } from "react";
 import Permission from "../../Permission";
-import { AlertCircle } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 const CreateCategoriesForm = () => {
   type ValidationCategorySchema = z.infer<typeof CategorySchema>;
   const { toast } = useToast();
   const [isAllowed, setIsAllowed] = useState(false);
-  const [modal, setModal] = useState(0);
+  const [adminId, setadminId] = useState(0);
   const { unrestricted, moderate, restricted } = rolePermissions;
+
   const {
     register,
     handleSubmit,
@@ -44,20 +45,24 @@ const CreateCategoriesForm = () => {
     }
   }, [isAllowed]);
 
-  const handlePermission = async (permission: boolean) => {
+  const handlePermission = async (permission: boolean, id?: number) => {
     if (permission) {
       setIsAllowed(true);
+      id && setadminId(id);
     }
   };
   const onSubmit = async (data: ValidationCategorySchema) => {
+    const {category_name} = data;
     if (isAllowed) {
       const form = new FormData();
       for (const key of Object.keys(data) as (keyof typeof data)[]) {
         form.append(key, data[key]);
       }
+
       try {
-        const response = await createCategory(form);
-        if (response.status === 201) {
+        const newCategory = await createCategory(form);
+        const activity = await createActivity({ action: "created", target: "category", object: category_name }, adminId);
+        if (newCategory.status === 201 && activity.status === 201) {
           toast({
             description: "You have successfully created a category!",
           });
@@ -146,15 +151,6 @@ const CreateCategoriesForm = () => {
           </form>
         </DialogContent>
       </Dialog>
-      {modal === 2 && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>
-            Your session has expired. Please log in again.
-          </AlertDescription>
-        </Alert>
-      )}
     </>
   );
 };

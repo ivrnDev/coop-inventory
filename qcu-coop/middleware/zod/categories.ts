@@ -3,6 +3,7 @@ import { z } from "zod";
 export const CategorySchema = z.object({
   category_name: z
     .string()
+    .toLowerCase()
     .trim()
     .max(20, { message: "Category cannot exceed 20 characters" })
     .refine((value) => value.length > 0, {
