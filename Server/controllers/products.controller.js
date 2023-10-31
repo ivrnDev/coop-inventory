@@ -235,7 +235,7 @@ module.exports = {
       const { category_name } = req.body;
       const category_image = req.file.buffer;
       const result = await createNewCategoryDB(category_name, category_image);
-      if(result === 1) return res.status(400).json({message: `${category_name} already exist!`})
+      if (result === 1) return res.status(400).json({ message: `${category_name} already exist!` })
       if (!result) return res.status(400).json({ message: "Failed to create a new category" });
       return res.status(201).json({ message: `Successfully added new category ${category_name}` })
     } catch (error) {
@@ -248,7 +248,8 @@ module.exports = {
       const { category_name } = req.body;
       const category_image = req.file.buffer;
       const result = await updateCategoryByIdDB(category_name, category_image, id)
-      if (!result) return res.status(400).json({ message: "Failed to create a new category" });
+      if (result === 1) return res.status(400).json({ message: `${category_name} is already exist` })
+      if (!result) return res.status(400).json({ message: `Failed to update category with an ID of ${id}` });
       return res.status(201).json({ message: `Successfully update category ID of ${id} to ${category_name}` })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })

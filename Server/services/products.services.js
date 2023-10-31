@@ -291,7 +291,9 @@ module.exports = {
     })
   },
   updateCategoryByIdDB: (category_name, category_image, id) => {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+      const isExist = await module.exports.getCategoryByNameDB(category_name)
+      if (isExist) return resolve(1)
       pool.execute(updateCategoryByIdQuery, [category_name, category_image, id], (error, result) => {
         if (error) return reject(error)
         return resolve(result)
