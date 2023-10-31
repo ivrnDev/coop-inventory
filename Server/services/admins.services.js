@@ -1,6 +1,16 @@
 const { adminQueries } = require("../db/dbQueries");
-const { createNewAdminQuery, updateAdminQuery, getAllAdminsQuery, getAdminByIdQuery, getIdByPasswordQuery, getAdminPermissionQuery } = adminQueries;
-const pool = require('../db/database')
+const {
+  createNewAdminQuery,
+  updateAdminQuery,
+  getAllAdminsQuery,
+  getAdminByIdQuery,
+  getIdByPasswordQuery,
+  getAdminPermissionQuery,
+  createNewActivityQuery
+} = adminQueries;
+const pool = require('../db/database');
+
+
 module.exports = {
   createNewAdminDB: (admin_name, admin_username, admin_password, role, profilePicture) => {
     return new Promise((resolve, reject) => {
@@ -100,6 +110,7 @@ module.exports = {
       );
     })
   },
+
   getAdminPermissionDB: (password, permittedRoles) => {
     return new Promise(async (resolve, reject) => {
       const getRequestRole = await module.exports.getIdByPasswordDB(password);
@@ -129,11 +140,17 @@ module.exports = {
       } else {
         return resolve(0);
       }
-
-
-
-
-
+    })
+  },
+  createNewActivityDB: (admin_id, action, target, object, message) => {
+    return new Promise(async (resolve, reject) => {
+      pool.execute(createNewActivityQuery,
+        [admin_id, action, target, object, message],
+        (error, result) => {
+          if (error) return reject(error);
+          return resolve(result);
+        }
+      )
     })
   },
 }

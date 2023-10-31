@@ -208,7 +208,10 @@ module.exports = {
         `,
         getIdByPasswordQuery: `
            SELECT admin_id, role FROM admin WHERE admin_password = ?
-        `
+        `,
+        createNewActivityQuery: `
+           INSERT INTO activity (admin_id, action, target, object, message) VALUES (?, ?, ?, ?, ?)
+        `,
     }
 }
 

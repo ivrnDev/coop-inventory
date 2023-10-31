@@ -1,4 +1,13 @@
-const { createNewAdminDB, updateAdminDB, getAllAdminsDB, getAdminByIdDB, getAdminPermissionDB, getIdByPasswordDB } = require("../services/admins.services");
+const { Validate, Phrases } = require("../lib/activity");
+const {
+  createNewAdminDB,
+  updateAdminDB,
+  getAllAdminsDB,
+  getAdminByIdDB,
+  getAdminPermissionDB,
+  createNewActivityDB
+} = require("../services/admins.services");
+
 
 module.exports = {
   createNewAdmin: async (req, res) => {
@@ -79,6 +88,33 @@ module.exports = {
       if (result === 0) return res.status(403).json({ message: `Admin has no permission` })
       if (!result) return res.status(400).json({ message: 'Failed to get admin' })
       return res.status(200).json({ message: `Access granted`, result: result })
+    } catch (error) {
+      res.status(500).json({ message: 'Internal Server Error', error: error })
+    }
+  },
+  createNewActivity: async (req, res) => {
+    const { action, target, object } = req.body;
+    const { id } = req.query;
+
+    const Validation = new Validate();
+
+    if (!Validation.action(action)) return res.status(400).json({ message: "Invalid action type" })
+    if (!Validation.target(target)) return res.status(400).json({ message: "Invalid target type" })
+
+
+    try {
+      const admin = await getAdminByIdDB(id);
+      if (admin === null) return res.status(404).json({ message: `There is no admin with an Id of ${id}` })
+
+      const { admin_name } = admin[0];
+      const Message = new Phrases(admin_name, action, target, object);
+      const message = Message.getPhrase();
+      if (message === null) return res.status(400).json({ message: "Couldn't create activity message" })
+
+      const result = await createNewActivityDB(id, action, target, object, message)
+
+      if (!result) return res.status(400).json({ message: 'Failed to create new activity' })
+      return res.status(201).json({ message: 'Successfully created a new activity', result: result })
     } catch (error) {
       res.status(500).json({ message: 'Internal Server Error', error: error })
     }
