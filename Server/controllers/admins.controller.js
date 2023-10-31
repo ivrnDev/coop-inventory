@@ -101,14 +101,13 @@ module.exports = {
     if (!Validation.action(action)) return res.status(400).json({ message: "Invalid action type" })
     if (!Validation.target(target)) return res.status(400).json({ message: "Invalid target type" })
 
-
     try {
       const admin = await getAdminByIdDB(id);
       if (admin === null) return res.status(404).json({ message: `There is no admin with an Id of ${id}` })
 
       const { admin_name } = admin[0];
-      const Message = new Phrases(admin_name, action, target, object);
-      const message = Message.getPhrase();
+      const Messages = new Phrases(admin_name, action, target, object);
+      const message = Messages.getPhrase();
       if (message === null) return res.status(400).json({ message: "Couldn't create activity message" })
 
       const result = await createNewActivityDB(id, action, target, object, message)
