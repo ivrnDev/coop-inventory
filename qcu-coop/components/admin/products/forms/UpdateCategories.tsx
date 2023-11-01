@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import {
   createCategory,
   getAllCategories,
+  getCategoryById,
   updateCategory,
 } from "@/lib/api/categories";
 import { createActivity } from "@/lib/api/activity";
@@ -36,6 +37,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CategoriesType } from "@/types/products/products";
+import DeleteButton from "../buttons/Delete";
 
 const UpdateCategoriesForm = () => {
   const { toast } = useToast();
@@ -50,25 +52,16 @@ const UpdateCategoriesForm = () => {
     handleSubmit,
     control,
     formState: { errors, isSubmitSuccessful, isSubmitting },
+    getValues,
+    reset,
   } = useForm<ValidationCategorySchema>({
     resolver: zodResolver(UpdateCategorySchema),
   });
 
-  useEffect(() => {
-    const getCategories = async () => {
-      const result = await getAllCategories();
-      setCategories(result);
-    };
-    getCategories();
-  }, []);
-
-  useEffect(() => {
-    if (isAllowed) {
-      handleSubmit(onSubmit)();
-      setIsAllowed(false);
-    }
-  }, [isAllowed]);
-
+  const getCategories = async () => {
+    const result = await getAllCategories();
+    setCategories(result);
+  };
   const handlePermission = async (permission: boolean, id?: number) => {
     if (permission) {
       setIsAllowed(true);
@@ -85,11 +78,18 @@ const UpdateCategoriesForm = () => {
         form.append(key, data[key]);
       }
       try {
-        const newCategory = await updateCategory(form, category_id);
+        const getCategory = await getCategoryById(category_id);
+        const existingCategoryName = getCategory[0].category_name;
         const activity = await createActivity(
-          { action: "updated", target: "category", object: category_name },
+          {
+            action: "updated",
+            target: "category",
+            object: existingCategoryName,
+            change: category_name,
+          },
           adminId
         );
+        const newCategory = await updateCategory(form, category_id);
         if (newCategory.status === 201 && activity.status === 201) {
           toast({
             description: "You have successfully updated a category!",
@@ -105,6 +105,17 @@ const UpdateCategoriesForm = () => {
     }
     return;
   };
+
+  useEffect(() => {
+    getCategories();
+  }, [onSubmit]);
+
+  useEffect(() => {
+    if (isAllowed) {
+      handleSubmit(onSubmit)();
+      setIsAllowed(false);
+    }
+  }, [isAllowed]);
 
   return (
     <>
@@ -135,14 +146,12 @@ const UpdateCategoriesForm = () => {
                       <SelectLabel>Categories</SelectLabel>
                       {categories &&
                         categories.map((category, index) => (
-                          <>
-                            <SelectItem
-                              key={index}
-                              value={`${category.category_id}`}
-                            >
-                              {category.category_name}
-                            </SelectItem>
-                          </>
+                          <SelectItem
+                            key={index}
+                            value={`${category.category_id}`}
+                          >
+                            {category.category_name}
+                          </SelectItem>
                         ))}
                     </SelectGroup>
                   </SelectContent>
@@ -205,7 +214,7 @@ const UpdateCategoriesForm = () => {
                       "bg-green-500 text-white rounded-md p-2": true,
                     })}
                   >
-                    {isSubmitting ? "Submitting" : "Submit"}
+                    {isSubmitting ? "Updating" : "Update"}
                   </div>
                 </DialogTrigger>
                 <DialogContent>
@@ -215,6 +224,8 @@ const UpdateCategoriesForm = () => {
                   />
                 </DialogContent>
               </Dialog>
+
+              <DeleteButton categoryId={getValues().category_id} />
             </DialogFooter>
           </form>
         </DialogContent>

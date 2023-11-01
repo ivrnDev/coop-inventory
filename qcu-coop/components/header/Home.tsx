@@ -28,7 +28,6 @@ const HomeHeader = () => {
                 alt="QCU-Logo"
                 width={50}
                 height={50}
-                loading="lazy"
               />
             </Link>
           </div>
@@ -60,8 +59,8 @@ const HomeHeader = () => {
           {navigationMobile.map((nav, index) => (
             <div key={index} className="">
               <Link href={nav.link}>
-                <div className="relative w-10 h-10 hover:-translate-y-1 transition-all">
-                  <Image src={nav.src} alt={nav.name} fill></Image>
+                <div className="relative w-10 h-10 hover:-translate-y-1 transition-all object-contain">
+                  <Image src={nav.src} alt={nav.name} sizes="(min-width: 2rem)" fill />
                 </div>
               </Link>
             </div>
@@ -83,6 +82,7 @@ const HomeHeader = () => {
         </div>
         <div className="flex justify-center items-center mr-9 space-x-7">
           <Input
+            name="search"
             placeholder="Search"
             className="hidden md:block w-[250px]"
           ></Input>

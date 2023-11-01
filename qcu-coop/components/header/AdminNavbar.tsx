@@ -29,6 +29,7 @@ const AdminNavBar = () => {
               <Image
                 src="/icons/dashboard-icon.png"
                 alt="dashboard-icon"
+                sizes="(min-width: 2rem)"
                 fill
                 className="hover:animate-bounce md:hover:animate-none"
               />
@@ -44,6 +45,7 @@ const AdminNavBar = () => {
               <Image
                 src="/icons/orders-icon.png"
                 alt="orders-icon"
+                sizes="(min-width: 2rem)"
                 fill
                 className="hover:animate-bounce md:hover:animate-none"
               />
@@ -59,6 +61,7 @@ const AdminNavBar = () => {
               <Image
                 src="/icons/products-icon.png"
                 alt="products-icon"
+                sizes="(min-width: 2rem)"
                 fill
                 className="hover:animate-bounce md:hover:animate-none"
               />
@@ -74,6 +77,7 @@ const AdminNavBar = () => {
               <Image
                 src="/icons/analytics-icon.png"
                 alt="analytics-icon"
+                sizes="(min-width: 2rem)"
                 fill
                 className="hover:animate-bounce md:hover:animate-none"
               />
@@ -89,6 +93,7 @@ const AdminNavBar = () => {
               <Image
                 src="/icons/accounts-icon.png"
                 alt="accounts-icon"
+                sizes="(min-width: 2rem)"
                 fill
                 className="hover:animate-bounce md:hover:animate-none"
               />
@@ -104,6 +109,7 @@ const AdminNavBar = () => {
               <Image
                 src="/icons/logout-icon.png"
                 alt="logout-icon"
+                sizes="(min-width: 2rem)"
                 fill
                 className="hover:animate-bounce md:hover:animate-none"
               />
