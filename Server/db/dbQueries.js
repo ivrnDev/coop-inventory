@@ -84,6 +84,9 @@ module.exports = {
         updateCategoryByIdQuery: `
           UPDATE category SET category_name = ?, category_image = ? WHERE category_id = ? 
         `,
+        deleteCategoryByIdQuery: `
+          UPDATE category SET isDeleted = ? WHERE category_id = ? 
+        `,
         getAllProductsQuery: `
             SELECT * FROM products as p
             JOIN category as ct ON p.category_id = ct.category_id

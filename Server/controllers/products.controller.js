@@ -17,6 +17,7 @@ const {
   getAllCategoryDB,
   getCategoryByIdDB,
   createNewCategoryDB,
+  deleteCategoryByIdDB,
   updateCategoryByIdDB,
   updateProductImageDB
 } = require('../services/products.services')
@@ -243,17 +244,29 @@ module.exports = {
     }
   },
   updateCategoryById: async (req, res) => {
-    try {
-      const id = req.params.id
-      const { category_name } = req.body;
-      const category_image = req.file.buffer;
-      const result = await updateCategoryByIdDB(category_name, category_image, id)
-      if (result === 1) return res.status(400).json({ message: `${category_name} is already exist` })
-      if (!result) return res.status(400).json({ message: `Failed to update category with an ID of ${id}` });
-      return res.status(201).json({ message: `Successfully update category ID of ${id} to ${category_name}` })
-    } catch (error) {
-      return res.status(500).json({ message: "Internal Server Error", error: error })
+    const { id } = req.params;
+    const { action } = req.query;
+    const { category_name } = req.body;
+    const category_image = req.file.buffer;
+    if (action) {
+      try {
+        const result = await deleteCategoryByIdDB(action, id)
+        if (!result) return res.status(400).json({ message: `Failed to update isDelete in category with an ID of ${id}` });
+        return res.status(201).json({ message: `Successfully update isDelete category ID of ${id}` })
+      } catch (error) {
+        return res.status(500).json({ message: "Internal Server Error", error: error })
+      }
+    } else {
+      try {
+        const result = await updateCategoryByIdDB(category_name, category_image, id)
+        if (result === 1) return res.status(400).json({ message: `${category_name} is already exist` })
+        if (!result) return res.status(400).json({ message: `Failed to update category with an ID of ${id}` });
+        return res.status(201).json({ message: `Successfully update category ID of ${id} to ${category_name}` })
+      } catch (error) {
+        return res.status(500).json({ message: "Internal Server Error", error: error })
+      }
     }
+
   },
   updateProductImage: async (req, res) => {
     try {

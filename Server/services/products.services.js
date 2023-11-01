@@ -22,6 +22,7 @@ const {
   getCategoryByNameQuery,
   createNewCategoryQuery,
   updateCategoryByIdQuery,
+  deleteCategoryByIdQuery,
   updateProductImageQuery,
 } = productQueries
 
@@ -295,6 +296,14 @@ module.exports = {
       const isExist = await module.exports.getCategoryByNameDB(category_name)
       if (isExist) return resolve(1)
       pool.execute(updateCategoryByIdQuery, [category_name, category_image, id], (error, result) => {
+        if (error) return reject(error)
+        return resolve(result)
+      })
+    })
+  },
+  deleteCategoryByIdDB: (action, id) => {
+    return new Promise(async (resolve, reject) => {
+      pool.execute(deleteCategoryByIdQuery, [action, id], (error, result) => {
         if (error) return reject(error)
         return resolve(result)
       })
