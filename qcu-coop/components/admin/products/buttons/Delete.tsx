@@ -8,9 +8,6 @@ import { rolePermissions } from "@/lib/permission";
 import { toast } from "@/components/ui/use-toast";
 import { createActivity } from "@/lib/api/activity";
 
-type DeleteButton = {
-  remove: number;
-};
 type Props = {
   categoryId: number;
 };
@@ -19,16 +16,6 @@ const DeleteButton = ({ categoryId }: Props) => {
   const { moderate } = rolePermissions;
   const [adminId, setadminId] = useState<number>(0);
   const [isAllowed, setisAllowed] = useState<boolean>(false);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { isSubmitting, isSubmitSuccessful },
-  } = useForm<DeleteButton>({
-    defaultValues: {
-      remove: 0,
-    },
-  });
 
   const handlePermission = (permission: boolean, admin?: number) => {
     if (permission) {
@@ -55,7 +42,7 @@ const DeleteButton = ({ categoryId }: Props) => {
         }
       } catch (error) {
         toast({
-          description: "Failed to deleted the category",
+          description: "Please select category first",
         });
       }
     }
@@ -77,7 +64,7 @@ const DeleteButton = ({ categoryId }: Props) => {
               "bg-red-500 text-white rounded-md p-2": true,
             })}
           >
-            {isSubmitting ? "Deleting" : "Delete"}
+            Delete
           </div>
         </DialogTrigger>
         <DialogContent>
