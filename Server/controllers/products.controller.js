@@ -213,8 +213,8 @@ module.exports = {
   getAllCategory: async (req, res) => {
     try {
       const result = await getAllCategoryDB()
-      if (!result) return res.status(400).json({ error: "Failed to get all category" })
-      if (result === null) return res.status(404).json({ error: "There is no existing category" })
+      if (result === null) return res.status(404).json({ message: "There is no existing category" })
+      if (!result) return res.status(400).json({ message: "Failed to get all category" })
       return res.status(201).json({ message: `Successfully get all category`, result: result })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })

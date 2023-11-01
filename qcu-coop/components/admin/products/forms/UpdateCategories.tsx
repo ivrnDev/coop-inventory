@@ -38,6 +38,7 @@ import {
 } from "@/components/ui/select";
 import { CategoriesType } from "@/types/products/products";
 import DeleteButton from "../buttons/Delete";
+import { isArray } from "util";
 
 const UpdateCategoriesForm = () => {
   const { toast } = useToast();
@@ -59,9 +60,18 @@ const UpdateCategoriesForm = () => {
   });
 
   const getCategories = async () => {
-    const result = await getAllCategories();
-    setCategories(result);
+    try {
+      const getCategories = await getAllCategories();
+      if (getCategories.status === 200) {
+        setCategories(categories);
+      } else {
+        console.log(getCategories.data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
   };
+
   const handlePermission = async (permission: boolean, id?: number) => {
     if (permission) {
       setIsAllowed(true);
@@ -105,10 +115,9 @@ const UpdateCategoriesForm = () => {
     }
     return;
   };
-
   useEffect(() => {
     getCategories();
-  }, [onSubmit]);
+  }, [isAllowed]);
 
   useEffect(() => {
     if (isAllowed) {
