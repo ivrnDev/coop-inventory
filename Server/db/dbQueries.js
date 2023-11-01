@@ -70,10 +70,10 @@ module.exports = {
             DELETE FROM variants WHERE product_id = ? AND variant_id = ?
         `,
         getAllCategoryQuery: `
-            SELECT * FROM category
+            SELECT * FROM category WHERE isDeleted = 0;
         `,
         getCategoryByIdQuery: `
-            SELECT * FROM category WHERE category_id = ?
+            SELECT * FROM category WHERE category_id = ? AND isDeleted = 0;
         `,
         getCategoryByNameQuery: `
             SELECT category_name FROM category WHERE category_name = ?
@@ -216,7 +216,7 @@ module.exports = {
            SELECT admin_id, role FROM admin WHERE admin_password = ?
         `,
         createNewActivityQuery: `
-           INSERT INTO activity (admin_id, action, target, object, message) VALUES (?, ?, ?, ?, ?)
+           INSERT INTO activity (admin_id, action, target, object, target_change, message) VALUES (?, ?, ?, ?, ?, ?)
         `,
         getAllActivitiesSearchQuery: `
            SELECT * FROM activity WHERE CONCAT(id, admin_id, message, date) REGEXP ?;

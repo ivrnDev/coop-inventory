@@ -13,13 +13,16 @@ class Validate {
 }
 
 class Phrases {
-  constructor(name, action, target, object) {
+  constructor(name, action, target, object, change) {
     this.name = name;
     this.action = action;
     this.object = object;
     this.target = target;
+    this.change = change;
     this.phrases = {
-      category: `${this.name} ${this.action} ${this.object} ${this.target} `,
+      category: this.change ?
+        `${this.name} ${this.action} ${this.object} to ${this.change} in ${this.target} ` :
+        `${this.name} ${this.action} ${this.object} ${this.target} `,
       product: `${this.name} ${this.action} ${this.object} ${this.target}`,
       transaction: `${this.name} ${this.action} ${this.target} No.${this.object}`,
       account: `${this.name} ${this.action} ${this.object}`,

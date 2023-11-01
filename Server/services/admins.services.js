@@ -145,11 +145,12 @@ module.exports = {
       }
     })
   },
-  createNewActivityDB: (admin_id, action, target, object, message) => {
+  createNewActivityDB: (admin_id, action, target, object, change, message) => {
     return new Promise(async (resolve, reject) => {
       pool.execute(createNewActivityQuery,
-        [admin_id, action, target, object, message],
+        [admin_id, action, target, object, change ? change : null, message],
         (error, result) => {
+          console.log(error)
           if (error) return reject(error);
           return resolve(result);
         }

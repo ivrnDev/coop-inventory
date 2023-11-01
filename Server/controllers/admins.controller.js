@@ -96,10 +96,10 @@ module.exports = {
     }
   },
   createNewActivity: async (req, res) => {
-    const { action, target, object } = req.body;
+    const { action, target, object, change } = req.body;
     const { id } = req.query;
-    
     const Validation = new Validate();
+    console.log(req.body)
 
     if (!Validation.action(action)) return res.status(400).json({ message: "Invalid action type" })
     if (!Validation.target(target)) return res.status(400).json({ message: "Invalid target type" })
@@ -109,11 +109,11 @@ module.exports = {
       if (admin === null) return res.status(404).json({ message: `There is no admin with an Id of ${id}` })
 
       const { admin_name } = admin[0];
-      const Messages = new Phrases(admin_name, action, target, object);
+      const Messages = new Phrases(admin_name, action, target, object, change);
       const message = Messages.getPhrase();
       if (message === null) return res.status(400).json({ message: "Couldn't create activity message" })
 
-      const result = await createNewActivityDB(id, action, target, object, message)
+      const result = await createNewActivityDB(id, action, target, object, change, message)
 
       if (!result) return res.status(400).json({ message: 'Failed to create new activity' })
       return res.status(201).json({ message: 'Successfully created a new activity', result: result })
