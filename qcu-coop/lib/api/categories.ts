@@ -70,16 +70,10 @@ export async function getAllCategories() {
     );
 
     const data = await res.json();
-    return {
-      status: res.status,
-      data
-    };
+    return data.result;
   } catch (error) {
     console.error("Error fetching data", error);
-    return {
-      status: 500,
-      data: null
-    };
+    return [];
   }
 }
 export async function getCategoryById(id: number) {

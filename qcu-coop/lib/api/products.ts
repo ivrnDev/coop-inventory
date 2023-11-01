@@ -10,8 +10,6 @@ export async function getAllProducts() {
       },
     });
 
-    if (!res.ok) throw new Error("Failed to fetch Data");
-
     const data = await res.json();
     return data.result;
   } catch (error) {
@@ -61,10 +59,7 @@ export async function createProduct(form: FormData) {
   }
 }
 
-export async function updateProduct(
-  form: any,
-  id: string
-) {
+export async function updateProduct(form: any, id: string) {
   console.log(form);
   try {
     const res = await fetch(`http://localhost:3000/api/products/${id}`, {

@@ -61,11 +61,9 @@ const UpdateCategoriesForm = () => {
 
   const getCategories = async () => {
     try {
-      const getCategories = await getAllCategories();
-      if (getCategories.status === 200) {
-        setCategories(categories);
-      } else {
-        console.log(getCategories.data.message);
+      const result = await getAllCategories();
+      if (result) {
+        setCategories(result);
       }
     } catch (error) {
       console.error("Error fetching categories:", error);
