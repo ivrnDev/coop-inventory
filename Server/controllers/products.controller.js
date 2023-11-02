@@ -37,20 +37,16 @@ module.exports = {
         }
       };
 
-      //Get requested product
-      const { category_id, product_name, display_name, display_price, product_stocks, product_description } = req.body;
+      const { category_id, product_name, display_name, display_price, product_description, variants } = req.body;
+      const parseVariants = JSON.parse(variants)
+      const product_stocks = parseVariants.reduce((accumulator, variant) => accumulator + Number(variant.variant_stocks), 0)
 
-      //Create Product
       const createdProduct = await createProductDB(category_id, product_name, display_name, display_price, product_stocks, product_description, imagePath);
 
       if (!createdProduct) return res.status(400).json({ message: "Failed to insert product" });
 
-      //Get the id of newly created product
       const { product_id } = createdProduct;
-      const { variants } = req.body;
-      const parseVariants = JSON.parse(variants)
 
-      //Create Variants
       const createdVariants = await createVariantsDB(product_id, parseVariants)
       if (!createdVariants) return res.status(400).json({ message: `Failed to insert variants in a product with an ID of ${product_id}` })
 
@@ -252,18 +248,18 @@ module.exports = {
       const result = await updateCategoryByIdDB(category_name, category_image, id)
       if (result === 1) return res.status(400).json({ message: `${category_name} is already exist` })
       if (!result) return res.status(400).json({ message: `Failed to update category with an ID of ${id}` });
-      return res.status(201).json({ message: `Successfully update category ID of ${id} to ${category_name}`, result: result})
+      return res.status(201).json({ message: `Successfully update category ID of ${id} to ${category_name}`, result: result })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }
   },
   deleteCategoryById: async (req, res) => {
-    const { id} = req.params;
-    const { remove} = req.query;
+    const { id } = req.params;
+    const { remove } = req.query;
     try {
       const result = await deleteCategoryByIdDB(remove, id)
       if (!result) return res.status(400).json({ message: `Failed to update isDeleted in category with an ID of ${id}` });
-      return res.status(201).json({ message: `Successfully updated isDeleted category ID of ${id}`, result: result})
+      return res.status(201).json({ message: `Successfully updated isDeleted category ID of ${id}`, result: result })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }
