@@ -59,17 +59,6 @@ const UpdateCategoriesForm = () => {
     resolver: zodResolver(UpdateCategorySchema),
   });
 
-  const getCategories = async () => {
-    try {
-      const result = await getAllCategories();
-      if (result) {
-        setCategories(result);
-      }
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  };
-
   const handlePermission = async (permission: boolean, id?: number) => {
     if (permission) {
       setIsAllowed(true);
@@ -77,6 +66,20 @@ const UpdateCategoriesForm = () => {
     }
     !isAllowed && buttonRef.current && buttonRef.current.click();
   };
+
+  useEffect(() => {
+    const getCategories = async () => {
+      try {
+        const result = await getAllCategories();
+        if (result) {
+          setCategories(result);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+    getCategories();
+  }, [handlePermission]);
 
   const onSubmit = async (data: ValidationCategorySchema) => {
     const { category_name, category_id } = data;
@@ -113,9 +116,6 @@ const UpdateCategoriesForm = () => {
     }
     return;
   };
-  useEffect(() => {
-    getCategories();
-  }, [isAllowed]);
 
   useEffect(() => {
     if (isAllowed) {

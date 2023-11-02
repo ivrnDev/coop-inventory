@@ -64,14 +64,6 @@ export const ProductSchema = z.object({
     .refine((value) => value.length >= 3, {
       message: "Display price must be at least 3 characters",
     }),
-  product_stocks: z
-    .string()
-    .trim()
-    .toLowerCase()
-    .max(6, { message: "Product stocks cannot exceed 6 digits" })
-    .refine((value) => value.length >= 0, {
-      message: "Product stocks is required",
-    }),
   product_description: z
     .string()
     .trim()
