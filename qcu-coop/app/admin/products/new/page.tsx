@@ -5,7 +5,7 @@ const CreateProductPage = () => {
       <div className="absolute bg-header-admin w-[100%] h-10 top-0 left-0 justify-center text-white text-[1.2rem] rounded-t-md flex items-center font-bold">
         CREATE PRODUCT
       </div>
-      <div className="bg-white w-full h-[calc(100%-2.5rem)] mt-10 oveflow-auto py-5 px-9">
+      <div className="bg-white w-full h-[calc(100%-2.5rem)] mt-10 oveflow-hidden py-5 px-9">
         <CreateProductForm />
       </div>
     </section>

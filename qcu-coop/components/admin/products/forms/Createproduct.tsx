@@ -22,16 +22,21 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
-import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useForm, useFieldArray, Controller, FieldName } from "react-hook-form";
+import { useEffect, useState, useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import classNames from "classnames";
+import Image from "next/image";
 
 import { CategoriesType } from "@/types/products/products";
 import { ProductSchema } from "@/middleware/zod/products";
 import { createProduct } from "@/lib/api/products";
 import { getAllCategories } from "@/lib/api/categories";
+import Permission from "../../Permission";
+import { rolePermissions } from "@/lib/permission";
+import { useToast } from "@/components/ui/use-toast";
+import { createActivity } from "@/lib/api/activity";
 
 type ValidationProduct = z.infer<typeof ProductSchema>;
 
@@ -54,7 +59,20 @@ const steps = [
 ];
 
 const CreateProductForm = () => {
+  const { toast } = useToast();
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const { restricted, moderate, unrestricted } = rolePermissions;
   const [categories, setCategories] = useState<CategoriesType[] | null>([]);
+  const [currentStep, setCurrentStep] = useState<number>(1);
+  const [isAllowed, setIsAllowed] = useState<boolean>(false);
+  const [adminId, setAdminId] = useState<number>(0);
+  const [imageNumber, setImageNumber] = useState<{
+    image: number;
+    albums: number;
+  }>({
+    image: 0,
+    albums: 0,
+  });
   const {
     register,
     handleSubmit,
@@ -82,367 +100,545 @@ const CreateProductForm = () => {
     getCategories();
   }, []);
 
-  const submitForm = async (data: ValidationProduct) => {
-    const form = new FormData();
-    const { variants, ...newData } = data;
-    for (const key of Object.keys(newData) as (keyof typeof newData)[]) {
-      form.append(key, newData[key]);
+  const handlePermission = async (permission: boolean, id?: number) => {
+    if (permission) {
+      setIsAllowed(true);
+      id && setAdminId(id);
     }
-    form.append("variants", JSON.stringify(variants));
-
-    try {
-      const response = await createProduct(form);
-      if (response.status === 201) {
-        console.log("Product created successfully");
-      } else {
-        console.error("Failed to create Product");
-      }
-    } catch (error) {
-      console.error("Error:", error);
+    !isAllowed && buttonRef.current && buttonRef.current.click();
+  };
+  type FieldName = keyof ValidationProduct;
+  const next = async () => {
+    if (currentStep < steps.length) {
+      const fields = steps[currentStep - 1].fields;
+      const validate = await trigger(fields as FieldName[], {
+        shouldFocus: true,
+      });
+      validate && setCurrentStep(currentStep + 1);
     }
   };
 
+  const prev = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handlePrevNext = (action: string) => {
+    if (action === "next") return next();
+    return prev();
+  };
+  const onSubmit = async (data: ValidationProduct) => {
+    const { product_name } = data;
+    if (isAllowed) {
+      const form = new FormData();
+      const { variants, ...newData } = data;
+      for (const key of Object.keys(newData) as (keyof typeof newData)[]) {
+        form.append(key, newData[key]);
+      }
+      form.append("variants", JSON.stringify(variants));
+
+      try {
+        const response = await createProduct(form);
+        const activity = await createActivity(
+          {
+            action: "created",
+            target: "product",
+            object: product_name,
+          },
+          adminId
+        );
+        if (response.status === 201) {
+          toast({
+            description: `You have successfully created ${product_name} product`,
+          });
+        } else {
+          toast({
+            description: `Failed to create new product`,
+          });
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (isAllowed) {
+      handleSubmit(onSubmit)();
+      setIsAllowed(false);
+    }
+  }, [isAllowed]);
+
   return (
-    <form onSubmit={handleSubmit(submitForm)} className="flex">
-      <div className="">
-        <div className="flex ">
-          <Controller
-            name="display_image"
-            control={control}
-            render={({ field: { value, onChange, ...field } }) => (
-              <>
-                <Label htmlFor="display_image">Image</Label>
-                <Input
-                  {...field}
-                  onChange={(event) => {
-                    const selectedFile = event.target.files?.[0];
-                    if (selectedFile) {
-                      onChange(selectedFile);
-                    }
-                  }}
-                  type="file"
-                  id="display_image"
-                  className={classNames({
-                    "border-red-600": errors.display_image,
-                  })}
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="grid grid-cols-2 w-full h-full overflow-y-auto"
+    >
+      {currentStep === 1 && (
+        <>
+          <div id="first-section" className="p-5 flex flex-col space-y-5">
+            <div id="image-container">
+              <p className="font-bold">Images / Albums</p>
+              <div className="flex">
+                <Label
+                  htmlFor="display_image"
+                  className="bg-inputColor border border-black hover:cursor-pointer w-20 h-20 flex flex-col justify-center items-center"
+                >
+                  <div id="add-icon-container" className="relative w-10 h-10">
+                    <Image
+                      src="/icons/add-image-icon.svg"
+                      alt="add-image-icon"
+                      sizes="min-w-1"
+                      fill
+                    />
+                  </div>
+                  <p>Add Image</p>
+                  <p>{imageNumber.image}/1</p>
+                </Label>
+                <Controller
+                  name="display_image"
+                  control={control}
+                  render={({ field: { value, onChange, ...field } }) => (
+                    <>
+                      <Input
+                        {...field}
+                        onChange={(event) => {
+                          const selectedFile = event.target.files;
+                          if (selectedFile) {
+                            onChange(selectedFile[0]);
+                            setImageNumber((prevCount) => ({
+                              ...prevCount,
+                              ["image"]: selectedFile.length,
+                            }));
+                          }
+                        }}
+                        type="file"
+                        id="display_image"
+                        className={classNames({
+                          "border-red-600": errors.display_image,
+                          hidden: true,
+                        })}
+                      />
+                    </>
+                  )}
                 />
-              </>
-            )}
-          />
-          {errors.display_image && (
-            <p className="text-red-600 text-sm mt-2">
-              <>{errors.display_image?.message}</>
-            </p>
-          )}
-        </div>
-        <div className="flex flex-col space-y-1.5">
-          <Label htmlFor="product_name">Name</Label>
-          <Input
-            {...register("product_name")}
-            id="product_name"
-            placeholder="Product Name"
-            autoComplete="off"
-            className={classNames({
-              "border-red-600": errors.product_name,
-            })}
-          />
-          {errors.product_name && (
-            <p className="text-red-600 text-sm mt-2">
-              <>{errors.product_name?.message}</>
-            </p>
-          )}
-        </div>
-        <div className="flex flex-col space-y-1.5">
-          <Label htmlFor="display_name">Display Name</Label>
-          <Input
-            {...register("display_name")}
-            id="display_name"
-            placeholder="Display Name"
-            autoComplete="off"
-            className={classNames({
-              "border-red-600": errors.display_name,
-            })}
-          />
-          {errors.display_name && (
-            <p className="text-red-600 text-sm mt-2">
-              <>{errors.display_name?.message}</>
-            </p>
-          )}
-        </div>
-        <div className="flex flex-col space-y-1.5">
-          <Label htmlFor="display_price">Display Price</Label>
-          <Input
-            {...register("display_price")}
-            id="display_price"
-            placeholder="Display Price"
-            autoComplete="off"
-            className={classNames({
-              "border-red-600": errors.display_price,
-            })}
-          />
-          {errors.display_price && (
-            <p className="text-red-600 text-sm mt-2">
-              <>{errors.display_price?.message}</>
-            </p>
-          )}
-        </div>
-        <div className="flex flex-col space-y-1.5">
-          <Label htmlFor="product_description">Description</Label>
-          <Textarea
-            {...register("product_description")}
-            id="product_description"
-            placeholder="Description"
-            autoComplete="off"
-            className={classNames({
-              "border-red-600": errors.product_description,
-            })}
-          />
-          {errors.product_description && (
-            <p className="text-red-600 text-sm mt-2">
-              <>{errors.product_description?.message}</>
-            </p>
-          )}
-        </div>
+                {errors.display_image && (
+                  <p className="text-red-600 text-sm mt-2">
+                    <>{errors.display_image?.message}</>
+                  </p>
+                )}
+              </div>
+            </div>
 
-        <div className="flex flex-col space-y-1.5">
-          <Controller
-            name="status"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <>
-                <Label htmlFor="status">Status</Label>
-                <Select onValueChange={onChange} value={value}>
-                  <SelectTrigger
-                    id="status"
-                    className={classNames({
-                      "border-red-600": errors.status,
-                    })}
-                  >
-                    <SelectValue placeholder="Select" />
-                  </SelectTrigger>
-                  <SelectContent position="popper">
-                    <SelectItem value="Active">Active</SelectItem>
-                    <SelectItem value="Inactive">Inactive</SelectItem>
-                  </SelectContent>
-                </Select>
-              </>
-            )}
-          />
-          {errors.status && (
-            <p className="text-red-600 text-sm mt-2">
-              <>{errors.status?.message}</>
-            </p>
-          )}
-        </div>
-        <div className="flex flex-col space-y-1.5">
-          <Controller
-            name="isFeatured"
-            control={control}
-            render={({ field }) => (
-              <>
-                <Label htmlFor="isFeatured">Featured</Label>
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger
-                    id="isFeatured"
-                    className={classNames({
-                      "border-red-600": errors.isFeatured,
-                    })}
-                  >
-                    <SelectValue placeholder="Select" />
-                  </SelectTrigger>
-                  <SelectContent position="popper">
-                    <SelectItem value="1">Yes</SelectItem>
-                    <SelectItem value="0">No</SelectItem>
-                  </SelectContent>
-                </Select>
-              </>
-            )}
-          />
-          {errors.isFeatured && (
-            <p className="text-red-600 text-sm mt-2">
-              <>{errors.isFeatured?.message}</>
-            </p>
-          )}
-        </div>
-        <div className="flex flex-col space-y-1.5">
-          <Controller
-            name="category_id"
-            control={control}
-            render={({ field }) => (
-              <>
-                <Label htmlFor="category_id">Category</Label>
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger
-                    id="category_id"
-                    className={classNames({
-                      "border-red-600": errors.category_id,
-                    })}
-                  >
-                    <SelectValue placeholder="Select" />
-                  </SelectTrigger>
-                  <SelectContent position="popper">
-                    <SelectGroup>
-                      {!categories && <SelectLabel>No Categories</SelectLabel>}
-                      {categories &&
-                        categories.length > 0 &&
-                        categories.map((category, index) => (
-                          <SelectItem
-                            value={`${category.category_id}`}
-                            key={index}
-                          >
-                            {category.category_name}
-                          </SelectItem>
-                        ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </>
-            )}
-          />
-          {errors.category_id && (
-            <p className="text-red-600 text-sm mt-2">
-              <>{errors.category_id?.message}</>
-            </p>
-          )}
-        </div>
-      </div>
+            <div className="flex flex-col md:flex-row md:items-center md:space-x-10">
+              <Label htmlFor="product_name" className="font-bold">
+                Name
+              </Label>
+              <Input
+                {...register("product_name")}
+                id="product_name"
+                placeholder="Product Name"
+                autoComplete="off"
+                className={classNames({
+                  "border-red-600": errors.product_name,
+                  "bg-inputColor border-black": true,
+                })}
+              />
+              {errors.product_name && (
+                <p className="text-red-600 text-sm mt-2">
+                  <>{errors.product_name?.message}</>
+                </p>
+              )}
+            </div>
 
-      {/* Variants */}
-      <div className="flex space-x-5">
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant={"outline"}>Create Variants</Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>CREATE VARIANT</DialogTitle>
-            </DialogHeader>
+            <div className="flex flex-col md:flex-row md:items-center md:space-x-10">
+              <Label
+                htmlFor="display_name"
+                className="font-bold whitespace-nowrap"
+              >
+                Display Name
+              </Label>
+              <Input
+                {...register("display_name")}
+                id="display_name"
+                placeholder="Display Name"
+                autoComplete="off"
+                className={classNames({
+                  "border-red-600": errors.display_name,
+                  "bg-inputColor border-black": true,
+                })}
+              />
+              {errors.display_name && (
+                <p className="text-red-600 text-sm mt-2">
+                  <>{errors.display_name?.message}</>
+                </p>
+              )}
+            </div>
+
+            <div className="flex flex-col md:flex-row md:items-center md:space-x-10">
+              <Label
+                htmlFor="display_price"
+                className="font-bold whitespace-nowrap"
+              >
+                Display Price
+              </Label>
+              <Input
+                {...register("display_price")}
+                id="display_price"
+                placeholder="Display Price"
+                autoComplete="off"
+                className={classNames({
+                  "border-red-600": errors.display_price,
+                  "bg-inputColor border-black": true,
+                })}
+              />
+              {errors.display_price && (
+                <p className="text-red-600 text-sm mt-2">
+                  <>{errors.display_price?.message}</>
+                </p>
+              )}
+            </div>
+
+            <div className="flex flex-col md:flex-row md:items-center md:space-x-10">
+              <Label htmlFor="category_id" className="font-bold">
+                Category
+              </Label>
+              <Controller
+                name="category_id"
+                control={control}
+                render={({ field }) => (
+                  <>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger
+                        id="category_id"
+                        className={classNames({
+                          "border-red-600": errors.category_id,
+                          "bg-inputColor border-black": true,
+                        })}
+                      >
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent position="popper">
+                        <SelectGroup>
+                          {!categories && (
+                            <SelectLabel>No Categories</SelectLabel>
+                          )}
+                          {categories &&
+                            categories.length > 0 &&
+                            categories.map((category, index) => (
+                              <SelectItem
+                                value={`${category.category_id}`}
+                                key={index}
+                              >
+                                {category.category_name}
+                              </SelectItem>
+                            ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </>
+                )}
+              />
+              {errors.category_id && (
+                <p className="text-red-600 text-sm mt-2">
+                  <>{errors.category_id?.message}</>
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div id="second-section" className="p-5 flex flex-col space-y-5">
+            <div className="flex flex-col md:flex-row md:items-center md:space-x-10">
+              <Label htmlFor="status" className="font-bold">
+                Status
+              </Label>
+              <Controller
+                name="status"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <>
+                    <Select onValueChange={onChange} value={value}>
+                      <SelectTrigger
+                        id="status"
+                        className={classNames({
+                          "border-red-600": errors.status,
+                          "bg-inputColor border-black": true,
+                        })}
+                      >
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent position="popper">
+                        <SelectItem value="Active">Active</SelectItem>
+                        <SelectItem value="Inactive">Inactive</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </>
+                )}
+              />
+              {errors.status && (
+                <p className="text-red-600 text-sm mt-2">
+                  <>{errors.status?.message}</>
+                </p>
+              )}
+            </div>
+
+            <div className="flex flex-col md:flex-row md:items-center md:space-x-10">
+              <Label htmlFor="isFeatured" className="font-bold">
+                Featured
+              </Label>
+              <Controller
+                name="isFeatured"
+                control={control}
+                render={({ field }) => (
+                  <>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger
+                        id="isFeatured"
+                        className={classNames({
+                          "border-red-600": errors.isFeatured,
+                          "bg-inputColor border-black": true,
+                        })}
+                      >
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent position="popper">
+                        <SelectItem value="1">Yes</SelectItem>
+                        <SelectItem value="0">No</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </>
+                )}
+              />
+              {errors.isFeatured && (
+                <p className="text-red-600 text-sm mt-2">
+                  <>{errors.isFeatured?.message}</>
+                </p>
+              )}
+            </div>
+
+            <div className="flex flex-col md:flex-row md:items-center md:space-x-10">
+              <Label htmlFor="product_description" className="font-bold">
+                Description
+              </Label>
+              <Textarea
+                {...register("product_description")}
+                id="product_description"
+                placeholder="Description"
+                autoComplete="off"
+                className={classNames({
+                  "border-red-600": errors.product_description,
+                  "bg-inputColor border-black": true,
+                })}
+              />
+              {errors.product_description && (
+                <p className="text-red-600 text-sm mt-2">
+                  <>{errors.product_description?.message}</>
+                </p>
+              )}
+            </div>
+          </div>
+          <Button
+            variant="system"
+            type="button"
+            onClick={() => handlePrevNext("next")}
+            className="absolute right-5 bottom-5 w-[12%] flex justify-center items-center"
+          >
+            <p className="text-lg">Next</p>
+            <div className="absolute right-6  w-5 h-5">
+              <Image
+                src="/icons/right-chevron-icon.svg"
+                alt="right-chevron"
+                sizes="min-w-1"
+                fill
+              />
+            </div>
+          </Button>
+        </>
+      )}
+
+      {currentStep === 2 && (
+        <>
+          <div id="variant-container" className="grid grid-cols-2 bg-[#37B3E2]">
             {fields.map((field, index) => (
-              <div key={field.id} className="grid gap-4 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label
+              <div key={field.id} className="p-2 flex flex-col space-y-3">
+                <div className="flex items-center">
+                  <Label
                     htmlFor={`variants.${index}.variant_name`}
-                    className="text-right"
+                    className="font-bold"
                   >
                     Name
-                  </label>
-                  <Input
-                    {...register(`variants.${index}.variant_name` as const)}
-                    id={`variants${index}.variant_name`}
-                    autoComplete="off"
-                    className={classNames({
-                      "border-red-600":
-                        errors.variants && errors.variants[index]?.variant_name,
-                      "col-span-3": true,
-                    })}
-                  />
-                  {errors.variants && (
-                    <p className="text-red-600 text-sm mt-2">
-                      <>{errors.variants[index]?.variant_name?.message}</>
-                    </p>
-                  )}
+                  </Label>
+                  <div>
+                    <Input
+                      {...register(`variants.${index}.variant_name` as const)}
+                      id={`variants${index}.variant_name`}
+                      autoComplete="off"
+                      placeholder="small e.g"
+                      className={classNames({
+                        "border-red-600":
+                          errors.variants &&
+                          errors.variants[index]?.variant_name,
+                      })}
+                    />
+                    {errors.variants && (
+                      <p className="text-red-600 text-sm text-center">
+                        <>{errors.variants[index]?.variant_name?.message}</>
+                      </p>
+                    )}
+                  </div>
                 </div>
-
-                <div className="grid grid-cols-4 items-center gap-4">
+                <div className="flex">
                   <label
                     htmlFor={`variants.${index}.variant_symbol`}
                     className="text-right"
                   >
                     Symbol
                   </label>
-                  <Input
-                    {...register(`variants.${index}.variant_symbol` as const)}
-                    id={`variants.${index}.variant_symbol`}
-                    autoComplete="off"
-                    className={classNames({
-                      "border-red-600":
-                        errors.variants &&
-                        errors.variants[index]?.variant_symbol,
-                      "col-span-3": true,
-                    })}
-                  />
-                  {errors.variants && (
-                    <p className="text-red-600 text-sm mt-2">
-                      <>{errors.variants[index]?.variant_symbol?.message}</>
-                    </p>
-                  )}
+                  <div>
+                    <Input
+                      {...register(`variants.${index}.variant_symbol` as const)}
+                      id={`variants.${index}.variant_symbol`}
+                      autoComplete="off"
+                      className={classNames({
+                        "border-red-600":
+                          errors.variants &&
+                          errors.variants[index]?.variant_symbol,
+                        "": true,
+                      })}
+                    />
+                    {errors.variants && (
+                      <p className="text-red-600 text-sm text-center">
+                        <>{errors.variants[index]?.variant_symbol?.message}</>
+                      </p>
+                    )}
+                  </div>
                 </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label
+                <div className="flex">
+                  <Label
                     htmlFor={`variants.${index}.variant_price`}
                     className="text-right"
                   >
                     Price
-                  </label>
-                  <Input
-                    {...register(`variants.${index}.variant_price` as const)}
-                    type="number"
-                    id={`variants.${index}.variant_price`}
-                    autoComplete="off"
-                    className={classNames({
-                      "border-red-600":
-                        errors.variants &&
-                        errors.variants[index]?.variant_price,
-                      "col-span-3": true,
-                    })}
-                  />
-                  {errors.variants && (
-                    <p className="text-red-600 text-sm mt-2">
-                      <>{errors.variants[index]?.variant_price?.message}</>
-                    </p>
-                  )}
+                  </Label>
+                  <div>
+                    <Input
+                      {...register(`variants.${index}.variant_price` as const)}
+                      type="number"
+                      id={`variants.${index}.variant_price`}
+                      autoComplete="off"
+                      className={classNames({
+                        "border-red-600":
+                          errors.variants &&
+                          errors.variants[index]?.variant_price,
+                        "": true,
+                      })}
+                    />
+                    {errors.variants && (
+                      <p className="text-red-600 text-sm mt-2">
+                        <>{errors.variants[index]?.variant_price?.message}</>
+                      </p>
+                    )}
+                  </div>
                 </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label
+                <div className="flex ">
+                  <Label
                     htmlFor={`variants.${index}.variant_stocks`}
                     className="text-right"
                   >
                     Stocks
-                  </label>
-                  <Input
-                    {...register(`variants.${index}.variant_stocks` as const)}
-                    type="number"
-                    id={`variants.${index}.variant_stocks`}
-                    autoComplete="off"
-                    className={classNames({
-                      "border-red-600":
-                        errors.variants &&
-                        errors.variants[index]?.variant_stocks,
-                      "col-span-3": true,
-                    })}
-                  />
-                  {errors.variants && (
-                    <p className="text-red-600 text-sm mt-2">
-                      <>{errors.variants[index]?.variant_stocks?.message}</>
-                    </p>
-                  )}
-                  <Button variant="default" onClick={() => remove(index)}>
-                    DELETE
-                  </Button>
+                  </Label>
+                  <div>
+                    <Input
+                      {...register(`variants.${index}.variant_stocks` as const)}
+                      type="number"
+                      id={`variants.${index}.variant_stocks`}
+                      autoComplete="off"
+                      className={classNames({
+                        "border-red-600":
+                          errors.variants &&
+                          errors.variants[index]?.variant_stocks,
+                        "": true,
+                      })}
+                    />
+                    {errors.variants && (
+                      <p className="text-red-600 text-sm mt-2">
+                        <>{errors.variants[index]?.variant_stocks?.message}</>
+                      </p>
+                    )}
+                  </div>
                 </div>
+                <Button
+                  variant="destructive"
+                  size="lg"
+                  onClick={() => remove(index)}
+                >
+                  DELETE
+                </Button>
               </div>
             ))}
-
-            <DialogFooter>
+          </div>
+          <Button
+            variant="system"
+            type="button"
+            onClick={() =>
+              append({
+                variant_name: "",
+                variant_symbol: "",
+                variant_price: "0",
+                variant_stocks: "0",
+              })
+            }
+            className="absolute right-10"
+          >
+            Add Variant
+          </Button>
+          <Button
+            variant="system"
+            type="button"
+            onClick={() => handlePrevNext("prev")}
+            className="absolute left-5 bottom-5 w-[12%] flex justify-center items-center"
+          >
+            <div className="absolute left-6 w-5 h-5">
+              <Image
+                src="/icons/left-chevron-icon.svg"
+                alt="left-chevron"
+                sizes="min-w-1"
+                fill
+              />
+            </div>
+            <p className="text-lg">Prev</p>
+          </Button>
+          <Dialog>
+            <DialogTrigger className="h-fit w-fit">
               <Button
-                variant="default"
-                onClick={() =>
-                  append({
-                    variant_name: "",
-                    variant_symbol: "",
-                    variant_price: "0",
-                    variant_stocks: "0",
-                  })
-                }
+                ref={buttonRef}
+                variant="system"
+                type="button"
+                className="absolute right-5 bottom-5 w-[14%] flex space-x-3 "
               >
-                Add Variant
+                <div className="relative w-5 h-5 float-left">
+                  <Image
+                    src="/icons/add-sign-icon.svg"
+                    alt="add-sign"
+                    sizes="min-w-1"
+                    fill
+                  />
+                </div>
+                <p className="text-lg whitespace-nowrap">
+                  {isSubmitting ? "Publishing Item" : "Publish Item"}
+                </p>
               </Button>
-              <DialogClose>Save changes</DialogClose>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
-      <Button type="submit">{isSubmitting ? "Submitting" : "Submit"}</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <Permission
+                roles={moderate}
+                handlePermission={handlePermission}
+              />
+            </DialogContent>
+          </Dialog>
+        </>
+      )}
     </form>
   );
 };

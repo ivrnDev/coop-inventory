@@ -64,6 +64,7 @@ module.exports = {
           user: "#D9D9D9",
           admin: "#D9D9D9",
         },
+        inputColor: "#D9D9D9"
       },
       borderRadius: {
         lg: "var(--radius)",
