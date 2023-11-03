@@ -29,7 +29,6 @@ import { z } from "zod";
 import classNames from "classnames";
 import Image from "next/image";
 
-import { CategoriesType } from "@/types/products/products";
 import { ProductSchema } from "@/middleware/zod/products";
 import { createProduct } from "@/lib/api/products";
 import { getAllCategories } from "@/lib/api/categories";
@@ -38,6 +37,7 @@ import { rolePermissions } from "@/lib/permission";
 import { useToast } from "@/components/ui/use-toast";
 import { createActivity } from "@/lib/api/activity";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Categories } from "@/types/products/products";
 
 type ValidationProduct = z.infer<typeof ProductSchema>;
 type SelectedImage = {
@@ -73,7 +73,7 @@ const CreateProductForm = () => {
   const { toast } = useToast();
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const { restricted, moderate, unrestricted } = rolePermissions;
-  const [categories, setCategories] = useState<CategoriesType[] | null>([]);
+  const [categories, setCategories] = useState<Categories[] | null>([]);
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [isAllowed, setIsAllowed] = useState<boolean>(false);
   const [adminId, setAdminId] = useState<number>(0);
@@ -119,6 +119,7 @@ const CreateProductForm = () => {
     }
     !isAllowed && buttonRef.current && buttonRef.current.click();
   };
+  
   type FieldName = keyof ValidationProduct;
   const next = async () => {
     if (currentStep < steps.length) {
@@ -172,7 +173,7 @@ const CreateProductForm = () => {
           toast({
             variant: "destructive",
             title: "Failed to Create Product.",
-            description: `${product_name} already exist`,
+            description: `${response.data.message}`,
           });
         }
       } catch (error) {
@@ -492,7 +493,7 @@ const CreateProductForm = () => {
                             categories.length > 0 &&
                             categories.map((category, index) => (
                               <SelectItem
-                                value={`${category.category_id}`}
+                                value={`${String(category.category_id)}`}
                                 key={index}
                               >
                                 {category.category_name}
@@ -533,8 +534,8 @@ const CreateProductForm = () => {
                         <SelectValue placeholder="Select" />
                       </SelectTrigger>
                       <SelectContent position="popper">
-                        <SelectItem value="Active">Active</SelectItem>
-                        <SelectItem value="Inactive">Inactive</SelectItem>
+                        <SelectItem value="active">Active</SelectItem>
+                        <SelectItem value="inactive">Inactive</SelectItem>
                       </SelectContent>
                     </Select>
                   </>

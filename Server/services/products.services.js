@@ -26,9 +26,9 @@ const {
   deleteCategoryByIdQuery,
   updateProductImageQuery,
 } = productQueries
+const { getProductAlbumByIdDB } = require('./albums.services.js')
 
 module.exports = {
-  //Create a new product information
   createProductDB: (category_id, product_name, display_name, display_price, product_stocks, product_description, imagePath) => {
     return new Promise(async (resolve, reject) => {
       const isExist = await module.exports.getProductByNameDB(product_name);
@@ -54,14 +54,12 @@ module.exports = {
       );
     })
   },
-  //Update products
   updateProductsDB: async (category_id, display_name, display_price, product_stocks, product_description, status, isFeatured, product_id) => {
     return new Promise(async (resolve, reject) => {
-      //Check if product with given ID exist
+
       const findProductByID = await module.exports.getProductByIdDB(product_id);
       if (findProductByID === null) resolve(null);
 
-      //Update the product
       pool.execute(updateProductQuery, [category_id,
         display_name, display_price, product_stocks, product_description, status, isFeatured, product_id,
       ], (error, result) => {
@@ -218,12 +216,17 @@ module.exports = {
     })
   },
   getProductByIdDB: (id) => {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+      const variants = await module.exports.getVariantByProductIdDB(id);
+      if (variants === null) return resolve(null)
+      const albums = await getProductAlbumByIdDB(id);
+      if (albums === null) return resolve(null)
+
       pool.execute(getProductByIdQuery, [id], (error, result) => {
         if (error) return reject(error);
         if (result.length === 0) resolve(null)
+
         const products = result.map((product) => ({
-          category_id: product.category_id,
           product_id: product.product_id,
           product_name: product.product_name,
           display_name: product.display_name,
@@ -236,13 +239,11 @@ module.exports = {
           isDeleted: product.isDeleted,
           date_created: product.date_created,
           display_image: product.display_image.toString('base64'),
-          variant_id: product.variant_id,
-          variant_name: product.variant_name,
-          variant_symbol: product.variant_symbol,
-          variant_price: product.variant_price,
-          variant_stocks: product.variant_stocks,
+          category_id: product.category_id,
           category_name: product.category_name,
-          category_image: product.category_image.toString('base64')
+          category_image: product.category_image.toString('base64'),
+          albums: albums,
+          variants: variants
         }))
         return resolve(products);
       })

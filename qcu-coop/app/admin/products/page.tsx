@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { ProductsType } from "@/types/products/products";
+import { Product } from "@/types/products/products";
 import { getAllProducts } from "@/lib/api/products";
 import AdminRenderProducts from "@/components/admin/products/render/Products";
 import CreateCategoriesForm from "@/components/admin/products/forms/CreateCategories";
 import UpdateCategoriesForm from "@/components/admin/products/forms/UpdateCategories";
 
 const AdminProducts = async () => {
-  const products: ProductsType[] = await getAllProducts();
+  const products: Product[] = await getAllProducts();
   return (
     <>
       <section className="h-48 w-full flex flex-row p-3 gap-3">

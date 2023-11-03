@@ -40,6 +40,8 @@ module.exports = {
       const { category_id, product_name, display_name, display_price, product_description, variants } = req.body;
 
       const parseVariants = JSON.parse(variants)
+      if (parseVariants.length === 0) return res.status(400).json({ message: "Variant is required!" });
+
       const product_stocks = parseVariants.reduce((accumulator, variant) => accumulator + Number(variant.variant_stocks), 0)
 
       const createdProduct = await createProductDB(category_id, product_name, display_name, display_price, product_stocks, product_description, imagePath);

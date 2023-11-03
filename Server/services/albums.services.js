@@ -62,7 +62,7 @@ module.exports = {
         const album = result.map((album) => ({
           photo_id: album.photo_id,
           product_id: album.product_id,
-          display_image: album.product_photo.toString('base64'),
+          product_photo: album.product_photo.toString('base64'),
         }))
         return resolve(album)
       })

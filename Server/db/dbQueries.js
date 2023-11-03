@@ -91,11 +91,16 @@ module.exports = {
             SELECT * FROM products as p
             JOIN category as ct ON p.category_id = ct.category_id
         `,
+        // getProductByIdQuery: `
+        //     SELECT * FROM products as p
+        //     JOIN  variants as v ON v.product_id = p.product_id
+        //     JOIN category as ct ON p.category_id = ct.category_id 
+        //     WHERE p.product_id = ?
+        // `,
         getProductByIdQuery: `
             SELECT * FROM products as p
-            JOIN  variants as v ON v.product_id = p.product_id
-            JOIN category as ct ON p.category_id = ct.category_id 
-            WHERE p.product_id = ?
+            JOIN category as ct ON p.category_id = ct.category_id
+            WHERE product_id = ?
         `,
         getProductByNameQuery: `
             SELECT product_name FROM products WHERE product_name = ?

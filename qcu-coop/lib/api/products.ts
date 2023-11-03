@@ -1,6 +1,4 @@
-import { ProductFormValues } from "@/types/form/products";
-import { ProductsType } from "@/types/products/products";
-import { UpdateProductSchema } from "@/middleware/zod/updateProducts";
+
 
 export async function getAllProducts() {
   try {

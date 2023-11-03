@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -6,12 +7,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ProductsType } from "@/types/products/products";
+import { Product } from "@/types/products/products";
 import Image from "next/image";
 import Link from "next/link";
 
 type Props = {
-  products: ProductsType[];
+  products: Product[];
 };
 
 const AdminRenderProducts = ({ products }: Props) => {
@@ -50,17 +51,23 @@ const AdminRenderProducts = ({ products }: Props) => {
               <TableCell>{product.status}</TableCell>
               <TableCell>{product.isFeatured === 1 ? "Yes" : "No"}</TableCell>
               <TableCell>
-                <Link
-                  href={`./products/update/${
-                    product.product_name.toLowerCase()
-                  }?${new URLSearchParams({
-                    id: String(product.product_id),
-                  })}
-                  
+                <Button type="button" variant="destructive">
+                  DELETE
+                </Button>
+              </TableCell>
+              <TableCell>
+                <Button type="button" variant="submit">
+                  <Link
+                    href={`./products/update/${product.product_name.toLowerCase()}?${new URLSearchParams(
+                      {
+                        id: String(product.product_id),
+                      }
+                    )}
                   `}
-                >
-                  EDIT
-                </Link>
+                  >
+                    EDIT
+                  </Link>
+                </Button>
               </TableCell>
             </TableRow>
           ))
