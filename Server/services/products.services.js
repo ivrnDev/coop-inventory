@@ -11,6 +11,7 @@ const {
   deleteVariantsQuery,
   getAllProductsQuery,
   getProductByIdQuery,
+  getProductByNameQuery,
   addProductStocksQuery,
   subtractProductStocksQuery,
   addVariantStocksQuery,
@@ -29,7 +30,10 @@ const {
 module.exports = {
   //Create a new product information
   createProductDB: (category_id, product_name, display_name, display_price, product_stocks, product_description, imagePath) => {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+      const isExist = await module.exports.getProductByNameDB(product_name);
+      if (isExist) return resolve(1);
+
       pool.execute(createProductQuery,
         [category_id, product_name, display_name, display_price, product_stocks, product_description, imagePath],
         (error, result) => {
@@ -241,6 +245,15 @@ module.exports = {
           category_image: product.category_image.toString('base64')
         }))
         return resolve(products);
+      })
+    })
+  },
+  getProductByNameDB: (id) => {
+    return new Promise((resolve, reject) => {
+      pool.execute(getProductByNameQuery, [id], (error, result) => {
+        if (error) return reject(error);
+        if (result.length === 0) resolve(null)
+        return resolve(result);
       })
     })
   },

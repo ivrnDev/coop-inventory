@@ -30,6 +30,7 @@ const VariantSchema = z.object({
       message: "Variant stocks is required",
     }),
 });
+
 export const ProductSchema = z.object({
   product_name: z
     .string()
@@ -45,7 +46,6 @@ export const ProductSchema = z.object({
   display_name: z
     .string()
     .trim()
-    .toLowerCase()
     .max(20, { message: "Display name cannot exceed 20 characters" })
     .refine((value) => value.length > 0, {
       message: "Display name is required",
@@ -67,7 +67,6 @@ export const ProductSchema = z.object({
   product_description: z
     .string()
     .trim()
-    .toLowerCase()
     .max(255, { message: "product_description cannot exceed 255 characters" }),
   status: z
     .string()
@@ -92,22 +91,37 @@ export const ProductSchema = z.object({
     }),
   display_image: z
     .any()
-    .refine((value) => !!value, {
-      message: "Category image is required",
-
-    })
+    .optional()
     .refine(
       (file) => {
         if (!file) {
-          return false;
+          return true;
         }
         const allowedFileTypes = ["image/jpeg", "image/png"];
         return allowedFileTypes.includes(file.type);
       },
       {
         message: "Invalid file type. Only JPEG and PNG images are allowed.",
-
       }
     ),
+  product_album: z
+    .any()
+    .optional()
+    .refine(
+      (files) => {
+        if (!files) return true;
+        for (const file of files) {
+          const allowedFileTypes = ["image/jpeg", "image/png"];
+          if (!allowedFileTypes.includes(file.type)) {
+            return false;
+          }
+        }
+        return true;
+      },
+      {
+        message: "Invalid file type. Only JPEG and PNG images are allowed.",
+      }
+    ),
+
   variants: z.array(VariantSchema),
 });

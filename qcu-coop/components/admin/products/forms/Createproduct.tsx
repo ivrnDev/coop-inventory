@@ -53,6 +53,7 @@ const steps = [
       "isFeatured",
       "category_id",
       "display_image",
+      "product_album",
     ],
   },
   { step: 2, name: "Variants", fields: ["variants"] },
@@ -132,29 +133,35 @@ const CreateProductForm = () => {
     const { product_name } = data;
     if (isAllowed) {
       const form = new FormData();
-      const { variants, ...newData } = data;
+      const { variants, product_album, ...newData } = data;
       for (const key of Object.keys(newData) as (keyof typeof newData)[]) {
         form.append(key, newData[key]);
       }
       form.append("variants", JSON.stringify(variants));
-
+      if (product_album) {
+        for (const file of product_album) {
+          form.append("product_album", file);
+        }
+      }
       try {
         const response = await createProduct(form);
-        const activity = await createActivity(
-          {
-            action: "created",
-            target: "product",
-            object: product_name,
-          },
-          adminId
-        );
         if (response.status === 201) {
+          await createActivity(
+            {
+              action: "created",
+              target: "product",
+              object: product_name,
+            },
+            adminId
+          );
           toast({
-            description: `You have successfully created ${product_name} product`,
+            description: `You have successfully created ${product_name} product.`,
           });
         } else {
           toast({
-            description: `Failed to create new product`,
+            variant: "destructive",
+            title: "Failed to Create Product.",
+            description: `${product_name} already exist`,
           });
         }
       } catch (error) {
@@ -178,12 +185,12 @@ const CreateProductForm = () => {
       {currentStep === 1 && (
         <>
           <div id="first-section" className="p-5 flex flex-col space-y-5">
-            <div id="image-container">
-              <p className="font-bold">Images / Albums</p>
+            <Label className="font-bold">Images / Albums</Label>
+            <div id="image-container" className="flex space-x-2">
               <div className="flex">
                 <Label
                   htmlFor="display_image"
-                  className="bg-inputColor border border-black hover:cursor-pointer w-20 h-20 flex flex-col justify-center items-center"
+                  className="bg-inputColor border border-black hover:cursor-pointer w-24 h-24 flex flex-col justify-center items-center"
                 >
                   <div id="add-icon-container" className="relative w-10 h-10">
                     <Image
@@ -226,6 +233,57 @@ const CreateProductForm = () => {
                 {errors.display_image && (
                   <p className="text-red-600 text-sm mt-2">
                     <>{errors.display_image?.message}</>
+                  </p>
+                )}
+              </div>
+              <div className="flex">
+                <Label
+                  htmlFor="product_album"
+                  className="bg-inputColor border border-black hover:cursor-pointer w-24 h-24 flex flex-col justify-center items-center"
+                >
+                  <div id="add-icon-container" className="relative w-10 h-10">
+                    <Image
+                      src="/icons/add-image-icon.svg"
+                      alt="add-image-icon"
+                      sizes="min-w-1"
+                      fill
+                    />
+                  </div>
+                  <p>Add Albums</p>
+                  <p>{imageNumber.albums}/10</p>
+                </Label>
+                <Controller
+                  name="product_album"
+                  control={control}
+                  render={({ field: { value, onChange, ...field } }) => (
+                    <>
+                      <Input
+                        {...field}
+                        onChange={(event) => {
+                          const selectedFile = event.target.files;
+                          if (selectedFile) {
+                            const convertArray = Array.from(selectedFile);
+                            onChange(convertArray);
+                            setImageNumber((prevCount) => ({
+                              ...prevCount,
+                              ["albums"]: selectedFile.length,
+                            }));
+                          }
+                        }}
+                        type="file"
+                        id="product_album"
+                        multiple
+                        className={classNames({
+                          "border-red-600": errors.product_album,
+                          hidden: true,
+                        })}
+                      />
+                    </>
+                  )}
+                />
+                {errors.product_album && (
+                  <p className="text-red-600 text-sm mt-2">
+                    <>{errors.product_album?.message}</>
                   </p>
                 )}
               </div>

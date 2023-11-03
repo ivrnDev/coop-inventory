@@ -9,7 +9,6 @@ module.exports = {
       return res.status(201).json({ message: 'Successfully uploaded product album', result: result })
     } catch (error) {
       res.status(500).json({ message: 'Internal Server Error', error: error })
-
     }
   },
   updateProductAlbumImage: async (req, res) => {
@@ -22,9 +21,9 @@ module.exports = {
       }
 
       const { id } = req.params;
-      
+
       const getAlbumById = await getAlbumByIdDB(id);
-      if (getAlbumById === null) return res.status(400).json({ error: `Failed to update, there is no existing album with an ID of ${id}`})
+      if (getAlbumById === null) return res.status(400).json({ error: `Failed to update, there is no existing album with an ID of ${id}` })
 
       const result = await updateProductAlbumImageDB(id, image);
       if (!result) return res.status(400).json({ message: "Failed to update product" });

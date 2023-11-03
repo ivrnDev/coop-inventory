@@ -25,7 +25,7 @@ import { useRef } from "react";
 
 const CreateCategoriesForm = () => {
   const { toast } = useToast();
-  const buttonRef = useRef<HTMLDivElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
   const { unrestricted, moderate, restricted } = rolePermissions;
   type ValidationCategorySchema = z.infer<typeof CategorySchema>;
   const [isAllowed, setIsAllowed] = useState(false);
@@ -66,17 +66,21 @@ const CreateCategoriesForm = () => {
 
       try {
         const newCategory = await createCategory(form);
-        const activity = await createActivity(
-          { action: "created", target: "category", object: category_name },
-          adminId
-        );
-        if (newCategory.status === 201 && activity.status === 201) {
+
+        if (newCategory.status === 201) {
+          await createActivity(
+            { action: "created", target: "category", object: category_name },
+            adminId
+          );
           toast({
+            title: "Success",
             description: "You have successfully created a category!",
           });
         } else if (newCategory.status === 400) {
           toast({
-            description: `Category ${category_name} already exist`,
+            variant: "destructive",
+            title: "Failed to Create Category.",
+            description: `Category ${category_name} already exist.`,
           });
         }
       } catch (error) {
@@ -142,14 +146,9 @@ const CreateCategoriesForm = () => {
             <DialogFooter>
               <Dialog>
                 <DialogTrigger>
-                  <div
-                    ref={buttonRef}
-                    className={classNames({
-                      "bg-green-500 text-white rounded-md p-2": true,
-                    })}
-                  >
+                  <Button type="button" variant="submit" ref={buttonRef}>
                     {isSubmitting ? "Submitting" : "Submit"}
-                  </div>
+                  </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <Permission

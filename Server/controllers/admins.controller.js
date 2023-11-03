@@ -99,7 +99,6 @@ module.exports = {
     const { action, target, object, change } = req.body;
     const { id } = req.query;
     const Validation = new Validate();
-    console.log(req.body)
 
     if (!Validation.action(action)) return res.status(400).json({ message: "Invalid action type" })
     if (!Validation.target(target)) return res.status(400).json({ message: "Invalid target type" })

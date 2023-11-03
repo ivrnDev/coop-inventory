@@ -7,12 +7,13 @@ import Permission from "../../Permission";
 import { rolePermissions } from "@/lib/permission";
 import { toast } from "@/components/ui/use-toast";
 import { createActivity } from "@/lib/api/activity";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   categoryId: number;
 };
 const DeleteButton = ({ categoryId }: Props) => {
-  const deleteBtnRef = useRef<HTMLDivElement | null>(null);
+  const deleteBtnRef = useRef<HTMLButtonElement | null>(null);
   const { moderate } = rolePermissions;
   const [adminId, setadminId] = useState<number>(0);
   const [isAllowed, setisAllowed] = useState<boolean>(false);
@@ -30,12 +31,12 @@ const DeleteButton = ({ categoryId }: Props) => {
         const getCategory = await getCategoryById(categoryId);
         const categoryName = getCategory[0].category_name;
         const removeCategory = await deleteCategory(1, categoryId);
-        if (getCategory)
+
+        if (removeCategory.status === 201) {
           await createActivity(
             { action: "deleted", target: "category", object: categoryName },
             adminId
           );
-        if (removeCategory.status === 201) {
           toast({
             description: "Successfully deleted the category",
           });
@@ -58,14 +59,9 @@ const DeleteButton = ({ categoryId }: Props) => {
     <>
       <Dialog>
         <DialogTrigger>
-          <div
-            ref={deleteBtnRef}
-            className={classNames({
-              "bg-red-500 text-white rounded-md p-2": true,
-            })}
-          >
+          <Button type="button" variant="destructive" ref={deleteBtnRef}>
             Delete
-          </div>
+          </Button>
         </DialogTrigger>
         <DialogContent>
           <Permission roles={moderate} handlePermission={handlePermission} />

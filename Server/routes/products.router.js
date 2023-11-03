@@ -23,7 +23,7 @@ const router = express.Router();
 const upload = require('../middleware/multer');
 
 router.get('/', getAllProducts);
-router.post('/', upload.single('display_image'), createProduct);
+router.post('/', upload.fields([{ name: 'display_image', maxCount: 1 }, { name: 'product_album', maxCount: 10 }]), createProduct);
 router.get('/:id', getProductById)
 router.patch('/:id', updateProducts);
 router.patch('/image/:id', upload.single('display_image'), updateProductImage);

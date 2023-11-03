@@ -44,7 +44,7 @@ const UpdateCategoriesForm = () => {
   const { toast } = useToast();
   const { unrestricted, moderate, restricted } = rolePermissions;
   type ValidationCategorySchema = z.infer<typeof UpdateCategorySchema>;
-  const buttonRef = useRef<HTMLDivElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [isAllowed, setIsAllowed] = useState(false);
   const [adminId, setadminId] = useState(0);
   const [categories, setCategories] = useState<CategoriesType[]>();
@@ -91,23 +91,26 @@ const UpdateCategoriesForm = () => {
       try {
         const getCategory = await getCategoryById(category_id);
         const existingCategoryName = getCategory[0].category_name;
-        const activity = await createActivity(
-          {
-            action: "updated",
-            target: "category",
-            object: existingCategoryName,
-            change: category_name,
-          },
-          adminId
-        );
+
         const newCategory = await updateCategory(form, category_id);
-        if (newCategory.status === 201 && activity.status === 201) {
+        if (newCategory.status === 201) {
+          await createActivity(
+            {
+              action: "updated",
+              target: "category",
+              object: existingCategoryName,
+              change: category_name,
+            },
+            adminId
+          );
           toast({
-            description: "You have successfully updated a category!",
+            description: "You have successfully updated a category.",
           });
         } else if (newCategory.status === 400) {
           toast({
-            description: `Category ${category_name} already exist`,
+            variant: "destructive",
+            title: "Failed to Update Category.",
+            description: `Category ${category_name} already exist.`,
           });
         }
       } catch (error) {
@@ -215,14 +218,9 @@ const UpdateCategoriesForm = () => {
             <DialogFooter>
               <Dialog>
                 <DialogTrigger>
-                  <div
-                    ref={buttonRef}
-                    className={classNames({
-                      "bg-green-500 text-white rounded-md p-2": true,
-                    })}
-                  >
+                  <Button type="button" variant="submit" ref={buttonRef}>
                     {isSubmitting ? "Updating" : "Update"}
-                  </div>
+                  </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <Permission
@@ -231,7 +229,6 @@ const UpdateCategoriesForm = () => {
                   />
                 </DialogContent>
               </Dialog>
-
               <DeleteButton categoryId={getValues().category_id} />
             </DialogFooter>
           </form>

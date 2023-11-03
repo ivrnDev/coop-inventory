@@ -97,6 +97,9 @@ module.exports = {
             JOIN category as ct ON p.category_id = ct.category_id 
             WHERE p.product_id = ?
         `,
+        getProductByNameQuery: `
+            SELECT product_name FROM products WHERE product_name = ?
+        `,
         updateProductQuery: `
             UPDATE products SET category_id = ?, display_name = ?, display_price = ?, product_stocks = ?, product_description = ?, status = ?, isFeatured = ? WHERE product_id = ?
         `,

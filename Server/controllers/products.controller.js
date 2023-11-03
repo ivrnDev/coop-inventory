@@ -1,4 +1,5 @@
 const fs = require('fs').promises;
+const { createProductAlbumDB } = require('../services/albums.services');
 const {
   createProductDB,
   createVariantsDB,
@@ -26,8 +27,8 @@ module.exports = {
   createProduct: async (req, res) => {
     try {
       let imagePath;
-      if (req.file) {
-        imagePath = req.file.buffer;
+      if (req.files) {
+        imagePath = req.files.display_image[0].buffer;
       } else {
         const defaultImagePath = './public/default-image.jpg';
         try {
@@ -36,30 +37,34 @@ module.exports = {
           return res.status(500).json({ message: "Error reading default image" });
         }
       };
-
       const { category_id, product_name, display_name, display_price, product_description, variants } = req.body;
+      
       const parseVariants = JSON.parse(variants)
       const product_stocks = parseVariants.reduce((accumulator, variant) => accumulator + Number(variant.variant_stocks), 0)
 
       const createdProduct = await createProductDB(category_id, product_name, display_name, display_price, product_stocks, product_description, imagePath);
-
+      if (createdProduct === 1) return res.status(400).json({ message: `${product_name} already exist` });
       if (!createdProduct) return res.status(400).json({ message: "Failed to insert product" });
 
       const { product_id } = createdProduct;
+      const album = req.files.product_album
+
+      const createAlbum = await createProductAlbumDB(product_id, album);
+      if (!createAlbum) return res.status(400).json({ error: "Failed to upload albums" })
 
       const createdVariants = await createVariantsDB(product_id, parseVariants)
       if (!createdVariants) return res.status(400).json({ message: `Failed to insert variants in a product with an ID of ${product_id}` })
 
       const result = {
         product: createdProduct,
-        variants: createdVariants
+        variants: createdVariants,
+        albums: createAlbum
       }
       return res.status(201).json({ message: "Successfully created a new product", result: result });
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error });
     }
   },
-  //Get all products list
   getAllProducts: async (req, res) => {
     try {
       const result = await getAllProductsDB();
@@ -69,7 +74,6 @@ module.exports = {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }
   },
-  //Update product by ID
   updateProducts: async (req, res) => {
     try {
       //Get requested product
@@ -96,9 +100,7 @@ module.exports = {
   },
 
   createVariants: async (req, res) => {
-
     try {
-      //Update variant
       const { variants } = req.body;
       const updatedVariants = await createNewVariantsDB(req.params.id, variants);
 
@@ -111,7 +113,6 @@ module.exports = {
     }
   },
   deleteVariants: async (req, res) => {
-    console.log(req.query)
     const { product_id, variant_id } = req.query
     try {
       const deletedVariants = await deleteVariantsDB(product_id, variant_id);
@@ -120,8 +121,6 @@ module.exports = {
       return res.status(500).json({ message: "Internal Server Error", error: error });
     }
   },
-
-  //Get Product by Id
   getProductById: async (req, res) => {
     try {
       const result = await getProductByIdDB(req.params.id);
