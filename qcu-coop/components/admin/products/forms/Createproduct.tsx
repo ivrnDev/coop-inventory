@@ -37,6 +37,7 @@ import Permission from "../../Permission";
 import { rolePermissions } from "@/lib/permission";
 import { useToast } from "@/components/ui/use-toast";
 import { createActivity } from "@/lib/api/activity";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 type ValidationProduct = z.infer<typeof ProductSchema>;
 type SelectedImage = {
@@ -197,6 +198,92 @@ const CreateProductForm = () => {
           <div id="first-section" className="p-5 flex flex-col space-y-5">
             <Label className="font-bold">Images / Albums</Label>
             <div id="image-container" className="flex space-x-2">
+              <div id="product-image-preview">
+                <Dialog>
+                  <DialogTrigger
+                    className={classNames({
+                      "bg-inputColor border border-black w-24 h-24 hover:cursor-pointer":
+                        true,
+                      "hover:cursor-default": !selectedImage.image,
+                    })}
+                  >
+                    {selectedImage.image && (
+                      <div
+                        id="preview-image-container"
+                        className="relative w-full h-full object-contain"
+                      >
+                        <Image
+                          src={URL.createObjectURL(selectedImage.image)}
+                          alt="Selected Image"
+                          sizes="min-w-1"
+                          fill
+                        />
+                      </div>
+                    )}
+                  </DialogTrigger>
+                  {selectedImage.image && (
+                    <DialogContent>
+                      <AspectRatio ratio={10 / 10} className="absolute">
+                        <Image
+                          src={URL.createObjectURL(selectedImage.image)}
+                          alt="Selected Image"
+                          sizes="min-w-1"
+                          fill
+                          className="rounded-lg object-cover"
+                        />
+                      </AspectRatio>
+                    </DialogContent>
+                  )}
+                </Dialog>
+              </div>
+              <div id="product-album-preview">
+                <Dialog>
+                  <DialogTrigger
+                    className={classNames({
+                      "bg-inputColor border border-black w-24 h-24 hover:cursor-pointer":
+                        true,
+                      "hover:cursor-default": !selectedImage.albums[0],
+                    })}
+                  >
+                    {selectedImage.albums[0] && (
+                      <div
+                        id="preview-image-container"
+                        className="relative w-full h-full object-contain"
+                      >
+                        <Image
+                          src={URL.createObjectURL(selectedImage.albums[0])}
+                          alt="Selected Image"
+                          sizes="min-w-1"
+                          fill
+                        />
+                      </div>
+                    )}
+                  </DialogTrigger>
+                  {selectedImage.albums && (
+                    <DialogContent className="flex justify-center items-center">
+                      <div
+                        className={classNames({
+                          "w-full h-[500px] gap-1 overflow-y-auto flex flex-wrap":
+                            true,
+                          "grid grid-cols-2": selectedImage.albums.length >= 4,
+                        })}
+                      >
+                        {selectedImage.albums.map((album, index) => (
+                          <AspectRatio ratio={1 / 1} key={index} className="">
+                            <Image
+                              src={URL.createObjectURL(album)}
+                              alt="Selected Image"
+                              sizes="min-w-1"
+                              fill
+                              className="rounded-lg object-cover"
+                            />
+                          </AspectRatio>
+                        ))}
+                      </div>
+                    </DialogContent>
+                  )}
+                </Dialog>
+              </div>
               <div className="flex">
                 <Label
                   htmlFor="display_image"
