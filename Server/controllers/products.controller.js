@@ -48,7 +48,7 @@ module.exports = {
 
       const { product_id } = createdProduct;
       const album = req.files.product_album
-      
+
       if (album) {
         const createAlbum = await createProductAlbumDB(product_id, album);
         if (!createAlbum) return res.status(400).json({ error: "Failed to upload albums" })
@@ -60,7 +60,6 @@ module.exports = {
       const result = {
         product: createdProduct,
         variants: createdVariants,
-        albums: createAlbum
       }
       return res.status(201).json({ message: "Successfully created a new product", result: result });
     } catch (error) {
