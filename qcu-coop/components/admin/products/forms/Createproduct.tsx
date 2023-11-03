@@ -39,6 +39,15 @@ import { useToast } from "@/components/ui/use-toast";
 import { createActivity } from "@/lib/api/activity";
 
 type ValidationProduct = z.infer<typeof ProductSchema>;
+type SelectedImage = {
+  image: File | null;
+  albums: File[] | [];
+};
+
+type ImageNumber = {
+  image: number;
+  albums: number;
+};
 
 const steps = [
   {
@@ -67,10 +76,11 @@ const CreateProductForm = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [isAllowed, setIsAllowed] = useState<boolean>(false);
   const [adminId, setAdminId] = useState<number>(0);
-  const [imageNumber, setImageNumber] = useState<{
-    image: number;
-    albums: number;
-  }>({
+  const [selectedImage, setSelectedImage] = useState<SelectedImage>({
+    image: null,
+    albums: [],
+  });
+  const [imageNumber, setImageNumber] = useState<ImageNumber>({
     image: 0,
     albums: 0,
   });
@@ -213,10 +223,15 @@ const CreateProductForm = () => {
                         onChange={(event) => {
                           const selectedFile = event.target.files;
                           if (selectedFile) {
-                            onChange(selectedFile[0]);
+                            const imageFile = selectedFile[0];
+                            onChange(imageFile);
+                            setSelectedImage((prevFiles) => ({
+                              ...prevFiles,
+                              image: imageFile,
+                            }));
                             setImageNumber((prevCount) => ({
                               ...prevCount,
-                              ["image"]: selectedFile.length,
+                              image: selectedFile.length,
                             }));
                           }
                         }}
@@ -262,8 +277,12 @@ const CreateProductForm = () => {
                         onChange={(event) => {
                           const selectedFile = event.target.files;
                           if (selectedFile) {
-                            const convertArray = Array.from(selectedFile);
-                            onChange(convertArray);
+                            const albumFiles = Array.from(selectedFile);
+                            onChange(albumFiles);
+                            setSelectedImage((prevFiles) => ({
+                              ...prevFiles,
+                              albums: albumFiles,
+                            }));
                             setImageNumber((prevCount) => ({
                               ...prevCount,
                               ["albums"]: selectedFile.length,
