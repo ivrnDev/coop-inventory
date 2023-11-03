@@ -38,7 +38,7 @@ module.exports = {
         }
       };
       const { category_id, product_name, display_name, display_price, product_description, variants } = req.body;
-      
+
       const parseVariants = JSON.parse(variants)
       const product_stocks = parseVariants.reduce((accumulator, variant) => accumulator + Number(variant.variant_stocks), 0)
 
@@ -48,9 +48,11 @@ module.exports = {
 
       const { product_id } = createdProduct;
       const album = req.files.product_album
-
-      const createAlbum = await createProductAlbumDB(product_id, album);
-      if (!createAlbum) return res.status(400).json({ error: "Failed to upload albums" })
+      
+      if (album) {
+        const createAlbum = await createProductAlbumDB(product_id, album);
+        if (!createAlbum) return res.status(400).json({ error: "Failed to upload albums" })
+      }
 
       const createdVariants = await createVariantsDB(product_id, parseVariants)
       if (!createdVariants) return res.status(400).json({ message: `Failed to insert variants in a product with an ID of ${product_id}` })
