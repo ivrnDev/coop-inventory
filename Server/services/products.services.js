@@ -54,14 +54,14 @@ module.exports = {
       );
     })
   },
-  updateProductsDB: async (category_id, display_name, display_price, product_stocks, product_description, status, isFeatured, product_id) => {
+  updateProductsDB: async (category_id, display_name, display_price, product_stocks, product_description, status, isFeatured, display_image, product_id) => {
     return new Promise(async (resolve, reject) => {
 
       const findProductByID = await module.exports.getProductByIdDB(product_id);
       if (findProductByID === null) resolve(null);
 
       pool.execute(updateProductQuery, [category_id,
-        display_name, display_price, product_stocks, product_description, status, isFeatured, product_id,
+        display_name, display_price, product_stocks, product_description, status, isFeatured, display_image, product_id,
       ], (error, result) => {
         if (error) return reject(error)
         const updatedProduct = {
@@ -90,8 +90,9 @@ module.exports = {
     })
   },
   createNewVariantsDB: (product_id, variants) => {
+    const variantArray = new Array(variants)
     return new Promise((resolve, reject) => {
-      variants.forEach(async (value, index) => {
+      variantArray.map(async (value, index) => {
         const checkVariant = await module.exports.getVariantByProductIdDB(product_id)
         let existingVariantId;
         if (checkVariant && checkVariant.length > 0) {
@@ -138,12 +139,19 @@ module.exports = {
   },
   updateVariantsDB: (product_id, variants) => {
     return new Promise((resolve, reject) => {
-      variants.map((variant, index) => {
-        const { variant_id, variant_name, variant_symbol, variant_price, variant_stocks } = variant;
-        pool.execute(updateVariantQuery, [variant_name, variant_symbol, variant_price, variant_stocks, product_id, variant_id], (error, result) => {
-          if (error) return reject(error)
-          return resolve(variants)
-        })
+      variants.map(async (variant, index) => {
+        const { id, variant_id, variant_name, variant_symbol, variant_price, variant_stocks } = variant;
+        if (!id && !variant_id) {
+          await module.exports.createNewVariantsDB(product_id, variant)
+        }
+        if (variant.variant_id && variant.id) {
+          pool.execute(updateVariantQuery, [variant_name, variant_symbol, variant_price, variant_stocks, product_id, variant_id], (error, result) => {
+            if (error) return reject(error)
+            return resolve(variants)
+          })
+        }
+
+
       })
     })
   },
@@ -220,7 +228,6 @@ module.exports = {
       const variants = await module.exports.getVariantByProductIdDB(id);
       if (variants === null) return resolve(null)
       const albums = await getProductAlbumByIdDB(id);
-      if (albums === null) return resolve(null)
 
       pool.execute(getProductByIdQuery, [id], (error, result) => {
         if (error) return reject(error);
@@ -242,7 +249,7 @@ module.exports = {
           category_id: product.category_id,
           category_name: product.category_name,
           category_image: product.category_image.toString('base64'),
-          albums: albums,
+          albums: albums ? albums : null,
           variants: variants
         }))
         return resolve(products);

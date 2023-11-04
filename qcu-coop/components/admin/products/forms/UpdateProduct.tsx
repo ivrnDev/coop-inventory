@@ -30,6 +30,7 @@ import { ValidationMap, useEffect, useRef, useState } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import Image from "next/image";
 import classNames from "classnames";
+import { z, ZodType } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Categories, Product, ProductAlbum } from "@/types/products/products";
@@ -91,7 +92,7 @@ const UpdateProductForm = ({ categories, id }: Props) => {
     const getProduct = async () => {
       try {
         const item = await getProductById(id);
-          handleImage(item);
+        handleImage(item);
         if (item && item.length > 0) {
           const defaultFormValues: ValidateProduct = {
             product_name: item[0].product_name || "",
@@ -106,6 +107,7 @@ const UpdateProductForm = ({ categories, id }: Props) => {
             variants:
               item[0].variants &&
               item[0].variants.map((variant: any) => ({
+                id: variant.id || 0,
                 variant_id: variant.variant_id || 0,
                 variant_name: variant.variant_name || "",
                 variant_symbol: variant.variant_symbol || "",
@@ -123,9 +125,8 @@ const UpdateProductForm = ({ categories, id }: Props) => {
   }, []);
 
   useEffect(() => {
-    setValue("display_image", selectedImage.image)
+    setValue("display_image", selectedImage.image);
     setValue("product_album", selectedImage.albums);
-
   }, [selectedImage]);
   const handlePermission = async (permission: boolean, id?: number) => {
     if (permission) {
@@ -201,17 +202,34 @@ const UpdateProductForm = ({ categories, id }: Props) => {
     return setCurrentStep(2);
   };
   const onSubmit = async (data: ValidateProduct) => {
-    console.log(data);
-    // try {
-    //   const response = await updateProduct(data, id);
-    //   if (response.status === 200) {
-    //     console.log("Product updated successfully");
-    //   } else {
-    //     console.error("Failed to create Product");
-    //   }
-    // } catch (error) {
-    //   console.error("Error:", error);
-    // }
+    const form = new FormData();
+     const { variants, product_album, ...newData } = data;
+    for (const key of Object.keys(newData) as (keyof typeof newData)[]) {
+      form.append(key, newData[key]);
+    }
+    form.append("variants", JSON.stringify(variants));
+      if (product_album) {
+        for (const file of product_album) {
+          form.append("product_album", file);
+        }
+      }
+
+    try {
+      const response = await updateProduct(form, id);
+      if (response.status === 200) {
+        toast({
+          description: `You have successfully updated ${data.product_name} product.`,
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Failed to Update Product.",
+          description: `${response.data.message}`,
+        });
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
@@ -219,7 +237,7 @@ const UpdateProductForm = ({ categories, id }: Props) => {
       onSubmit={handleSubmit(onSubmit)}
       className="grid grid-cols-2 w-full h-full overflow-y-auto"
     >
-      <RadioGroup defaultValue="variation" className="absolute flex w-full">
+      <RadioGroup defaultValue="product" className="absolute flex w-full">
         <div className="flex items-center space-x-2 absolute right-72">
           <RadioGroupItem
             value="variation"
@@ -667,150 +685,129 @@ const UpdateProductForm = ({ categories, id }: Props) => {
 
       {currentStep === 2 && (
         <>
-          <div className="flex space-x-5">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant={"outline"}>Edit Variants</Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>EDIT VARIANT</DialogTitle>
-                </DialogHeader>
-                {fields && fields.length > 0 ? (
-                  fields.map((field, index) => (
-                    <div key={field.id} className="grid gap-4 py-4">
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <label
-                          htmlFor={`variants.${index}.variant_name`}
-                          className="text-right"
-                        >
-                          Name
-                        </label>
-                        <input
-                          {...register(
-                            `variants.${index}.variant_name` as const
-                          )}
-                          id={`variants${index}.variant_name`}
-                          autoComplete="off"
-                          className={classNames({
-                            "border-red-600":
-                              errors.variants &&
-                              errors.variants[index]?.variant_name,
-                            "col-span-3": true,
-                          })}
-                        />
-                        {errors.variants && (
-                          <p className="text-red-600 text-sm mt-2">
-                            <>{errors.variants[index]?.variant_name?.message}</>
-                          </p>
-                        )}
-                      </div>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <label
-                          htmlFor={`variants.${index}.variant_symbol`}
-                          className="text-right"
-                        >
-                          Symbol
-                        </label>
-                        <input
-                          {...register(
-                            `variants.${index}.variant_symbol` as const
-                          )}
-                          id={`variants.${index}.variant_symbol`}
-                          autoComplete="off"
-                          className={classNames({
-                            "border-red-600":
-                              errors.variants &&
-                              errors.variants[index]?.variant_symbol,
-                            "col-span-3": true,
-                          })}
-                        />
-                        {errors.variants && (
-                          <p className="text-red-600 text-sm mt-2">
-                            <>
-                              {errors.variants[index]?.variant_symbol?.message}
-                            </>
-                          </p>
-                        )}
-                      </div>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <label
-                          htmlFor={`variants.${index}.variant_price`}
-                          className="text-right"
-                        >
-                          Price
-                        </label>
-                        <input
-                          {...register(
-                            `variants.${index}.variant_price` as const
-                          )}
-                          type="number"
-                          id={`variants.${index}.variant_price`}
-                          autoComplete="off"
-                          className={classNames({
-                            "border-red-600":
-                              errors.variants &&
-                              errors.variants[index]?.variant_price,
-                            "col-span-3": true,
-                          })}
-                        />
-                        {errors.variants && (
-                          <p className="text-red-600 text-sm mt-2">
-                            <>
-                              {errors.variants[index]?.variant_price?.message}
-                            </>
-                          </p>
-                        )}
-                      </div>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <label
-                          htmlFor={`variants.${index}.variant_stocks`}
-                          className="text-right"
-                        >
-                          Stocks
-                        </label>
-                        <input
-                          {...register(
-                            `variants.${index}.variant_stocks` as const
-                          )}
-                          type="number"
-                          id={`variants.${index}.variant_stocks`}
-                          autoComplete="off"
-                          className={classNames({
-                            "border-red-600":
-                              errors.variants &&
-                              errors.variants[index]?.variant_stocks,
-                            "col-span-3": true,
-                          })}
-                        />
-                        {errors.variants && (
-                          <p className="text-red-600 text-sm mt-2">
-                            <>
-                              {errors.variants[index]?.variant_stocks?.message}
-                            </>
-                          </p>
-                        )}
-                        <Button
-                          variant="default"
-                          onClick={() => handleRemoveForm(index, field)}
-                        >
-                          DELETE
-                        </Button>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div>NO EXISTING VARIANTS</div>
-                )}
-
-                <DialogFooter>
-                  <DialogClose>
-                    <div>Save changes</div>
-                  </DialogClose>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+          <div
+            id="variant-container"
+            className="grid grid-cols-2 bg-[#37B3E2] mt-5"
+          >
+            {fields.map((field, index) => (
+              <div key={field.id} className="p-2 flex flex-col space-y-3">
+                <div className="flex items-center">
+                  <Label
+                    htmlFor={`variants.${index}.variant_name`}
+                    className="font-bold"
+                  >
+                    Name
+                  </Label>
+                  <div>
+                    <Input
+                      {...register(`variants.${index}.variant_name` as const)}
+                      id={`variants${index}.variant_name`}
+                      autoComplete="off"
+                      placeholder="small e.g"
+                      className={classNames({
+                        "border-red-600":
+                          errors.variants &&
+                          errors.variants[index]?.variant_name,
+                      })}
+                    />
+                    {errors.variants && (
+                      <p className="text-red-600 text-sm text-center">
+                        <>{errors.variants[index]?.variant_name?.message}</>
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div className="flex">
+                  <label
+                    htmlFor={`variants.${index}.variant_symbol`}
+                    className="text-right"
+                  >
+                    Symbol
+                  </label>
+                  <div>
+                    <Input
+                      {...register(`variants.${index}.variant_symbol` as const)}
+                      id={`variants.${index}.variant_symbol`}
+                      autoComplete="off"
+                      className={classNames({
+                        "border-red-600":
+                          errors.variants &&
+                          errors.variants[index]?.variant_symbol,
+                        "": true,
+                      })}
+                    />
+                    {errors.variants && (
+                      <p className="text-red-600 text-sm text-center">
+                        <>{errors.variants[index]?.variant_symbol?.message}</>
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div className="flex">
+                  <Label
+                    htmlFor={`variants.${index}.variant_price`}
+                    className="text-right"
+                  >
+                    Price
+                  </Label>
+                  <div>
+                    <Input
+                      {...register(`variants.${index}.variant_price` as const)}
+                      type="number"
+                      id={`variants.${index}.variant_price`}
+                      autoComplete="off"
+                      className={classNames({
+                        "border-red-600":
+                          errors.variants &&
+                          errors.variants[index]?.variant_price,
+                        "": true,
+                      })}
+                    />
+                    {errors.variants && (
+                      <p className="text-red-600 text-sm mt-2">
+                        <>{errors.variants[index]?.variant_price?.message}</>
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div className="flex ">
+                  <Label
+                    htmlFor={`variants.${index}.variant_stocks`}
+                    className="text-right"
+                  >
+                    Stocks
+                  </Label>
+                  <div>
+                    <Input
+                      {...register(`variants.${index}.variant_stocks` as const)}
+                      type="number"
+                      id={`variants.${index}.variant_stocks`}
+                      autoComplete="off"
+                      className={classNames({
+                        "border-red-600":
+                          errors.variants &&
+                          errors.variants[index]?.variant_stocks,
+                        "": true,
+                      })}
+                    />
+                    {errors.variants && (
+                      <p className="text-red-600 text-sm mt-2">
+                        <>{errors.variants[index]?.variant_stocks?.message}</>
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <Button
+                  variant="destructive"
+                  size="lg"
+                  onClick={() => handleRemoveForm(index, field)}
+                >
+                  DELETE
+                </Button>
+              </div>
+            ))}
           </div>
+
           <Button
             variant="system"
             type="button"

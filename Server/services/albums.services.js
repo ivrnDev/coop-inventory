@@ -1,6 +1,6 @@
 const pool = require('../db/database');
 const { albumQueries } = require('../db/dbQueries');
-const { createProductAlbumQuery, updateProductAlbumImageQuery, getAlbumByIdQuery, getAllAlbumsQuery, getProductAlbumByIDQuery } = albumQueries
+const { createProductAlbumQuery, updateProductAlbumImageQuery, getAlbumByIdQuery, getAllAlbumsQuery, getProductAlbumByIDQuery, deleteAlbumByProductIdQuery } = albumQueries
 module.exports = {
   createProductAlbumDB: (product_id, albums) => {
     return new Promise((resolve, reject) => {
@@ -65,6 +65,14 @@ module.exports = {
           product_photo: album.product_photo.toString('base64'),
         }))
         return resolve(album)
+      })
+    })
+  },
+  deleteAlbumByProductIdDB: (product_id) => {
+    return new Promise((resolve, reject) => {
+      pool.execute(deleteAlbumByProductIdQuery, [product_id], (error, result) => {
+        if (error) return reject(error)
+        return resolve(result)
       })
     })
   },

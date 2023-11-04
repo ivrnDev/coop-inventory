@@ -106,7 +106,7 @@ module.exports = {
             SELECT product_name FROM products WHERE product_name = ?
         `,
         updateProductQuery: `
-            UPDATE products SET category_id = ?, display_name = ?, display_price = ?, product_stocks = ?, product_description = ?, status = ?, isFeatured = ? WHERE product_id = ?
+            UPDATE products SET category_id = ?, display_name = ?, display_price = ?, product_stocks = ?, product_description = ?, status = ?, isFeatured = ?, display_image = ? WHERE product_id = ?
         `,
         updateVariantQuery: `
             UPDATE variants SET variant_name = ?, variant_symbol = ?, variant_price = ?, variant_stocks = ? WHERE product_id = ? AND variant_id = ?
@@ -149,6 +149,9 @@ module.exports = {
         `,
         getProductAlbumByIDQuery: `
             SELECT * FROM albums WHERE product_id = ?
+        `,
+        deleteAlbumByProductIdQuery: `
+            DELETE FROM albums WHERE product_id = ?
         `,
 
 

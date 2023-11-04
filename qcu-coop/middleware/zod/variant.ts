@@ -1,6 +1,8 @@
 import { z } from "zod";
 
 export const VariantSchema = z.object({
+  id: z.number().optional(),
+  variant_id: z.number().optional(),
   variant_name: z
     .string()
     .toLowerCase()

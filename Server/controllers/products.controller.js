@@ -1,5 +1,5 @@
 const fs = require('fs').promises;
-const { createProductAlbumDB } = require('../services/albums.services');
+const { createProductAlbumDB, deleteAlbumByProductIdDB } = require('../services/albums.services');
 const {
   createProductDB,
   createVariantsDB,
@@ -79,17 +79,42 @@ module.exports = {
   },
   updateProducts: async (req, res) => {
     try {
-      //Get requested product
-      const { category_id, display_name, display_price, product_stocks, product_description, status, isFeatured } = req.body
+      let imagePath;
+      if (req.files) {
+        imagePath = req.files.display_image[0].buffer;
+      } else {
+        const defaultImagePath = './public/default-image.jpg';
+        try {
+          imagePath = await fs.readFile(defaultImagePath);
+        } catch (error) {
+          return res.status(500).json({ message: "Error reading default image" });
+        }
+      }
 
-      //Update product
-      const updatedProduct = await updateProductsDB(category_id, display_name, display_price, product_stocks, product_description, status, isFeatured, req.params.id)
-      if (updatedProduct === null) return res.status(404).json({ message: `There is no product with an ID of ${req.params.id}` });
+      const { category_id, display_name, display_price, product_description, status, isFeatured, variants } = req.body
+      const { id } = req.params
+
+      const parseVariants = JSON.parse(variants)
+      if (parseVariants.length === 0) return res.status(400).json({ message: "Variant is required!" });
+
+      const product_stocks = parseVariants.reduce((accumulator, variant) => accumulator + Number(variant.variant_stocks), 0)
+
+      const updatedProduct = await updateProductsDB(category_id, display_name, display_price, product_stocks, product_description, status, isFeatured, imagePath, id)
+      if (updatedProduct === null) return res.status(404).json({ message: `There is no product with an ID of ${id}` });
       if (!updatedProduct) return res.status(400).json({ message: "Failed to update product" });
 
-      //Update variant
-      const { variants } = req.body;
-      const updatedVariants = await updateVariantsDB(req.params.id, variants);
+      const updatedVariants = await updateVariantsDB(id, parseVariants);
+      if (!updatedVariants) return res.status(400).json({ message: `Failed to update variants in a product with an ID of ${id}` })
+
+      const album = req.files.product_album
+
+      if (!album) await deleteAlbumByProductIdDB(id);
+      if (album) {
+        const deleteAlbum = await deleteAlbumByProductIdDB(id);
+        const createAlbum = await createProductAlbumDB(id, album);
+        if (!createAlbum) return res.status(400).json({ error: "Failed to upload albums" })
+      }
+
 
       const result = {
         product: updatedProduct,
