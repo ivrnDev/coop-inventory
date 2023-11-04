@@ -119,7 +119,7 @@ const CreateProductForm = () => {
     }
     !isAllowed && buttonRef.current && buttonRef.current.click();
   };
-  
+
   type FieldName = keyof ValidationProduct;
   const next = async () => {
     if (currentStep < steps.length) {
@@ -203,9 +203,9 @@ const CreateProductForm = () => {
                 <Dialog>
                   <DialogTrigger
                     className={classNames({
-                      "bg-inputColor border border-black w-24 h-24 hover:cursor-pointer":
+                      "bg-inputColor border border-black w-24 h-24 cursor-default":
                         true,
-                      "hover:cursor-default": !selectedImage.image,
+                      "cursor-pointer": selectedImage.image,
                     })}
                   >
                     {selectedImage.image && (
@@ -241,9 +241,9 @@ const CreateProductForm = () => {
                 <Dialog>
                   <DialogTrigger
                     className={classNames({
-                      "bg-inputColor border border-black w-24 h-24 hover:cursor-pointer":
+                      "bg-inputColor border border-black w-24 h-24 cursor-default":
                         true,
-                      "hover:cursor-default": !selectedImage.albums[0],
+                      "cursor-pointer": selectedImage.albums.length > 0,
                     })}
                   >
                     {selectedImage.albums[0] && (

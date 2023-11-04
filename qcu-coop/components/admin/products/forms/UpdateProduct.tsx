@@ -40,6 +40,7 @@ import { getProductById, updateProduct } from "@/lib/api/products";
 import { rolePermissions } from "@/lib/permission";
 import Permission from "../../Permission";
 import AddVariants from "./AddVariants";
+import { createActivity } from "@/lib/api/activity";
 
 type Props = {
   categories: Categories[];
@@ -57,13 +58,12 @@ type ImageNumber = {
 };
 
 const UpdateProductForm = ({ categories, id }: Props) => {
+  const { restricted, moderate, unrestricted } = rolePermissions;
   const { toast } = useToast();
   const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const { restricted, moderate, unrestricted } = rolePermissions;
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [isAllowed, setIsAllowed] = useState<boolean>(false);
   const [adminId, setAdminId] = useState<number>(0);
-  const [productItem, setProductItem] = useState<Product[]>([]);
   const [selectedImage, setSelectedImage] = useState<SelectedImage>({
     image: null,
     albums: [],
@@ -202,35 +202,51 @@ const UpdateProductForm = ({ categories, id }: Props) => {
     return setCurrentStep(2);
   };
   const onSubmit = async (data: ValidateProduct) => {
-    const form = new FormData();
-     const { variants, product_album, ...newData } = data;
-    for (const key of Object.keys(newData) as (keyof typeof newData)[]) {
-      form.append(key, newData[key]);
-    }
-    form.append("variants", JSON.stringify(variants));
+    if (isAllowed) {
+      const form = new FormData();
+      const { variants, product_album, ...newData } = data;
+      for (const key of Object.keys(newData) as (keyof typeof newData)[]) {
+        form.append(key, newData[key]);
+      }
+      form.append("variants", JSON.stringify(variants));
       if (product_album) {
         for (const file of product_album) {
           form.append("product_album", file);
         }
       }
-
-    try {
-      const response = await updateProduct(form, id);
-      if (response.status === 200) {
-        toast({
-          description: `You have successfully updated ${data.product_name} product.`,
-        });
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Failed to Update Product.",
-          description: `${response.data.message}`,
-        });
+      try {
+        const response = await updateProduct(form, id);
+        if (response.status === 200) {
+          await createActivity(
+            {
+              action: "updated",
+              target: "product",
+              object: data.product_name,
+            },
+            adminId
+          );
+          toast({
+            description: `You have successfully updated ${data.product_name} product.`,
+          });
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Failed to Update Product.",
+            description: `${response.data.message}`,
+          });
+        }
+      } catch (error) {
+        console.error("Error:", error);
       }
-    } catch (error) {
-      console.error("Error:", error);
     }
   };
+
+  useEffect(() => {
+    if (isAllowed) {
+      handleSubmit(onSubmit)();
+      setIsAllowed(false);
+    }
+  }, [isAllowed]);
 
   return (
     <form
@@ -264,9 +280,9 @@ const UpdateProductForm = ({ categories, id }: Props) => {
                 <Dialog>
                   <DialogTrigger
                     className={classNames({
-                      "bg-inputColor border border-black w-24 h-24 hover:cursor-pointer":
+                      "bg-inputColor border border-black w-24 h-24 cursor-default":
                         true,
-                      "hover:cursor-default": !selectedImage.image,
+                      "cursor-pointer": selectedImage.image,
                     })}
                   >
                     {selectedImage.image && (
@@ -302,9 +318,9 @@ const UpdateProductForm = ({ categories, id }: Props) => {
                 <Dialog>
                   <DialogTrigger
                     className={classNames({
-                      "bg-inputColor border border-black w-24 h-24 hover:cursor-pointer":
+                      "bg-inputColor border border-black w-24 h-24 cursor-default":
                         true,
-                      "hover:cursor-default": !selectedImage.albums[0],
+                      "cursor-pointer": selectedImage.albums.length > 0,
                     })}
                   >
                     {selectedImage.albums[0] && (
@@ -321,7 +337,7 @@ const UpdateProductForm = ({ categories, id }: Props) => {
                       </div>
                     )}
                   </DialogTrigger>
-                  {selectedImage.albums && (
+                  {selectedImage.albums.length > 0 && (
                     <DialogContent className="flex justify-center items-center">
                       <div
                         className={classNames({
@@ -413,7 +429,11 @@ const UpdateProductForm = ({ categories, id }: Props) => {
                       fill
                     />
                   </div>
-                  <p>{selectedImage.albums ? "Edit Image" : "Add Image"}</p>
+                  <p>
+                    {selectedImage.albums.length > 0
+                      ? "Edit Image"
+                      : "Add Image"}
+                  </p>
                   <p>{imageNumber.albums}/10</p>
                 </Label>
                 <Controller
@@ -664,22 +684,6 @@ const UpdateProductForm = ({ categories, id }: Props) => {
               )}
             </div>
           </div>
-          <Button
-            variant="system"
-            type="submit"
-            // onClick={() => handlePrevNext("next")}
-            className="absolute right-5 bottom-5 w-[12%] flex justify-center items-center"
-          >
-            <p className="text-lg">Next</p>
-            <div className="absolute right-6  w-5 h-5">
-              <Image
-                src="/icons/right-chevron-icon.svg"
-                alt="right-chevron"
-                sizes="min-w-1"
-                fill
-              />
-            </div>
-          </Button>
         </>
       )}
 
@@ -822,22 +826,6 @@ const UpdateProductForm = ({ categories, id }: Props) => {
             className="absolute right-10"
           >
             Add Variant
-          </Button>
-          <Button
-            variant="system"
-            type="button"
-            // onClick={() => handlePrevNext("prev")}
-            className="absolute left-5 bottom-5 w-[12%] flex justify-center items-center"
-          >
-            <div className="absolute left-6 w-5 h-5">
-              <Image
-                src="/icons/left-chevron-icon.svg"
-                alt="left-chevron"
-                sizes="min-w-1"
-                fill
-              />
-            </div>
-            <p className="text-lg">Prev</p>
           </Button>
           <Dialog>
             <DialogTrigger className="h-fit w-fit">
