@@ -18,6 +18,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,15 +26,14 @@ import { useToast } from "@/components/ui/use-toast";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Textarea } from "@/components/ui/textarea";
 
-import { useEffect, useRef, useState } from "react";
+import { ValidationMap, useEffect, useRef, useState } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import Image from "next/image";
 import classNames from "classnames";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Categories, Product } from "@/types/products/products";
-import { ProductSchema } from "@/middleware/zod/products";
+import { Categories, Product, ProductAlbum } from "@/types/products/products";
+import { ProductSchema, ValidateProduct } from "@/middleware/zod/products";
 import { deleteVariant } from "@/lib/api/variants";
 import { getProductById, updateProduct } from "@/lib/api/products";
 import { rolePermissions } from "@/lib/permission";
@@ -44,7 +44,7 @@ type Props = {
   categories: Categories[];
   id: string;
 };
-type ValidationProduct = z.infer<typeof ProductSchema>;
+
 type SelectedImage = {
   image: File | null;
   albums: File[] | [];
@@ -62,6 +62,7 @@ const UpdateProductForm = ({ categories, id }: Props) => {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [isAllowed, setIsAllowed] = useState<boolean>(false);
   const [adminId, setAdminId] = useState<number>(0);
+  const [productItem, setProductItem] = useState<Product[]>([]);
   const [selectedImage, setSelectedImage] = useState<SelectedImage>({
     image: null,
     albums: [],
@@ -75,8 +76,9 @@ const UpdateProductForm = ({ categories, id }: Props) => {
     handleSubmit,
     control,
     reset,
+    setValue,
     formState: { errors, isSubmitSuccessful, isSubmitting },
-  } = useForm<ValidationProduct>({
+  } = useForm<ValidateProduct>({
     resolver: zodResolver(ProductSchema),
   });
 
@@ -88,37 +90,27 @@ const UpdateProductForm = ({ categories, id }: Props) => {
   useEffect(() => {
     const getProduct = async () => {
       try {
-        const productItem = await getProductById(id);
-        handleImage(productItem);
-        if (productItem && productItem.length > 0) {
-          const {
-            product_name,
-            display_name,
-            display_price,
-            product_description,
-            status,
-            isFeatured,
-            category_id,
-            variants,
-          } = productItem[0];
-
-          const defaultFormValues: ValidationProduct = {
-            product_name: product_name || "",
-            display_name: display_name || "",
-            display_price: display_price || "",
-            product_description: product_description || "",
-            status: status == "active" ? "active" : "inactive",
-            isFeatured: String(isFeatured) == "1" ? "1" : "0",
-            category_id: String(category_id) || "",
+        const item = await getProductById(id);
+          handleImage(item);
+        if (item && item.length > 0) {
+          const defaultFormValues: ValidateProduct = {
+            product_name: item[0].product_name || "",
+            display_name: item[0].display_name || "",
+            display_price: item[0].display_price || "",
+            product_description: item[0].product_description || "",
+            status: item[0].status == "active" ? "active" : "inactive",
+            isFeatured: String(item[0].isFeatured) == "1" ? "1" : "0",
+            category_id: String(item[0].category_id) || "",
             display_image: selectedImage.image,
+            product_album: selectedImage.albums,
             variants:
-              variants &&
-              variants.map((variant: any) => ({
+              item[0].variants &&
+              item[0].variants.map((variant: any) => ({
                 variant_id: variant.variant_id || 0,
                 variant_name: variant.variant_name || "",
                 variant_symbol: variant.variant_symbol || "",
-                variant_price: variant.variant_price || 0,
-                variant_stocks: variant.variant_stocks || 0,
+                variant_price: String(variant.variant_price) || "0",
+                variant_stocks: String(variant.variant_stocks) || "0",
               })),
           };
           reset(defaultFormValues);
@@ -130,6 +122,11 @@ const UpdateProductForm = ({ categories, id }: Props) => {
     getProduct();
   }, []);
 
+  useEffect(() => {
+    setValue("display_image", selectedImage.image)
+    setValue("product_album", selectedImage.albums);
+
+  }, [selectedImage]);
   const handlePermission = async (permission: boolean, id?: number) => {
     if (permission) {
       setIsAllowed(true);
@@ -155,11 +152,12 @@ const UpdateProductForm = ({ categories, id }: Props) => {
   };
 
   const handleImage = (productItem: Product[]) => {
+    let newAlbums: any = [];
     const productImages = productItem[0];
     const image = productImages.display_image;
     if (image) {
       const blob = base64ToBlob(image, "image/png");
-      const file = new File([blob], "image.png", { type: "image/png" });
+      const file = new File([blob], `image.png`, { type: "image/png" });
       setSelectedImage((prevFiles) => ({
         ...prevFiles,
         image: file,
@@ -172,12 +170,15 @@ const UpdateProductForm = ({ categories, id }: Props) => {
     if (productImages.albums && productImages.albums.length > 0) {
       productImages.albums.map((photo) => {
         const blob = base64ToBlob(photo.product_photo, "image/png");
-        const file = new File([blob], "image.png", { type: "image/png" });
-        setSelectedImage((prevFiles) => ({
-          ...prevFiles,
-          albums: [...prevFiles.albums, file],
-        }));
+        const file = new File([blob], `image${photo.photo_id}.png`, {
+          type: "image/png",
+        });
+        newAlbums.push(file);
       });
+      setSelectedImage((prevFiles) => ({
+        ...prevFiles,
+        albums: newAlbums,
+      }));
       setImageNumber((prevCount) => ({
         ...prevCount,
         albums: productImages.albums.length,
@@ -195,17 +196,22 @@ const UpdateProductForm = ({ categories, id }: Props) => {
     return new Blob([byteArray], { type });
   };
 
-  const onSubmit = async (data: ValidationProduct) => {
-    try {
-      const response = await updateProduct(data, id);
-      if (response.status === 200) {
-        console.log("Product updated successfully");
-      } else {
-        console.error("Failed to create Product");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
+  const handlePrevNext = (action: number) => {
+    if (action === 1) return setCurrentStep(1);
+    return setCurrentStep(2);
+  };
+  const onSubmit = async (data: ValidateProduct) => {
+    console.log(data);
+    // try {
+    //   const response = await updateProduct(data, id);
+    //   if (response.status === 200) {
+    //     console.log("Product updated successfully");
+    //   } else {
+    //     console.error("Failed to create Product");
+    //   }
+    // } catch (error) {
+    //   console.error("Error:", error);
+    // }
   };
 
   return (
@@ -213,6 +219,24 @@ const UpdateProductForm = ({ categories, id }: Props) => {
       onSubmit={handleSubmit(onSubmit)}
       className="grid grid-cols-2 w-full h-full overflow-y-auto"
     >
+      <RadioGroup defaultValue="variation" className="absolute flex w-full">
+        <div className="flex items-center space-x-2 absolute right-72">
+          <RadioGroupItem
+            value="variation"
+            id="variation"
+            onClick={() => handlePrevNext(2)}
+          />
+          <Label htmlFor="variation">Variation</Label>
+        </div>
+        <div className="flex items-center space-x-2 absolute left-4">
+          <RadioGroupItem
+            value="product"
+            id="product"
+            onClick={() => handlePrevNext(1)}
+          />
+          <Label htmlFor="product">Product</Label>
+        </div>
+      </RadioGroup>
       {currentStep === 1 && (
         <>
           <div id="first-section" className="p-5 flex flex-col space-y-5">
@@ -317,7 +341,7 @@ const UpdateProductForm = ({ categories, id }: Props) => {
                       fill
                     />
                   </div>
-                  <p>Add Image</p>
+                  <p>{selectedImage.image ? "Edit Image" : "Add Image"}</p>
                   <p>{imageNumber.image}/1</p>
                 </Label>
                 <Controller
@@ -371,7 +395,7 @@ const UpdateProductForm = ({ categories, id }: Props) => {
                       fill
                     />
                   </div>
-                  <p>Add Albums</p>
+                  <p>{selectedImage.albums ? "Edit Image" : "Add Image"}</p>
                   <p>{imageNumber.albums}/10</p>
                 </Label>
                 <Controller
@@ -624,7 +648,7 @@ const UpdateProductForm = ({ categories, id }: Props) => {
           </div>
           <Button
             variant="system"
-            type="button"
+            type="submit"
             // onClick={() => handlePrevNext("next")}
             className="absolute right-5 bottom-5 w-[12%] flex justify-center items-center"
           >

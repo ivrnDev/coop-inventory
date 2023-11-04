@@ -1,5 +1,4 @@
 
-
 export async function getAllProducts() {
   try {
     const res = await fetch("http://localhost:3000/api/products", {
@@ -57,8 +56,7 @@ export async function createProduct(form: FormData) {
   }
 }
 
-export async function updateProduct(form: any, id: string) {
-  console.log(form);
+export async function updateProduct(form: FormData, id: string) {
   try {
     const res = await fetch(`http://localhost:3000/api/products/${id}`, {
       method: "PATCH",

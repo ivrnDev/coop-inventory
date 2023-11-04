@@ -95,3 +95,5 @@ export const ProductSchema = z.object({
 
   variants: z.array(VariantSchema),
 });
+
+export type ValidateProduct = z.infer<typeof ProductSchema>;
