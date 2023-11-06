@@ -92,8 +92,6 @@ export const ProductSchema = z.object({
         message: "Invalid file type. Only JPEG and PNG images are allowed.",
       }
     ),
-
-  variants: z.array(VariantSchema),
 });
 
 export type ValidateProduct = z.infer<typeof ProductSchema>;

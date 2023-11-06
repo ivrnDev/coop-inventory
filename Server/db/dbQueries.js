@@ -105,6 +105,9 @@ module.exports = {
         updateVariantQuery: `
             UPDATE variants SET variant_name = ?, variant_symbol = ?, variant_price = ?, variant_stocks = ? WHERE product_id = ? AND variant_id = ?
         `,
+        updateProductStocksQuery: `
+            UPDATE products SET product_stocks = ? WHERE product_id = ?        
+        `,
         addProductStocksQuery: `
             UPDATE products SET product_stocks = product_stocks + ? WHERE product_id = ?
         `,

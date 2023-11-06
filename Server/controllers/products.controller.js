@@ -93,7 +93,7 @@ module.exports = {
 
       const { category_id, display_name, display_price, product_description, status, isFeatured } = req.body
       const { id } = req.params
-      
+
       const updatedProduct = await updateProductsDB(category_id, display_name, display_price, product_description, status, isFeatured, imagePath, id)
       if (updatedProduct === null) return res.status(404).json({ message: `There is no product with an ID of ${id}` });
       if (!updatedProduct) return res.status(400).json({ message: "Failed to update product" });
@@ -103,6 +103,7 @@ module.exports = {
       if (!album) await deleteAlbumByProductIdDB(id);
       if (album) {
         const deleteAlbum = await deleteAlbumByProductIdDB(id);
+        if (!deleteAlbum) return res.status(400).json({ error: "Failed to delete albums" })
         const createAlbum = await createProductAlbumDB(id, album);
         if (!createAlbum) return res.status(400).json({ error: "Failed to upload albums" })
       }
@@ -199,17 +200,21 @@ module.exports = {
     }
   },
   updateVariant: async (req, res) => {
-    const {id} = req.params
-    const parseVariants = JSON.parse(req.body.variants)
-    if (parseVariants.length === 0) return res.status(400).json({ message: "Variant is required!" });
+    const { id } = req.params
+    const variants = req.body.variants;
+    if (variants.length === 0) return res.status(400).json({ message: "Variant is required!" });
 
-    const product_stocks = parseVariants.reduce((accumulator, variant) => accumulator + Number(variant.variant_stocks), 0)
+    const product_stocks = variants.reduce((accumulator, variant) => accumulator + Number(variant.variant_stocks), 0)
     try {
-      const updateProductStocks = await updateProductStocksDB(id, 'add', product_stocks);
-      if(!updateProductStocks) return res.status(400).json({message: `Failed to update product stocks to ${product_stocks}`})
+      const updateProductStocks = await updateProductStocksDB(id, 'update', product_stocks);
+      if (!updateProductStocks) return res.status(400).json({ message: `Failed to update product stocks to ${product_stocks}` })
 
-      const updatedVariants = await updateVariantsDB(id, parseVariants);
+      const updatedVariants = await updateVariantsDB(id, variants);
       if (!updatedVariants) return res.status(400).json({ message: `Failed to update variants in a product with an ID of ${id}` })
+      const result = {
+        stocks: product_stocks,
+        variants: variants
+      }
       return res.status(200).json({ message: `Successfully updated the variant with product ID of ${id}`, result: result });
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })

@@ -38,9 +38,9 @@ import { ProductSchema, ValidateProduct } from "@/middleware/zod/products";
 import { deleteVariant } from "@/lib/api/variants";
 import { getProductById, updateProduct } from "@/lib/api/products";
 import { rolePermissions } from "@/lib/permission";
-import Permission from "../../Permission";
-import AddVariants from "./AddVariants";
 import { createActivity } from "@/lib/api/activity";
+import Permission from "../../Permission";
+import UpdateVariant from "./updateVariant";
 
 type Props = {
   categories: Categories[];
@@ -64,6 +64,7 @@ const UpdateProductForm = ({ categories, id }: Props) => {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [isAllowed, setIsAllowed] = useState<boolean>(false);
   const [adminId, setAdminId] = useState<number>(0);
+  const [productName, setProductName] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<SelectedImage>({
     image: null,
     albums: [],
@@ -83,15 +84,11 @@ const UpdateProductForm = ({ categories, id }: Props) => {
     resolver: zodResolver(ProductSchema),
   });
 
-  const { fields, append, remove } = useFieldArray({
-    name: "variants",
-    control,
-  });
-
   useEffect(() => {
     const getProduct = async () => {
       try {
         const item = await getProductById(id);
+        setProductName(item[0].product_name)
         handleImage(item);
         if (item && item.length > 0) {
           const defaultFormValues: ValidateProduct = {
@@ -104,16 +101,6 @@ const UpdateProductForm = ({ categories, id }: Props) => {
             category_id: String(item[0].category_id) || "",
             display_image: selectedImage.image,
             product_album: selectedImage.albums,
-            variants:
-              item[0].variants &&
-              item[0].variants.map((variant: any) => ({
-                id: variant.id || 0,
-                variant_id: variant.variant_id || 0,
-                variant_name: variant.variant_name || "",
-                variant_symbol: variant.variant_symbol || "",
-                variant_price: String(variant.variant_price) || "0",
-                variant_stocks: String(variant.variant_stocks) || "0",
-              })),
           };
           reset(defaultFormValues);
         }
@@ -128,28 +115,13 @@ const UpdateProductForm = ({ categories, id }: Props) => {
     setValue("display_image", selectedImage.image);
     setValue("product_album", selectedImage.albums);
   }, [selectedImage]);
+
   const handlePermission = async (permission: boolean, id?: number) => {
     if (permission) {
       setIsAllowed(true);
       id && setAdminId(id);
     }
     !isAllowed && buttonRef.current && buttonRef.current.click();
-  };
-
-  const handleRemoveForm = async (index: number, field: any) => {
-    try {
-      if (index > 0) {
-        const response = await deleteVariant(id, field.variant_id);
-        if (response.status === 200) {
-          console.log("Variant deleted successfully");
-        } else {
-          console.error("Failed to delete variant");
-        }
-        remove(index);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
   };
 
   const handleImage = (productItem: Product[]) => {
@@ -204,11 +176,10 @@ const UpdateProductForm = ({ categories, id }: Props) => {
   const onSubmit = async (data: ValidateProduct) => {
     if (isAllowed) {
       const form = new FormData();
-      const { variants, product_album, ...newData } = data;
+      const { product_album, ...newData } = data;
       for (const key of Object.keys(newData) as (keyof typeof newData)[]) {
         form.append(key, newData[key]);
       }
-      form.append("variants", JSON.stringify(variants));
       if (product_album) {
         for (const file of product_album) {
           form.append("product_album", file);
@@ -684,158 +655,12 @@ const UpdateProductForm = ({ categories, id }: Props) => {
               )}
             </div>
           </div>
-        </>
-      )}
 
-      {currentStep === 2 && (
-        <>
-          <div
-            id="variant-container"
-            className="grid grid-cols-2 bg-[#37B3E2] mt-5"
-          >
-            {fields.map((field, index) => (
-              <div key={field.id} className="p-2 flex flex-col space-y-3">
-                <div className="flex items-center">
-                  <Label
-                    htmlFor={`variants.${index}.variant_name`}
-                    className="font-bold"
-                  >
-                    Name
-                  </Label>
-                  <div>
-                    <Input
-                      {...register(`variants.${index}.variant_name` as const)}
-                      id={`variants${index}.variant_name`}
-                      autoComplete="off"
-                      placeholder="small e.g"
-                      className={classNames({
-                        "border-red-600":
-                          errors.variants &&
-                          errors.variants[index]?.variant_name,
-                      })}
-                    />
-                    {errors.variants && (
-                      <p className="text-red-600 text-sm text-center">
-                        <>{errors.variants[index]?.variant_name?.message}</>
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <div className="flex">
-                  <label
-                    htmlFor={`variants.${index}.variant_symbol`}
-                    className="text-right"
-                  >
-                    Symbol
-                  </label>
-                  <div>
-                    <Input
-                      {...register(`variants.${index}.variant_symbol` as const)}
-                      id={`variants.${index}.variant_symbol`}
-                      autoComplete="off"
-                      className={classNames({
-                        "border-red-600":
-                          errors.variants &&
-                          errors.variants[index]?.variant_symbol,
-                        "": true,
-                      })}
-                    />
-                    {errors.variants && (
-                      <p className="text-red-600 text-sm text-center">
-                        <>{errors.variants[index]?.variant_symbol?.message}</>
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <div className="flex">
-                  <Label
-                    htmlFor={`variants.${index}.variant_price`}
-                    className="text-right"
-                  >
-                    Price
-                  </Label>
-                  <div>
-                    <Input
-                      {...register(`variants.${index}.variant_price` as const)}
-                      type="number"
-                      id={`variants.${index}.variant_price`}
-                      autoComplete="off"
-                      className={classNames({
-                        "border-red-600":
-                          errors.variants &&
-                          errors.variants[index]?.variant_price,
-                        "": true,
-                      })}
-                    />
-                    {errors.variants && (
-                      <p className="text-red-600 text-sm mt-2">
-                        <>{errors.variants[index]?.variant_price?.message}</>
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <div className="flex ">
-                  <Label
-                    htmlFor={`variants.${index}.variant_stocks`}
-                    className="text-right"
-                  >
-                    Stocks
-                  </Label>
-                  <div>
-                    <Input
-                      {...register(`variants.${index}.variant_stocks` as const)}
-                      type="number"
-                      id={`variants.${index}.variant_stocks`}
-                      autoComplete="off"
-                      className={classNames({
-                        "border-red-600":
-                          errors.variants &&
-                          errors.variants[index]?.variant_stocks,
-                        "": true,
-                      })}
-                    />
-                    {errors.variants && (
-                      <p className="text-red-600 text-sm mt-2">
-                        <>{errors.variants[index]?.variant_stocks?.message}</>
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <Button
-                  variant="destructive"
-                  size="lg"
-                  onClick={() => handleRemoveForm(index, field)}
-                >
-                  DELETE
-                </Button>
-              </div>
-            ))}
-          </div>
-
-          <Button
-            variant="system"
-            type="button"
-            onClick={() =>
-              append({
-                variant_name: "",
-                variant_symbol: "",
-                variant_price: "0",
-                variant_stocks: "0",
-              })
-            }
-            className="absolute right-10"
-          >
-            Add Variant
-          </Button>
           <Dialog>
-            <DialogTrigger className="h-fit w-fit">
-              <Button
-                ref={buttonRef}
-                variant="system"
-                type="button"
-                className="absolute right-5 bottom-5 w-[14%] flex space-x-3 "
-              >
-                <div className="relative w-5 h-5 float-left">
+            <DialogTrigger
+             className="h-fit absolute right-5 bottom-5 w-[14%] flex space-x-3" 
+             ref={buttonRef}>
+                <div id="add-icon-contaier" className="relative w-5 h-5 float-left">
                   <Image
                     src="/icons/add-sign-icon.svg"
                     alt="add-sign"
@@ -846,7 +671,6 @@ const UpdateProductForm = ({ categories, id }: Props) => {
                 <p className="text-lg whitespace-nowrap">
                   {isSubmitting ? "Update Item" : "Update Item"}
                 </p>
-              </Button>
             </DialogTrigger>
             <DialogContent>
               <Permission
@@ -855,6 +679,12 @@ const UpdateProductForm = ({ categories, id }: Props) => {
               />
             </DialogContent>
           </Dialog>
+        </>
+      )}
+
+      {currentStep === 2 && (
+        <>
+          <UpdateVariant productId={id} productName={productName} />
         </>
       )}
     </form>

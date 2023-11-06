@@ -13,6 +13,7 @@ const {
   getProductByIdQuery,
   getProductByNameQuery,
   addProductStocksQuery,
+  updateProductStocksQuery,
   subtractProductStocksQuery,
   addVariantStocksQuery,
   subtractVariantStocksQuery,
@@ -146,7 +147,7 @@ module.exports = {
         if (variant.variant_id && variant.id) {
           pool.execute(updateVariantQuery, [variant_name, variant_symbol, variant_price, variant_stocks, product_id, variant_id], (error, result) => {
             if (error) return reject(error)
-            return resolve(variants)
+            return resolve(result)
           })
         }
 
@@ -164,10 +165,13 @@ module.exports = {
     })
   },
   updateProductStocksDB: (product_id, operation, value) => {
-    let updateProductStocksQuery;
-    operation === 'add' ? updateProductStocksQuery = addProductStocksQuery : updateProductStocksQuery = subtractProductStocksQuery
+    let Query;
+    operation === 'add' ? Query = addProductStocksQuery : 
+    operation === 'subtract' ? Query = subtractProductStocksQuery : 
+    Query = updateProductStocksQuery;
+    
     return new Promise((resolve, reject) => {
-      pool.execute(updateProductStocksQuery, [value, product_id], (error, result) => {
+      pool.execute(Query, [value, product_id], (error, result) => {
         if (error) return reject(error)
         return resolve(result)
       })

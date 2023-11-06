@@ -32,12 +32,13 @@ export type Product = {
   category_id: number;
   category_name: string;
   category_image: any;
-  albums: ProductAlbum[],
-  variants: Variant[]
+  albums: ProductAlbum[];
+  variants: Variant[];
 };
 
 export type Variant = {
-  id: number;
+  id?: number;
+  variant_id?: number;
   variant_name: string;
   variant_symbol: string;
   variant_price: number;
