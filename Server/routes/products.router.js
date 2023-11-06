@@ -9,6 +9,7 @@ const {
   deleteVariants,
   createVariants,
   updateProductStocks,
+  updateVariant,
   updateVariantStocks,
   updateProductSold,
   getAllCategory,
@@ -16,7 +17,8 @@ const {
   createNewCategory,
   deleteCategoryById,
   updateCategoryById,
-  updateProductImage
+  updateProductImage,
+
 } = require('../controllers/products.controller')
 const express = require('express');
 const router = express.Router();
@@ -37,6 +39,7 @@ router.get('/variant/list/:id', getVariantById);
 router.delete('/variant/list', deleteVariants); //Receive query params product_id and variat_id
 router.patch('/:id/stock', updateProductStocks);  //Receive query and params `action=add/value=15` e.g
 router.patch('/variant/list/:id/stock', updateVariantStocks);  //Receive query and params action/value
+router.patch('/variant/list/:id/update', updateVariant);  
 
 router.post('/category', upload.single('category_image'), createNewCategory);
 router.patch('/category/:id', upload.single('category_image'), updateCategoryById);

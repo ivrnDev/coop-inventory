@@ -54,21 +54,20 @@ module.exports = {
       );
     })
   },
-  updateProductsDB: async (category_id, display_name, display_price, product_stocks, product_description, status, isFeatured, display_image, product_id) => {
+  updateProductsDB: async (category_id, display_name, display_price, product_description, status, isFeatured, display_image, product_id) => {
     return new Promise(async (resolve, reject) => {
 
       const findProductByID = await module.exports.getProductByIdDB(product_id);
       if (findProductByID === null) resolve(null);
 
       pool.execute(updateProductQuery, [category_id,
-        display_name, display_price, product_stocks, product_description, status, isFeatured, display_image, product_id,
+        display_name, display_price, product_description, status, isFeatured, display_image, product_id,
       ], (error, result) => {
         if (error) return reject(error)
         const updatedProduct = {
           product_id,
           display_name,
           display_price,
-          product_stocks,
           product_description,
           status,
           isFeatured,

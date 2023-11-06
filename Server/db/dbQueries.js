@@ -91,12 +91,6 @@ module.exports = {
             SELECT * FROM products as p
             JOIN category as ct ON p.category_id = ct.category_id
         `,
-        // getProductByIdQuery: `
-        //     SELECT * FROM products as p
-        //     JOIN  variants as v ON v.product_id = p.product_id
-        //     JOIN category as ct ON p.category_id = ct.category_id 
-        //     WHERE p.product_id = ?
-        // `,
         getProductByIdQuery: `
             SELECT * FROM products as p
             JOIN category as ct ON p.category_id = ct.category_id
@@ -106,7 +100,7 @@ module.exports = {
             SELECT product_name FROM products WHERE product_name = ?
         `,
         updateProductQuery: `
-            UPDATE products SET category_id = ?, display_name = ?, display_price = ?, product_stocks = ?, product_description = ?, status = ?, isFeatured = ?, display_image = ? WHERE product_id = ?
+            UPDATE products SET category_id = ?, display_name = ?, display_price = ?, product_description = ?, status = ?, isFeatured = ?, display_image = ? WHERE product_id = ?
         `,
         updateVariantQuery: `
             UPDATE variants SET variant_name = ?, variant_symbol = ?, variant_price = ?, variant_stocks = ? WHERE product_id = ? AND variant_id = ?
