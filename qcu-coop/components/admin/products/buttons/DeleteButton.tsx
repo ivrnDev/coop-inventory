@@ -1,18 +1,25 @@
+"use client";
 import { useEffect, useRef, useState } from "react";
-import { deleteCategory, getCategoryById } from "@/lib/api/categories";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import Permission from "../../Permission";
-import { rolePermissions } from "@/lib/permission";
 import { toast } from "@/components/ui/use-toast";
 import { createActivity } from "@/lib/api/activity";
-import { Button } from "@/components/ui/button";
-
+import { handleAction } from "@/lib/delete";
 type Props = {
-  categoryId: number;
+  roles: string[];
+  target: {
+    id: number;
+    object: string;
+    target: string;
+  };
+  message: {
+    success: string;
+    failed: string;
+  };
+  deleteTarget: string;
 };
-const DeleteButton = ({ categoryId }: Props) => {
-  const deleteBtnRef = useRef<HTMLButtonElement | null>(null);
-  const { moderate } = rolePermissions;
+const DeleteButton = ({ roles, target, message, deleteTarget }: Props) => {
+  const deleteBtnRef = useRef<HTMLDivElement | null>(null);
   const [adminId, setadminId] = useState<number>(0);
   const [isAllowed, setisAllowed] = useState<boolean>(false);
 
@@ -26,22 +33,25 @@ const DeleteButton = ({ categoryId }: Props) => {
   const onSubmit = async () => {
     if (isAllowed) {
       try {
-        const getCategory = await getCategoryById(categoryId);
-        const categoryName = getCategory[0].category_name;
-        const removeCategory = await deleteCategory(1, categoryId);
-
-        if (removeCategory.status === 201) {
+        const action = await handleAction(target.id, deleteTarget);
+        if (action) {
           await createActivity(
-            { action: "deleted", target: "category", object: categoryName },
+            { action: "deleted", target: target.target, object: target.object },
             adminId
           );
-          toast({
-            description: "Successfully deleted the category",
+          return toast({
+            description: `${message.success}`,
           });
         }
+        return toast({
+          variant: "destructive",
+          title: `Failed to delete ${target.object}`,
+          description: `${message.failed}`,
+        });
       } catch (error) {
         toast({
-          description: "Please select category first",
+          variant: "destructive",
+          description: `Something went wrong.`,
         });
       }
     }
@@ -54,18 +64,16 @@ const DeleteButton = ({ categoryId }: Props) => {
     }
   }, [isAllowed]);
   return (
-    <>
+    <div>
       <Dialog>
         <DialogTrigger>
-          <Button type="button" variant="destructive" ref={deleteBtnRef}>
-            Delete
-          </Button>
+          <div ref={deleteBtnRef}>Delete</div>
         </DialogTrigger>
         <DialogContent>
-          <Permission roles={moderate} handlePermission={handlePermission} />
+          <Permission roles={roles} handlePermission={handlePermission} />
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 };
 

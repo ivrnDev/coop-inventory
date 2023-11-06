@@ -36,9 +36,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CategoriesType } from "@/types/products/products";
+import { Categories } from "@/types/products/products";
 import DeleteButton from "../buttons/Delete";
-import { isArray } from "util";
 
 const UpdateCategoriesForm = () => {
   const { toast } = useToast();
@@ -47,14 +46,13 @@ const UpdateCategoriesForm = () => {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [isAllowed, setIsAllowed] = useState(false);
   const [adminId, setadminId] = useState(0);
-  const [categories, setCategories] = useState<CategoriesType[]>();
-  const {
+  const [categories, setCategories] = useState<Categories[]>();
+    const {
     register,
     handleSubmit,
     control,
     formState: { errors, isSubmitSuccessful, isSubmitting },
     getValues,
-    reset,
   } = useForm<ValidationCategorySchema>({
     resolver: zodResolver(UpdateCategorySchema),
   });
@@ -83,7 +81,7 @@ const UpdateCategoriesForm = () => {
 
   const onSubmit = async (data: ValidationCategorySchema) => {
     const { category_name, category_id } = data;
-    if (isAllowed) {
+        if (isAllowed) {
       const form = new FormData();
       for (const key of Object.keys(data) as (keyof typeof data)[]) {
         form.append(key, data[key]);
@@ -159,7 +157,7 @@ const UpdateCategoriesForm = () => {
                           <SelectItem
                             key={index}
                             value={`${category.category_id}`}
-                          >
+                                                      >
                             {category.category_name}
                           </SelectItem>
                         ))}
@@ -215,7 +213,7 @@ const UpdateCategoriesForm = () => {
                 <>{errors.category_image?.message}</>
               </p>
             )}
-            <DialogFooter>
+                        <DialogFooter>
               <Dialog>
                 <DialogTrigger>
                   <Button type="button" variant="submit" ref={buttonRef}>

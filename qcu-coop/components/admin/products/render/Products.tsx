@@ -7,15 +7,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Product } from "@/types/products/products";
+import { Products } from "@/types/products/products";
 import Image from "next/image";
 import Link from "next/link";
+import DeleteButton from "../buttons/DeleteButton";
+import { rolePermissions } from "@/lib/permission";
 
 type Props = {
-  products: Product[];
+  products: Products[];
 };
 
 const AdminRenderProducts = ({ products }: Props) => {
+  const { moderate } = rolePermissions;
   return (
     <Table>
       <TableHeader>
@@ -51,9 +54,19 @@ const AdminRenderProducts = ({ products }: Props) => {
               <TableCell>{product.status}</TableCell>
               <TableCell>{product.isFeatured === 1 ? "Yes" : "No"}</TableCell>
               <TableCell>
-                <Button type="button" variant="destructive">
-                  DELETE
-                </Button>
+                <DeleteButton
+                  roles={moderate}
+                  target={{
+                    id: product.product_id,
+                    object: product.product_name,
+                    target: "product",
+                  }}
+                  message={{
+                    success: `Sucessfully deleted ${product.product_name} product`,
+                    failed: `Failed to delete ${product.product_name} product`,
+                  }}
+                  deleteTarget="deleteProduct"
+                />
               </TableCell>
               <TableCell>
                 <Button type="button" variant="submit">

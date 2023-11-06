@@ -70,7 +70,7 @@ module.exports = {
             DELETE FROM variants WHERE product_id = ?
         `,
         getAllCategoryQuery: `
-            SELECT * FROM category WHERE isDeleted = 0;
+            SELECT * FROM category WHERE isDeleted = '0';
         `,
         getCategoryByIdQuery: `
             SELECT * FROM category WHERE category_id = ? AND isDeleted = 0;
@@ -87,14 +87,18 @@ module.exports = {
         deleteCategoryByIdQuery: `
           UPDATE category SET isDeleted = ? WHERE category_id = ? 
         `,
+        updateIsDeletedById: `
+          UPDATE products SET isDeleted = ? WHERE product_id = ? 
+        `,
         getAllProductsQuery: `
             SELECT * FROM products as p
             JOIN category as ct ON p.category_id = ct.category_id
+            WHERE p.isDeleted = '0' AND ct.isDeleted = '0'
         `,
         getProductByIdQuery: `
             SELECT * FROM products as p
             JOIN category as ct ON p.category_id = ct.category_id
-            WHERE product_id = ?
+            WHERE p.product_id = ? AND p.isDeleted = '0'
         `,
         getProductByNameQuery: `
             SELECT product_name FROM products WHERE product_name = ?

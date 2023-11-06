@@ -11,6 +11,7 @@ const {
   deleteVariantsQuery,
   getAllProductsQuery,
   getProductByIdQuery,
+  updateIsDeletedById,
   getProductByNameQuery,
   addProductStocksQuery,
   updateProductStocksQuery,
@@ -77,7 +78,14 @@ module.exports = {
       })
     })
   },
-  //Create product variants and prices
+  deleteProductByIdDB: (product_id) => {
+    return new Promise(async (resolve, reject) => {
+      pool.execute(updateIsDeletedById, [1, product_id], (error, result) => {
+        if (error) return reject(error);
+        return resolve(result)
+      })
+    })
+  },
   createVariantsDB: (product_id, variants) => {
     return new Promise((resolve, reject) => {
       variants.map(async (variant, index) => {
@@ -157,9 +165,9 @@ module.exports = {
     })
   },
   deleteVariantsDB: (product_id) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       const isExist = await module.exports.getVariantByProductIdDB(product_id)
-      if(isExist === null) return resolve(null)
+      if (isExist === null) return resolve(null)
       pool.execute(deleteVariantsQuery, [product_id], (error, result) => {
         if (error) return reject(error)
         return resolve(result)
@@ -168,10 +176,10 @@ module.exports = {
   },
   updateProductStocksDB: (product_id, operation, value) => {
     let Query;
-    operation === 'add' ? Query = addProductStocksQuery : 
-    operation === 'subtract' ? Query = subtractProductStocksQuery : 
-    Query = updateProductStocksQuery;
-    
+    operation === 'add' ? Query = addProductStocksQuery :
+      operation === 'subtract' ? Query = subtractProductStocksQuery :
+        Query = updateProductStocksQuery;
+
     return new Promise((resolve, reject) => {
       pool.execute(Query, [value, product_id], (error, result) => {
         if (error) return reject(error)

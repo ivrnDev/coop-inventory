@@ -10,6 +10,7 @@ const {
   deleteVariantsDB,
   updateProductsDB,
   updateVariantsDB,
+  deleteProductByIdDB,
   getAllProductsDB,
   getProductByIdDB,
   updateProductStocksDB,
@@ -39,7 +40,7 @@ module.exports = {
       };
       const { category_id, product_name, display_name, display_price, product_description, variants } = req.body;
       const parseVariants = JSON.parse(variants)
-      
+
       if (parseVariants.length === 0) return res.status(400).json({ message: "Variant is required!" });
 
       const product_stocks = parseVariants.reduce((accumulator, variant) => accumulator + Number(variant.variant_stocks), 0)
@@ -51,7 +52,7 @@ module.exports = {
       const { product_id } = createdProduct;
       const album = req.files.product_album
 
-      if(album) {
+      if (album) {
         const createAlbum = await createProductAlbumDB(product_id, album);
         if (!createAlbum) return res.status(400).json({ error: "Failed to upload albums" })
       }
@@ -139,6 +140,16 @@ module.exports = {
       return res.status(200).json({ message: `Successfully delete variant with the product ID of ${product_id} and variant ID of ${variant_id}`, result: deletedVariants })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error });
+    }
+  },
+  deleteProductById: async (req, res) => {
+    const { id } = req.params
+    try {
+      const result = await deleteProductByIdDB(id);
+      if (result.length === null) return res.status(404).json({ error: `Product with an Id of ${id} has not found` })
+      return res.status(200).json({ message: `Successfully get the product with an ID of ${id}`, result: result });
+    } catch (error) {
+      return res.status(500).json({ message: "Internal Server Error", error: error })
     }
   },
   getProductById: async (req, res) => {
@@ -251,7 +262,7 @@ module.exports = {
       const result = await getAllCategoryDB()
       if (result === null) return res.status(404).json({ message: "There is no existing category" })
       if (!result) return res.status(400).json({ message: "Failed to get all category" })
-      return res.status(201).json({ message: `Successfully get all category`, result: result })
+      return res.status(200).json({ message: `Successfully get all category`, result: result })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }

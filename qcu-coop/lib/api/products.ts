@@ -1,4 +1,3 @@
-
 export async function getAllProducts() {
   try {
     const res = await fetch("http://localhost:3000/api/products", {
@@ -74,21 +73,27 @@ export async function updateProduct(form: FormData, id: string) {
     };
   }
 }
-export async function updateProductImage(form: FormData, id: string) {
-  try {
-    const res = await fetch(`http://localhost:3000/api/products/image/${id}`, {
-      method: "PATCH",
-      body: form,
-    });
-    const data = await res.json();
-    return {
-      status: res.status,
-      data,
-    };
-  } catch (error) {
-    return {
-      status: 500,
-      data: null,
-    };
+
+export async function deleteProduct(productId: number) {
+  if (productId) {
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/products/${productId}/delete`,
+        {
+          method: "PATCH",
+        }
+      );
+
+      const data = await res.json();
+      return {
+        status: res.status,
+        data,
+      };
+    } catch (error) {
+      return {
+        status: 500,
+        data: null
+      };
+    }
   }
 }

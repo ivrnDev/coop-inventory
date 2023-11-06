@@ -3,6 +3,7 @@ const {
   getAllProducts,
   getProductById,
   updateProducts,
+  deleteProductById,
   getAllVariants,
   getVariantById,
   getVariantByProductId,
@@ -32,6 +33,8 @@ router.patch('/image/:id', upload.single('display_image'), updateProductImage);
 
 router.patch('/:id/sold', updateProductSold);  //Receive query and params `action=add/value=15` e.g
 
+router.patch('/:id/delete', deleteProductById); 
+
 router.get('/variant/list', getAllVariants);
 router.post('/variant/list/new/:id', createVariants);
 router.get('/variant/list/item', getVariantByProductId); //Receive query
@@ -46,6 +49,8 @@ router.patch('/category/:id', upload.single('category_image'), updateCategoryByI
 router.patch('/category/action/:id', deleteCategoryById); //Params (action) 
 router.get('/category/list', getAllCategory);
 router.get('/category/:id', getCategoryById);
+
+
 
 
 
