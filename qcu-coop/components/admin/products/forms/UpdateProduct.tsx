@@ -457,6 +457,7 @@ const UpdateProductForm = ({ categories, id }: Props) => {
                 id="product_name"
                 placeholder="Product Name"
                 autoComplete="off"
+                disabled
                 className={classNames({
                   "border-red-600": errors.product_name,
                   "bg-inputColor border-black": true,

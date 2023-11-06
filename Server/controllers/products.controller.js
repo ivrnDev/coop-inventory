@@ -27,7 +27,7 @@ module.exports = {
   createProduct: async (req, res) => {
     try {
       let imagePath;
-      if (req.files) {
+      if (req.files.display_image) {
         imagePath = req.files.display_image[0].buffer;
       } else {
         const defaultImagePath = './public/default-image.jpg';
@@ -38,8 +38,8 @@ module.exports = {
         }
       };
       const { category_id, product_name, display_name, display_price, product_description, variants } = req.body;
-
       const parseVariants = JSON.parse(variants)
+      
       if (parseVariants.length === 0) return res.status(400).json({ message: "Variant is required!" });
 
       const product_stocks = parseVariants.reduce((accumulator, variant) => accumulator + Number(variant.variant_stocks), 0)
@@ -51,7 +51,7 @@ module.exports = {
       const { product_id } = createdProduct;
       const album = req.files.product_album
 
-      if (album) {
+      if(album) {
         const createAlbum = await createProductAlbumDB(product_id, album);
         if (!createAlbum) return res.status(400).json({ error: "Failed to upload albums" })
       }
@@ -209,7 +209,7 @@ module.exports = {
       const updateProductStocks = await updateProductStocksDB(id, 'update', product_stocks);
       if (!updateProductStocks) return res.status(400).json({ message: `Failed to update product stocks to ${product_stocks}` })
 
-      const updatedVariants = await updateVariantsDB(id, variants);
+      const updatedVariants = await createVariantsDB(id, variants);
       if (!updatedVariants) return res.status(400).json({ message: `Failed to update variants in a product with an ID of ${id}` })
       const result = {
         stocks: product_stocks,

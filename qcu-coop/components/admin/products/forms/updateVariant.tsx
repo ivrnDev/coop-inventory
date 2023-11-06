@@ -58,7 +58,6 @@ const UpdateVariant = ({ productId, productName }: Props) => {
             variants:
               item &&
               item.map((variant: any) => ({
-                id: variant.id || 0,
                 variant_id: variant.variant_id || 0,
                 variant_name: variant.variant_name || "",
                 variant_symbol: variant.variant_symbol || "",
@@ -75,20 +74,16 @@ const UpdateVariant = ({ productId, productName }: Props) => {
     getProduct();
   }, []);
 
-  const handleRemoveForm = async (index: number, field: any) => {
-    try {
-      if (index > 0) {
-        const response = await deleteVariant(productId, field.variant_id);
-        if (response.status === 200) {
-          console.log("Variant deleted successfully");
-        } else {
-          console.error("Failed to delete variant");
-        }
-        remove(index);
+  const handleRemoveForm = async (index: number) => {
+      if (fields.length < 2) {
+        return toast({
+          variant: "destructive",
+          title: "Failed to remove variant.",
+          description: "There must be atleast 1 variant.",
+        });
       }
-    } catch (error) {
-      console.error("Error:", error);
-    }
+      remove(index);
+   
   };
 
   const handlePermission = async (permission: boolean, id?: number) => {
@@ -100,7 +95,6 @@ const UpdateVariant = ({ productId, productName }: Props) => {
   };
 
   const onSubmit = async (data: ValidateVariant) => {
-    console.log(data);
     if (isAllowed) {
       try {
         const response = await updateVariant(data, productId);
@@ -248,7 +242,7 @@ const UpdateVariant = ({ productId, productName }: Props) => {
             <Button
               variant="destructive"
               size="lg"
-              onClick={() => handleRemoveForm(index, field)}
+              onClick={() => handleRemoveForm(index)}
             >
               DELETE
             </Button>

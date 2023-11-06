@@ -62,16 +62,7 @@ module.exports = {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }
   },
-  VariantArray: async (req, res) => {
-    try {
-      const { productId } = req.query
-      const result = await getProductAlbumByIdDB(productId);
-      if (result === null) return res.status(404).json({ error: `There is no existing albums with photo ID of ${id}` })
-      return res.status(200).json({ message: `Get all the albums of product ID of ${productId}`, result: result })
-    } catch (error) {
-      return res.status(500).json({ message: "Internal Server Error", error: error })
-    }
-  },
+  
 
 
 }

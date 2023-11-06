@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { VariantSchema } from "./variant";
+import { Variants } from "./variant";
 
 export const ProductSchema = z.object({
   product_name: z
@@ -16,7 +16,7 @@ export const ProductSchema = z.object({
   display_name: z
     .string()
     .trim()
-    .max(20, { message: "Display name cannot exceed 20 characters" })
+    .max(255, { message: "Display name cannot exceed 20 characters" })
     .refine((value) => value.length > 0, {
       message: "Display name is required",
     })
@@ -92,6 +92,7 @@ export const ProductSchema = z.object({
         message: "Invalid file type. Only JPEG and PNG images are allowed.",
       }
     ),
+  variants: z.array(Variants).optional(),
 });
 
 export type ValidateProduct = z.infer<typeof ProductSchema>;

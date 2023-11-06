@@ -80,7 +80,8 @@ module.exports = {
   //Create product variants and prices
   createVariantsDB: (product_id, variants) => {
     return new Promise((resolve, reject) => {
-      variants.map((variant, index) => {
+      variants.map(async (variant, index) => {
+        await module.exports.deleteVariantsDB(product_id, variants)
         const { variant_name, variant_symbol, variant_price, variant_stocks } = variant;
         pool.execute(createVariantQuery, [index + 1, product_id, variant_name, variant_symbol, variant_price, variant_stocks], (error, result) => {
           if (error) return reject(error);
@@ -93,7 +94,7 @@ module.exports = {
     const variantArray = new Array(variants)
     return new Promise((resolve, reject) => {
       variantArray.map(async (value, index) => {
-        const checkVariant = await module.exports.getVariantByProductIdDB(product_id)
+        const checkVariant = await module.exports.getVariantByProductIdDB(product_id);
         let existingVariantId;
         if (checkVariant && checkVariant.length > 0) {
           existingVariantId = checkVariant.length
@@ -155,10 +156,11 @@ module.exports = {
       })
     })
   },
-  deleteVariantsDB: (product_id, variant_id) => {
-
-    return new Promise((resolve, reject) => {
-      pool.execute(deleteVariantsQuery, [product_id, variant_id], (error, result) => {
+  deleteVariantsDB: (product_id) => {
+    return new Promise(async(resolve, reject) => {
+      const isExist = await module.exports.getVariantByProductIdDB(product_id)
+      if(isExist === null) return resolve(null)
+      pool.execute(deleteVariantsQuery, [product_id], (error, result) => {
         if (error) return reject(error)
         return resolve(result)
       })
