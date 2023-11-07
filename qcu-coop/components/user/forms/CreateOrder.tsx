@@ -26,8 +26,6 @@ const CreateOrderForm = ({ orders, children }: Props) => {
   });
 
   const onSubmit = (data: ValidateCustomer) => {
-    console.log(data);
-    console.log("sdad");
   };
 
   return (
