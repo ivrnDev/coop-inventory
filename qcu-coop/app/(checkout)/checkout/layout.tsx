@@ -1,7 +1,4 @@
-import CategoriesSidebar from "@/components/header/Categories";
 import HomeHeader from "@/components/header/Home";
-import "@/styles/globals.css";
-
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -17,8 +14,7 @@ export default function HomeLayout({
   return (
     <>
       <HomeHeader />
-      <CategoriesSidebar />
-      <main className="bg-main-user min-h-user-main-mobile md:min-h-user-main">
+      <main className="bg-main-user min-h-user-main-mobile md:min-h-user-main ">
         {children}
       </main>
     </>

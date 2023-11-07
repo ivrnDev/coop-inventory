@@ -6,9 +6,10 @@ export type Customer = {
 };
 
 export type Order = {
-  product_id: number;
-  variant_id: number;
-  quantity: number;
+  product_id: string;
+  variant_id: string;
+  quantity: string;
+  amount: string
 };
 
 export type Data = {

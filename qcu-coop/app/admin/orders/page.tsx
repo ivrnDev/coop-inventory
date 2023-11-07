@@ -1,6 +1,6 @@
 import AdminRenderOrders from "@/components/admin/products/render/Orders";
 import AdminRenderTransactions from "@/components/admin/products/render/Transactions";
-import TransactionFilter from "@/components/admin/products/render/transactions/Filter";
+import TransactionFilter from "@/components/admin/products/render/transactions/filter";
 import {
   getOrdersById,
   getTransactionByFilter,

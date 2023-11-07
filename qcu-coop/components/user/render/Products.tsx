@@ -1,11 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ProductsType } from "@/types/products/products";
-import AddtoCartButton from "@/components/cart/AddtoCartBtn";
-import { Button } from "@/components/ui/button";
+import { Products } from "@/types/products/products";
 
 type Props = {
-  products: ProductsType[];
+  products: Products[];
 };
 
 const RenderProducts = ({ products }: Props) => {
@@ -14,9 +12,11 @@ const RenderProducts = ({ products }: Props) => {
       {products && products.length > 0 ? (
         products.map((product, index) => (
           <Link
-            href={`/products/${product.product_name.toLowerCase()}?id=${
+            href={`
+            /products/${product.product_name.toLowerCase()}?id=${
               product.product_id
-            }`}
+            }&variant=1&quantity=1&&amount=0
+            `}
             key={index}
             className="w-fit"
           >

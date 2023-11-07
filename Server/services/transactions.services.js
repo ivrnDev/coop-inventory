@@ -5,14 +5,14 @@ const { updateOrderStatusByIDQuery, updateOrderStatusByTransactionIDQuery } = or
 
 module.exports = {
   //Create a new transaction
-  createTransactionDB: (customer_id, payment_method) => {
+  createTransactionDB: (student_id, payment_method) => {
     return new Promise((resolve, reject) => {
-      pool.execute(createTransactionQuery, [customer_id, payment_method], (error, result) => {
+      pool.execute(createTransactionQuery, [student_id, payment_method], (error, result) => {
         if (error) reject(error);
         const transaction_id = result.insertId;
         const transaction = {
           transaction_id,
-          customer_id,
+          student_id,
           total_price: 0,
         };
         resolve(transaction);
@@ -52,22 +52,7 @@ module.exports = {
       })
     })
   },
-  // updateTransactionDB: (transaction_id, transaction_amount, transaction_status) => {
-  //   return new Promise(async (resolve, reject) => {
-  //     try {
-  //       const result = transaction_amount
-  //         ? await module.exports.updateTransactionAmountDB(transaction_id, transaction_amount)
-  //         : transaction_status
-  //           ? await module.exports.updateTransactionStatusDB(transaction_id, transaction_status)
-  //           : null;
-
-  //       return resolve(result)
-  //     } catch (error) {
-  //       return reject(error)
-  //     }
-  //   })
-
-  // },
+  
   updateTransactionAmountDB: (transaction_id, transaction_amount) => {
     return new Promise((resolve, reject) => {
       pool.execute(updateTransactionAmountQuery, [transaction_amount, transaction_id], (error, result) => {

@@ -11,7 +11,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  createCategory,
   getAllCategories,
   getCategoryById,
   updateCategory,
@@ -51,7 +50,7 @@ const UpdateCategoriesForm = () => {
     register,
     handleSubmit,
     control,
-    formState: { errors, isSubmitSuccessful, isSubmitting },
+    formState: { errors, isSubmitting },
     getValues,
   } = useForm<ValidationCategorySchema>({
     resolver: zodResolver(UpdateCategorySchema),
@@ -157,7 +156,7 @@ const UpdateCategoriesForm = () => {
                           <SelectItem
                             key={index}
                             value={`${category.category_id}`}
-                                                      >
+                          >
                             {category.category_name}
                           </SelectItem>
                         ))}
@@ -213,12 +212,10 @@ const UpdateCategoriesForm = () => {
                 <>{errors.category_image?.message}</>
               </p>
             )}
-                        <DialogFooter>
+            <DialogFooter>
               <Dialog>
-                <DialogTrigger>
-                  <Button type="button" variant="submit" ref={buttonRef}>
-                    {isSubmitting ? "Updating" : "Update"}
-                  </Button>
+                <DialogTrigger ref={buttonRef}>
+                 {isSubmitting ? "Updating" : "Update"}
                 </DialogTrigger>
                 <DialogContent>
                   <Permission

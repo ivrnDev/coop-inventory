@@ -1,21 +1,18 @@
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
-import { z, ZodType } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import classNames from "classnames";
 
 import Permission from "../../Permission";
-import AddVariants from "./AddVariants";
 import { rolePermissions } from "@/lib/permission";
 import { ValidateVariant, VariantSchema } from "@/middleware/zod/variant";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import Image from "next/image";
 import {
-  deleteVariant,
   getVariantByProductId,
   updateVariant,
 } from "@/lib/api/variants";
@@ -30,7 +27,7 @@ type Props = {
 const UpdateVariant = ({ productId, productName }: Props) => {
   const { toast } = useToast();
   const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const { restricted, moderate, unrestricted } = rolePermissions;
+  const {  moderate } = rolePermissions;
   const [isAllowed, setIsAllowed] = useState<boolean>(false);
   const [adminId, setAdminId] = useState<number>(0);
   const {
@@ -39,7 +36,7 @@ const UpdateVariant = ({ productId, productName }: Props) => {
     control,
     reset,
     setValue,
-    formState: { errors, isSubmitSuccessful, isSubmitting },
+    formState: { errors, isSubmitting },
   } = useForm<ValidateVariant>({
     resolver: zodResolver(VariantSchema),
   });

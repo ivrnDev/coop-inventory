@@ -1,5 +1,4 @@
 "use client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -9,15 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,16 +17,14 @@ import { useToast } from "@/components/ui/use-toast";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Textarea } from "@/components/ui/textarea";
 
-import { ValidationMap, useEffect, useRef, useState } from "react";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { useEffect, useRef, useState } from "react";
+import { useForm, Controller } from "react-hook-form";
 import Image from "next/image";
 import classNames from "classnames";
-import { z, ZodType } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Categories, Product, ProductAlbum } from "@/types/products/products";
+import { Categories, Product } from "@/types/products/products";
 import { ProductSchema, ValidateProduct } from "@/middleware/zod/products";
-import { deleteVariant } from "@/lib/api/variants";
 import { getProductById, updateProduct } from "@/lib/api/products";
 import { rolePermissions } from "@/lib/permission";
 import { createActivity } from "@/lib/api/activity";
@@ -58,7 +47,7 @@ type ImageNumber = {
 };
 
 const UpdateProductForm = ({ categories, id }: Props) => {
-  const { restricted, moderate, unrestricted } = rolePermissions;
+  const { moderate } = rolePermissions;
   const { toast } = useToast();
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -79,7 +68,7 @@ const UpdateProductForm = ({ categories, id }: Props) => {
     control,
     reset,
     setValue,
-    formState: { errors, isSubmitSuccessful, isSubmitting },
+    formState: { errors, isSubmitting },
   } = useForm<ValidateProduct>({
     resolver: zodResolver(ProductSchema),
   });
@@ -88,7 +77,7 @@ const UpdateProductForm = ({ categories, id }: Props) => {
     const getProduct = async () => {
       try {
         const item = await getProductById(id);
-        setProductName(item[0].product_name)
+        setProductName(item[0].product_name);
         handleImage(item);
         if (item && item.length > 0) {
           const defaultFormValues: ValidateProduct = {
@@ -659,19 +648,23 @@ const UpdateProductForm = ({ categories, id }: Props) => {
 
           <Dialog>
             <DialogTrigger
-             className="h-fit absolute right-5 bottom-5 w-[14%] flex space-x-3" 
-             ref={buttonRef}>
-                <div id="add-icon-contaier" className="relative w-5 h-5 float-left">
-                  <Image
-                    src="/icons/add-sign-icon.svg"
-                    alt="add-sign"
-                    sizes="min-w-1"
-                    fill
-                  />
-                </div>
-                <p className="text-lg whitespace-nowrap">
-                  {isSubmitting ? "Update Item" : "Update Item"}
-                </p>
+              className="h-fit absolute right-5 bottom-5 w-[14%] flex space-x-3"
+              ref={buttonRef}
+            >
+              <div
+                id="add-icon-contaier"
+                className="relative w-5 h-5 float-left"
+              >
+                <Image
+                  src="/icons/add-sign-icon.svg"
+                  alt="add-sign"
+                  sizes="min-w-1"
+                  fill
+                />
+              </div>
+              <p className="text-lg whitespace-nowrap">
+                {isSubmitting ? "Update Item" : "Update Item"}
+              </p>
             </DialogTrigger>
             <DialogContent>
               <Permission

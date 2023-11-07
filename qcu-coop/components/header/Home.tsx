@@ -36,7 +36,7 @@ const HomeHeader = () => {
           </h1>
         </div>
 
-        <div className="flex justify-center items-center space-x-4">
+        <div className="flex justify-center items-center space-x-4 z-50">
           <Input placeholder="Search" className="md:hidden w-[7.5rem]"></Input>
           <div className="relative md:hidden">
             <Cart />

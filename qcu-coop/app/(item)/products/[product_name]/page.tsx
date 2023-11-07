@@ -1,18 +1,25 @@
-import QuantityInput from "@/components/user/forms/Quantity";
-import Item from "@/components/user/render/Item";
+import Item from "@/components/user/render/item/Item";
 
 type Params = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
 
 const ItemPage = ({ searchParams }: Params) => {
-  const id = searchParams?.id as string;
-  const productVariant = searchParams?.variantId as string;
-  const quantity = searchParams?.qty as string;
+  const product_id = searchParams?.id as string;
+  const variant_id = searchParams?.variant as string;
+  const quantity = searchParams?.quantity as string;
+  const amount = searchParams?.amount as string;
   return (
     <>
-      {id && id !== "undefined" && (
-        <Item id={id} productVariant={productVariant} qty={quantity} />
+      {product_id && (
+        <Item
+          searchParams={{
+            product_id,
+            variant_id,
+            quantity,
+            amount,
+          }}
+        />
       )}
     </>
   );

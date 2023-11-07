@@ -5,15 +5,16 @@ const { createTransactionDB, getTransactionByIdDB } = require('../services/trans
 module.exports = {
   //Create Customer, Transaction, and Order
   createOrder: async (req, res) => {
+    const { customer, orders } = req.body
     try {
-      const { customer_name, customer_phone, customer_email, payment_method } = req.body.customer;
-      const customer = await createCustomerDB(customer_name, customer_phone, customer_email);
-      if (!customer) return res.status(400).json({ message: "Failed to create a new order, customer information is invalid" })
+      const { student_id, customer_name, customer_phone, customer_email, payment_method } = customer;
+      const customer = await createCustomerDB(student_id, customer_name, customer_phone, customer_email);
+      if (!customer && customer === null) return res.status(400).json({ message: "Failed to create a new order, customer information is invalid" })
 
-      const transaction = await createTransactionDB(customer.customer_id, payment_method)
+      const transaction = await createTransactionDB(customer.student_id, payment_method)
       if (!transaction) return res.status(400).json({ message: "Failed to create a new order, transaction failed" });
 
-      await createOrderDB(transaction.transaction_id, req.body.orders);
+      await createOrderDB(transaction.transaction_id, orders);
       const transaction_receipt = await getTransactionByIdDB(transaction.transaction_id);
       const orderReceipt = await getOrderbyTransactionIdDB(transaction.transaction_id);
       const receipt = {

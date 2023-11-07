@@ -15,7 +15,6 @@ export async function getAllProducts() {
 }
 
 export async function getProductById(productId: string) {
-  if (productId) {
     try {
       const res = await fetch(
         `http://localhost:3000/api/products/${productId}`,
@@ -26,7 +25,6 @@ export async function getProductById(productId: string) {
         }
       );
 
-      if (!res.ok) throw new Error("Failed to fetch Data");
       const data = await res.json();
       return data.result;
     } catch (error) {
@@ -34,7 +32,6 @@ export async function getProductById(productId: string) {
       return [];
     }
   }
-}
 
 export async function createProduct(form: FormData) {
   try {

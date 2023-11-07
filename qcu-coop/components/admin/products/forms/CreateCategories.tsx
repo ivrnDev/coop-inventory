@@ -26,7 +26,7 @@ import { useRef } from "react";
 const CreateCategoriesForm = () => {
   const { toast } = useToast();
   const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const { unrestricted, moderate, restricted } = rolePermissions;
+  const { moderate } = rolePermissions;
   type ValidationCategorySchema = z.infer<typeof CategorySchema>;
   const [isAllowed, setIsAllowed] = useState(false);
   const [adminId, setadminId] = useState(0);

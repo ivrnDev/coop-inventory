@@ -10,18 +10,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useForm, Controller } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { updateTransactionStatus } from "@/lib/api/transaction";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { TransactionsType } from "@/types/transactions/transactions";
 
 type Props = {
@@ -29,10 +21,8 @@ type Props = {
 };
 export const UpdateTransactionStatus = ({ transactionById }: Props) => {
   const router = useRouter();
-  // const [status, setstatus] = useState("");
 
   const onSubmit = (status: string) => {
-    // setstatus(status);
     const updateStatus = async () => {
       if (status) {
         try {

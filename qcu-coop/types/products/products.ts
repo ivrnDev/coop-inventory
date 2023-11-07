@@ -37,7 +37,7 @@ export type Product = {
 };
 
 export type Variant = {
-  id?: number;
+  product_id?: number;
   variant_id?: number;
   variant_name: string;
   variant_symbol: string;

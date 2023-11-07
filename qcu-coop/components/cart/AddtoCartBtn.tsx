@@ -1,12 +1,12 @@
 "use client";
 import { RootState } from "../redux/store";
-import { ItemType, ProductsType } from "@/types/products/products";
+import { Product } from "@/types/products/products";
 import { setItem } from "../redux/features/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { Button } from "../ui/button";
 type Props = {
-  product: ItemType;
+  product: Product;
 };
 
 const AddtoCartButton = ({ product }: Props) => {

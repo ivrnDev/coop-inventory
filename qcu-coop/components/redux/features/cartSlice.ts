@@ -1,10 +1,9 @@
 "use client";
 
+import { Product} from "@/types/products/products";
 import { createSlice } from "@reduxjs/toolkit";
-import { ProductsType } from "@/types/products/products";
-import { isDeepStrictEqual } from "util";
 interface CartState {
-  item: ProductsType[];
+  item: Product[];
   itemNumber: number;
 }
 

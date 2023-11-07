@@ -1,12 +1,20 @@
 module.exports = {
     customerQueries: {
         createCustomerQuery: `
-            INSERT INTO customers (customer_name, customer_phone, customer_email) VALUES (?, ?, ?)`,
+            INSERT INTO customers (student_id, customer_name, customer_phone, customer_email) VALUES (?, ?, ?, ?)`,
         getCustomersQuery: `
             SELECT * FROM customers
         `,
         getCustomerbyIdQuery: `
-            SELECT * FROM customers WHERE customer_id = ?
+            SELECT * FROM customers WHERE student_id = ?
+        `,
+        verifyCustomerQuery: `
+            SELECT *,
+            (REGEXP_REPLACE(LOWER(student_name), '[[:space:]]', '') REGEXP REPLACE(LOWER(?), ' ', '') OR
+            REGEXP_REPLACE(LOWER(student_name), '[[:space:]]', '') REGEXP REVERSE(REPLACE(LOWER(?), ' ', ''))) AS match_found
+            FROM student
+            WHERE student_id = ?;
+
         `
     },
     orderQueries: {
@@ -159,23 +167,23 @@ module.exports = {
     },
     transactionQueries: {
         createTransactionQuery: `
-            INSERT INTO transactions (customer_id, payment_method) VALUES (?, ?)
+            INSERT INTO transactions (student_id, payment_method) VALUES (?, ?)
         `,
         getAllTransactionsQuery: `
             SELECT t.transaction_id, c.customer_name, c.customer_phone, c.customer_email, t.transaction_amount, t.payment_method, t.status as order_status, t.transaction_date
             FROM transactions as t
-            JOIN customers AS c ON t.customer_id = c.customer_id
+            JOIN customers AS c ON t.student_id = c.student_id
         `,
         getAllFilteredTransactionsQuery: `
             SELECT t.transaction_id, c.customer_name, c.customer_phone, c.customer_email, t.transaction_amount, t.payment_method, t.status as order_status, t.transaction_date
             FROM transactions as t
-            JOIN customers AS c ON t.customer_id = c.customer_id
+            JOIN customers AS c ON t.student_id = c.student_id
             WHERE t.status = ?
         `,
         getTransactionByIdQuery: `
             SELECT t.transaction_id, c.customer_name, c.customer_phone, c.customer_email, t.transaction_amount, t.payment_method, t.status as order_status, t.transaction_date
             FROM transactions as t
-            JOIN customers AS c ON t.customer_id = c.customer_id
+            JOIN customers AS c ON t.student_id = c.student_id
             WHERE transaction_id = ?
         `,
         updateTransactionAmountQuery: `
