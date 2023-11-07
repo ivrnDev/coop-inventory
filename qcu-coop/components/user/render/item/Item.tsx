@@ -15,17 +15,19 @@ type Props = {
 const Item = ({ product }: Props) => {
   const [count, setCount] = useState<number>(1);
   const [selectedVariant, setSelectedVariant] = useState<Variant>({
-    ...product.variants[0],
+    ...product?.variants[0],
     variant_id: 1,
   });
-  const [order, setOrder] = useState<Order>();
+  const [order, setOrder] = useState<Order[]>();
 
   useEffect(() => {
-    setOrder({
-      product_id: String(selectedVariant?.product_id),
-      variant_id: String(selectedVariant?.variant_id),
-      quantity: String(count),
-    });
+    setOrder([
+      {
+        product_id: String(selectedVariant?.product_id),
+        variant_id: String(selectedVariant?.variant_id),
+        quantity: String(count),
+      },
+    ]);
   }, [count, selectedVariant]);
 
   return (
@@ -43,7 +45,7 @@ const Item = ({ product }: Props) => {
                 Stocks:{" "}
                 {selectedVariant?.variant_stocks ?? product.product_stocks}
               </p>
-              <p>Total Amount: {selectedVariant?.variant_price ?? 0 * count}</p>
+              <p>Total Amount: {selectedVariant?.variant_price * count}</p>
               <p>Variants</p>
             </div>
             <div className="flex">
