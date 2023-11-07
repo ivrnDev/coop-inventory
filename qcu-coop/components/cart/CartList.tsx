@@ -23,7 +23,7 @@ const CartItem = () => {
     if (variant) {
       const currentPrice =
         Number(variant.variant_price) * quantities[productIndex];
-      const hasVariant = selectedVariants.some((v) => variant === v)  ;
+      const hasVariant = selectedVariants.some((v) => variant === v);
       const hasProduct = selectedVariants.some(
         (v) => v.product_id === variant.product_id
       );
@@ -123,11 +123,11 @@ const CartItem = () => {
     }
   };
 
-  // const orderArray = selectedVariants.map((variant, orderIndex) => ({
-  //   product_id: variant.product_id,
-  //   variant_id: variant.variant_id,
-  //   quantity: quantities[orderIndex],
-  // }));
+  const orders = selectedVariants.map((variant, orderIndex) => ({
+    product_id: variant.product_id,
+    variant_id: variant.variant_id,
+    quantity: quantities[orderIndex],
+  }));
 
   return (
     <>
@@ -203,9 +203,9 @@ const CartItem = () => {
 
         <Link
           href={{
-            pathname: "./checkout",
+            pathname: "/checkout",
             query: {
-              // products: JSON.stringify(orderArray),
+              order: JSON.stringify(orders),
             },
           }}
           className="bg-green-600 p-4 rounded-md w-fit whitespace-nowrap text-white font-bold text-center absolute bottom-10 left-1/2 -translate-x-1/2 -translate-y-1/2"

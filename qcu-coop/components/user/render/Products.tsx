@@ -15,8 +15,7 @@ const RenderProducts = ({ products }: Props) => {
             href={`
             /products/${product.product_name.toLowerCase()}?id=${
               product.product_id
-            }&variant=1&quantity=1&&amount=0
-            `}
+            }`}
             key={index}
             className="w-fit"
           >

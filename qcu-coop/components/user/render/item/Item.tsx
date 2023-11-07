@@ -1,70 +1,98 @@
-import Image from "next/image";
-import { getProductById } from "@/lib/api/products";
+"use client";
+import { useEffect, useState } from "react";
 
-import { Product } from "@/types/products/products";
-import ChoicesComponent from "./Choices";
+import { Product, Variant } from "@/types/products/products";
+import { Button } from "@/components/ui/button";
+import AddtoCartButton from "@/components/cart/AddtoCartBtn";
+import classNames from "classnames";
+import Link from "next/link";
+import { Order } from "@/types/orders/orders";
 
 type Props = {
-  searchParams: {
-    product_id: string;
-    variant_id: string;
-    quantity: string;
-    amount: string;
-  };
+  product: Product;
 };
 
-const Item = async ({ searchParams }: Props) => {
-  const { product_id, variant_id, quantity, amount } = searchParams;
-  const product: Product[] = await getProductById(product_id);
-  const findVariant = product[0].variants.filter(
-    (v) => v.variant_id === Number(variant_id)
-  );
+const Item = ({ product }: Props) => {
+  const [count, setCount] = useState<number>(1);
+  const [selectedVariant, setSelectedVariant] = useState<Variant>({
+    ...product.variants[0],
+    variant_id: 1,
+  });
+  const [order, setOrder] = useState<Order>();
 
-  const order = [
-    {
-      product_id: String(product[0].product_id),
-      variant_id,
-      quantity,
-      amount,
-    },
-  ];
+  useEffect(() => {
+    setOrder({
+      product_id: String(selectedVariant?.product_id),
+      variant_id: String(selectedVariant?.variant_id),
+      quantity: String(count),
+    });
+  }, [count, selectedVariant]);
 
   return (
     <>
       {product && (
         <>
-          <section className="flex flex-col min-h-user-main-mobile">
-            <div className="relative h-[35vh] w-56 object-contain border border-black">
-              <Image
-                src={`data:image/png;base64,${product[0].display_image}`}
-                alt={product[0].product_name}
-                sizes="min-h-1"
-                fill
-              />
-            </div>
+          <div className="flex flex-col min-h-user-main-mobile">
             <div className="">
-              <h1 className="">{product[0].display_name}</h1>
-
+              <h1 className="">{product.display_name}</h1>
               <p className="">
-                {variant_id
-                  ? findVariant[0].variant_price
-                  : product[0].display_price}
+                {selectedVariant?.variant_price ?? product.display_price}
               </p>
-
-              <p className="">{product[0].product_sold} sold</p>
+              <p className="">{product.product_sold} sold</p>
               <p className="">
-                Stocks:
-                {variant_id
-                  ? findVariant[0].variant_stocks
-                  : product[0].product_stocks}
+                Stocks:{" "}
+                {selectedVariant?.variant_stocks ?? product.product_stocks}
               </p>
-              <p>Total Amount: {amount}</p>
+              <p>Total Amount: {selectedVariant?.variant_price ?? 0 * count}</p>
               <p>Variants</p>
-              <div className="flex gap-10">
-                <ChoicesComponent product={product} orders={order} />
-              </div>
             </div>
-          </section>
+            <div className="flex">
+              {product.variants?.map((item, index) => (
+                <Button
+                  key={index}
+                  type="button"
+                  variant="system"
+                  onClick={() => setSelectedVariant(item)}
+                  className={classNames({
+                    "bg-blue-500": true,
+                    "bg-yellow-500":
+                      selectedVariant?.variant_id === item.variant_id,
+                  })}
+                >
+                  {item.variant_symbol}
+                </Button>
+              ))}
+            </div>
+            <div id="quantity-container" className="flex">
+              <Button
+                variant="secondary"
+                onClick={() => setCount((prev) => prev + 1)}
+              >
+                <p>+</p>
+              </Button>
+              <p>{count}</p>
+              <Button
+                variant="secondary"
+                onClick={() => count > 1 && setCount((prev) => prev - 1)}
+              >
+                <p>-</p>
+              </Button>
+            </div>
+
+            <div id="button-container" className="flex">
+              <AddtoCartButton product={product} />
+              <Link
+                href={{
+                  pathname: `/checkout`,
+                  query: {
+                    order: JSON.stringify(order),
+                  },
+                }}
+              >
+                <Button variant="submit">BUY NOW</Button>
+              </Link>
+            </div>
+          </div>
         </>
       )}
     </>

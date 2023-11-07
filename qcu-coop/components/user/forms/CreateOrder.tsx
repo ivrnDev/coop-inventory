@@ -24,10 +24,7 @@ const CreateOrderForm = ({ orders }: Props) => {
     resolver: zodResolver(CustomerSchema),
   });
 
-  const onSubmit = (data: ValidateCustomer) => {
-    //Must target this
-    console.log(data);
-  };
+  const onSubmit = (data: ValidateCustomer) => {};
 
   return (
     <div className="flex place-items-center justify-center h-screen bg-slate-600">

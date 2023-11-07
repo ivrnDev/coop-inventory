@@ -9,7 +9,6 @@ export type Order = {
   product_id: string;
   variant_id: string;
   quantity: string;
-  amount: string
 };
 
 export type Data = {
