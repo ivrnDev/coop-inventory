@@ -7,7 +7,6 @@ import UpdateCategoriesForm from "@/components/admin/products/forms/UpdateCatego
 
 const AdminProducts = async () => {
   const products: Products[] = await getAllProducts();
-  console.log(products)
   return (
     <>
       <section className="h-48 w-full flex flex-row p-3 gap-3">
