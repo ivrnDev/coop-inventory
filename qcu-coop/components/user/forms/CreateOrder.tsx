@@ -9,36 +9,40 @@ import { createOrder } from "@/lib/api/orders";
 import { ValidateCustomer, CustomerSchema } from "@/middleware/zod/customer";
 import { ValidateOrder } from "@/middleware/zod/orders";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   orders: ValidateOrder[];
+  children: React.ReactNode;
 };
 
-const CreateOrderForm = ({ orders }: Props) => {
+const CreateOrderForm = ({ orders, children }: Props) => {
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors, isSubmitSuccessful, isSubmitting },
   } = useForm<ValidateCustomer>({
     resolver: zodResolver(CustomerSchema),
   });
 
-  const onSubmit = (data: ValidateCustomer) => {};
+  const onSubmit = (data: ValidateCustomer) => {
+    console.log(data);
+    console.log("sdad");
+  };
 
   return (
     <div className="flex place-items-center justify-center h-screen bg-slate-600">
       <div>
         <h1 className="text-center">EDIT PERSONAL INFORMATION</h1>
         <Dialog>
-          <DialogTrigger></DialogTrigger>
+          <DialogTrigger>Change</DialogTrigger>
           <DialogContent>
             <form
               onSubmit={handleSubmit(onSubmit)}
-              className="bg-red-500 p-10 flex flex-col gap-5 w-fit h-fit "
+              className="first-line:p-10 flex flex-col gap-5 w-fit h-fit "
             >
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="customer_name">Display Name</Label>
+                <Label htmlFor="customer_name">Name</Label>
                 <Input
                   {...register("customer_name")}
                   id="customer_name"
@@ -55,7 +59,7 @@ const CreateOrderForm = ({ orders }: Props) => {
               </div>
 
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="student_id">Display Name</Label>
+                <Label htmlFor="student_id">Student ID</Label>
                 <Input
                   {...register("student_id")}
                   id="student_id"
@@ -72,7 +76,7 @@ const CreateOrderForm = ({ orders }: Props) => {
               </div>
 
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="customer_phone">Display Name</Label>
+                <Label htmlFor="customer_phone">Phone</Label>
                 <Input
                   {...register("customer_phone")}
                   id="customer_phone"
@@ -88,7 +92,7 @@ const CreateOrderForm = ({ orders }: Props) => {
                 )}
               </div>
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="customer_email">Display Name</Label>
+                <Label htmlFor="customer_email">Email Address</Label>
                 <Input
                   {...register("customer_email")}
                   id="customer_email"
@@ -103,11 +107,41 @@ const CreateOrderForm = ({ orders }: Props) => {
                   </p>
                 )}
               </div>
-
-              {/* <button type="submit">CREATE NOW</button> */}
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="payment_method">Payment Method</Label>
+                <Input
+                  {...register("payment_method")}
+                  id="payment_method"
+                  autoComplete="off"
+                  className={classNames({
+                    "border-red-600": errors.payment_method,
+                  })}
+                />
+                {errors.payment_method && (
+                  <p className="text-red-600 text-sm mt-2">
+                    {errors.payment_method?.message}
+                  </p>
+                )}
+              </div>
+              {/* <Button
+                variant="submit"
+                type="submit"
+                onClick={() => handleSubmit(onSubmit)()}
+              >
+                CREATE NOW
+              </Button> */}
             </form>
           </DialogContent>
         </Dialog>
+        {children}
+        <div>
+          <Button
+            variant="submit"
+            onClick={() => handleSubmit(onSubmit)()}
+          >
+            CREATE NOW
+          </Button>
+        </div>
       </div>
     </div>
   );
