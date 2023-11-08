@@ -9,7 +9,7 @@ import classNames from "classnames";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createOrder } from "@/lib/api/orders";
-import { ValidateCustomer, CustomerSchema } from "@/middleware/zod/customer";
+import { CustomerSchemaFunction } from "@/middleware/zod/customer";
 import { ValidateOrder } from "@/middleware/zod/orders";
 import {
   Dialog,
@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
-
+import { z } from "zod";
 type Props = {
   orders: ValidateOrder[];
   children: React.ReactNode;
@@ -37,7 +37,9 @@ type Props = {
 const CreateOrderForm = ({ orders, children }: Props) => {
   const currentDate = new Date();
   const closeRef = useRef<HTMLButtonElement | null>(null);
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [isCash, setIsCash] = useState<boolean>(true);
+  const CustomerSchema = CustomerSchemaFunction(isCash);
+  type ValidateCustomer = z.infer<typeof CustomerSchema>;
   const {
     register,
     handleSubmit,
@@ -51,12 +53,19 @@ const CreateOrderForm = ({ orders, children }: Props) => {
     resolver: zodResolver(CustomerSchema),
   });
 
+ const onSubmit = (data: ValidateCustomer) => {
+    console.log("sdaddsad");
+    console.log("sdaddsad");
+  };
+
   useEffect(() => {
     resetField("payment_method", { defaultValue: "cash" });
+    // resetField("reference_number", { defaultValue: null });
   }, []);
 
-  const onSubmit = (data: ValidateCustomer) => {};
+ 
 
+  console.log(getValues());
   return (
     <>
       <section
@@ -65,6 +74,7 @@ const CreateOrderForm = ({ orders, children }: Props) => {
       >
         <div className="flex space-x-28">
           <p className="text-custom-orange">Personal Information</p>
+          {/* {errors.reference_number && <p>{errors.reference_number.message}</p>} */}
           <Dialog>
             <DialogTrigger className="text-blue-500">Change</DialogTrigger>
             <DialogContent>
@@ -177,10 +187,11 @@ const CreateOrderForm = ({ orders, children }: Props) => {
           </Dialog>
         </div>
         <div>
-          <p>{watch("customer_name")}</p>
+          {/* <p>{watch("customer_name")}</p>
           <p>{watch("student_id")}</p>
           <p>{watch("customer_phone")}</p>
           <p>{watch("customer_email")}</p>
+          <p>{watch("reference_number")}</p> */}
         </div>
       </section>
       <section
@@ -273,7 +284,6 @@ const CreateOrderForm = ({ orders, children }: Props) => {
                   <TabsTrigger value="g-cash">E-Wallet</TabsTrigger>
                 </TabsList>
               </div>
-
               <TabsContent
                 value="cash"
                 className="flex border-b-2 border-t-2 border-black"
@@ -301,10 +311,34 @@ const CreateOrderForm = ({ orders, children }: Props) => {
                     </Label>
                   </div>
                 </RadioGroup>
+                <Dialog>
+                  <DialogTrigger>Input Transaction Details</DialogTrigger>
+                  <DialogContent>
+                    <div className="flex flex-col space-y-1.5">
+                      <Label htmlFor="reference_number">Reference Number</Label>
+                      <Input
+                        {...register("reference_number")}
+                        id="reference_number"
+                        autoComplete="off"
+                        className={classNames({
+                          "border-red-600": errors.reference_number,
+                        })}
+                        // onKeyDown={(e) =>
+                        //   e.code === "Enter" && closeRef.current?.click()
+                        // }
+                      />
+                      {errors.reference_number && (
+                        <p className="text-red-600 text-sm mt-2">
+                          {errors.reference_number?.message}
+                        </p>
+                      )}
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </TabsContent>
 
               <Button variant="submit" onClick={() => handleSubmit(onSubmit)()}>
-                CREATE NOW
+                {isSubmitting ? "Submitting" : "Check Out" }
               </Button>
             </Tabs>
           )}
