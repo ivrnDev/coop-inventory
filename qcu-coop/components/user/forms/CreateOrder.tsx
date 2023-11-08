@@ -55,9 +55,7 @@ const CreateOrderForm = ({ orders, children }: Props) => {
     resetField("payment_method", { defaultValue: "cash" });
   }, []);
 
-  const onSubmit = (data: ValidateCustomer) => {
-    console.log(data);
-  };
+  const onSubmit = (data: ValidateCustomer) => {};
 
   return (
     <>
