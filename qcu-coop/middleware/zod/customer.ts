@@ -23,9 +23,12 @@ export const CustomerSchemaFunction = (isCash: boolean) => {
       .min(9, { message: "Email must be atleast 9 characters" }),
     payment_method: z.string({ required_error: "Payment is required" }),
     reference_number: isCash
-      ? z.string()
-      : z.string({ required_error: "Reference number is required" }),
-    pickup_date: z.date({ required_error: "Please pick a date" }),
+      ? z.string().optional()
+      : z
+          .string({ required_error: "Reference number is required" })
+          .min(9, { message: "Reference number must be atleast 10 characters long" }),
+
+    pickup_date: z.string({ required_error: "Please pick a date" }),
   });
   return CustomerSchema;
 };

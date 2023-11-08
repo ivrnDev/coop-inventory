@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { CustomerSchema } from "./customer";
+import { CustomerSchemaFunction } from "./customer";
+const CustomerSchema = CustomerSchemaFunction(true);
 
 export const OrderSchema = z.object({
   product_id: z.string(),
@@ -8,7 +9,7 @@ export const OrderSchema = z.object({
 });
 export const Order = z.object({
   customer: z.array(CustomerSchema),
-  orders: z.array(OrderSchema)
-})
+  orders: z.array(OrderSchema),
+});
 export type ValidateOrder = z.infer<typeof OrderSchema>;
 export type ValidateOrders = z.infer<typeof Order>;

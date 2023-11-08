@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
 
 import classNames from "classnames";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createOrder } from "@/lib/api/orders";
 import { CustomerSchemaFunction } from "@/middleware/zod/customer";
@@ -48,41 +48,36 @@ const CreateOrderForm = ({ orders, children }: Props) => {
     resetField,
     control,
     watch,
+    trigger,
     formState: { errors, isSubmitSuccessful, isSubmitting },
   } = useForm<ValidateCustomer>({
     resolver: zodResolver(CustomerSchema),
   });
 
- const onSubmit = (data: ValidateCustomer) => {
-    console.log("sdaddsad");
-    console.log("sdaddsad");
+  const handleSubmission = async (data: ValidateCustomer) => {
   };
-
   useEffect(() => {
     resetField("payment_method", { defaultValue: "cash" });
-    // resetField("reference_number", { defaultValue: null });
   }, []);
 
- 
+  useEffect(() => {
+    watch("payment_method") !== "cash" ? setIsCash(false) : setIsCash(true);
+  }, [watch("payment_method")]);
 
-  console.log(getValues());
   return (
-    <>
+    <form onSubmit={handleSubmit(handleSubmission)}>
       <section
         id="personal-info-container"
         className="bg-white flex flex-col space-y-2 rounded-md p-4"
       >
         <div className="flex space-x-28">
           <p className="text-custom-orange">Personal Information</p>
-          {/* {errors.reference_number && <p>{errors.reference_number.message}</p>} */}
           <Dialog>
             <DialogTrigger className="text-blue-500">Change</DialogTrigger>
             <DialogContent>
               <DialogHeader>EDIT PERSONAL INFORMATION</DialogHeader>
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="first-line:p-10 flex flex-col gap-5 w-fit h-fit "
-              >
+
+              <div className="first-line:p-10 flex flex-col gap-5 w-fit h-fit">
                 <div className="flex flex-col space-y-1.5">
                   <Label htmlFor="customer_name">Name</Label>
                   <Input
@@ -166,7 +161,11 @@ const CreateOrderForm = ({ orders, children }: Props) => {
                   type="button"
                   variant="destructive"
                   onClick={() => {
-                    reset();
+                    resetField("customer_name");
+                    resetField("student_id");
+                    resetField("customer_phone");
+                    resetField("customer_email");
+
                     closeRef.current?.click();
                   }}
                 >
@@ -179,19 +178,19 @@ const CreateOrderForm = ({ orders, children }: Props) => {
                     closeRef.current?.click();
                   }}
                 >
-                  Submit
+                  Save Changes
                 </Button>
-              </form>
+              </div>
               <DialogClose ref={closeRef} />
             </DialogContent>
           </Dialog>
         </div>
         <div>
-          {/* <p>{watch("customer_name")}</p>
+          <p>{watch("customer_name")}</p>
           <p>{watch("student_id")}</p>
           <p>{watch("customer_phone")}</p>
           <p>{watch("customer_email")}</p>
-          <p>{watch("reference_number")}</p> */}
+          <p>{watch("reference_number")}</p>
         </div>
       </section>
       <section
@@ -241,7 +240,7 @@ const CreateOrderForm = ({ orders, children }: Props) => {
                   <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
-                      selected={value}
+                      selected={new Date(value)}
                       onSelect={(date) => {
                         date && onChange(format(date, "PPPP"));
                       }}
@@ -337,14 +336,14 @@ const CreateOrderForm = ({ orders, children }: Props) => {
                 </Dialog>
               </TabsContent>
 
-              <Button variant="submit" onClick={() => handleSubmit(onSubmit)()}>
-                {isSubmitting ? "Submitting" : "Check Out" }
+              <Button type="submit" variant="submit">
+                {isSubmitting ? "Submitting" : "Check Out"}
               </Button>
             </Tabs>
           )}
         />
       </section>
-    </>
+    </form>
   );
 };
 
