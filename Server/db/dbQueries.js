@@ -167,7 +167,7 @@ module.exports = {
     },
     transactionQueries: {
         createTransactionQuery: `
-            INSERT INTO transactions (student_id, payment_method) VALUES (?, ?)
+            INSERT INTO transactions (student_id, payment_method, reference_number, pickup_date) VALUES (?, ?, ?, ?)
         `,
         getAllTransactionsQuery: `
             SELECT t.transaction_id, c.customer_name, c.customer_phone, c.customer_email, t.transaction_amount, t.payment_method, t.status as order_status, t.transaction_date

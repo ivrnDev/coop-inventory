@@ -7,11 +7,11 @@ module.exports = {
   createOrder: async (req, res) => {
     const { customer, orders } = req.body
     try {
-      const { student_id, customer_name, customer_phone, customer_email, payment_method } = customer;
+      const { student_id, customer_name, customer_phone, customer_email, payment_method, reference_number, pickup_date } = customer;
       const customer = await createCustomerDB(student_id, customer_name, customer_phone, customer_email);
       if (!customer && customer === null) return res.status(400).json({ message: "Failed to create a new order, customer information is invalid" })
 
-      const transaction = await createTransactionDB(customer.student_id, payment_method)
+      const transaction = await createTransactionDB(customer.student_id, payment_method, reference_number, pickup_date)
       if (!transaction) return res.status(400).json({ message: "Failed to create a new order, transaction failed" });
 
       await createOrderDB(transaction.transaction_id, orders);

@@ -18,14 +18,14 @@ const Checkout = async ({ searchParams }: Params) => {
   for (const parsedOrder of parsedOrders) {
     if (parsedOrder && parsedOrder.product_id) {
       const product: Product[] = await getProductById(parsedOrder.product_id);
-      const findVariant = product[0].variants.filter(
+      const findVariant = product[0]?.variants.filter(
         (v) => v.variant_id === Number(parsedOrder.variant_id)
       );
       const insertOrderDetails = {
         ...product[0],
         quantity: Number(parsedOrder.quantity),
-        amount: findVariant[0].variant_price * Number(parsedOrder.quantity),
-        variantPrice: findVariant[0].variant_price,
+        amount: findVariant[0].variant_price ?? 0* Number(parsedOrder.quantity),
+        variantPrice: findVariant[0].variant_price ?? 0,
       };
       orderArray.push(insertOrderDetails);
     }
@@ -33,12 +33,9 @@ const Checkout = async ({ searchParams }: Params) => {
 
   return (
     <>
-      <section className="bg-green-500 mt-20">
-        <h2>Personal Information</h2>
-        <CreateOrderForm orders={parsedOrders}>
-          <CheckoutList orders={orderArray} />
-        </CreateOrderForm>
-      </section>
+      <CreateOrderForm orders={parsedOrders}>
+        <CheckoutList orders={orderArray} />
+      </CreateOrderForm>
     </>
   );
 };

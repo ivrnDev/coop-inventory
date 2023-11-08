@@ -16,7 +16,6 @@ type Props = {
 const CheckoutList = ({ orders }: Props) => {
   return (
     <>
-      <h1>Products Ordered</h1>
       <Table>
         <TableHeader>
           <TableRow>
