@@ -14,7 +14,7 @@ export default function HomeLayout({
   return (
     <>
       <HomeHeader />
-      <main className="bg-main-user min-h-user-main-mobile md:min-h-user-main flex flex-col items-center justify-center">
+      <main className="bg-main-user min-h-user-main-mobile md:min-h-user-main flex flex-col items-center justify-center space-y-5">
         {children}
       </main>
     </>

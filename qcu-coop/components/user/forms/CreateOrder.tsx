@@ -3,6 +3,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Calendar } from "@/components/ui/calendar";
 
 import classNames from "classnames";
 import { useForm, Controller } from "react-hook-form";
@@ -20,6 +21,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
 
 type Props = {
   orders: ValidateOrder[];
@@ -27,7 +35,9 @@ type Props = {
 };
 
 const CreateOrderForm = ({ orders, children }: Props) => {
+  const currentDate = new Date();
   const closeRef = useRef<HTMLButtonElement | null>(null);
+  const [date, setDate] = useState<Date | undefined>(new Date());
   const {
     register,
     handleSubmit,
@@ -45,7 +55,9 @@ const CreateOrderForm = ({ orders, children }: Props) => {
     resetField("payment_method", { defaultValue: "cash" });
   }, []);
 
-  const onSubmit = (data: ValidateCustomer) => {};
+  const onSubmit = (data: ValidateCustomer) => {
+    console.log(data);
+  };
 
   return (
     <>
@@ -171,10 +183,79 @@ const CreateOrderForm = ({ orders, children }: Props) => {
           <p>{watch("student_id")}</p>
           <p>{watch("customer_phone")}</p>
           <p>{watch("customer_email")}</p>
-          <p>{watch("payment_method")}</p>
         </div>
       </section>
-      <section id="orders-container">{children}</section>
+      <section
+        id="orders-container"
+        className="bg-white rounded-sm shadow-md flex flex-col justify-between"
+      >
+        {children}
+        <div id="pickup-container" className="flex justify-between">
+          <div className="flex space-x-3">
+            <p className="text-blue-400">Order Options</p>
+            <p className="text-blue-400">
+              {format(currentDate, "PPPP") === String(watch("pickup_date"))
+                ? "Immediate Pickup"
+                : "Scheduled Pickup"}
+            </p>
+          </div>
+          <Popover>
+            <Controller
+              name="pickup_date"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={classNames({
+                        "w-[240px] pl-3 text-left font-normal": true,
+                        "text-muted-foreground": !value,
+                      })}
+                    >
+                      {value ? (
+                        String(value)
+                      ) : (
+                        <span>
+                          {errors.pickup_date ? (
+                            <p className="text-red-600 text-sm mt-2">
+                              {errors.pickup_date?.message}
+                            </p>
+                          ) : (
+                            "Choose pickup date"
+                          )}
+                        </span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={value}
+                      onSelect={(date) => {
+                        date && onChange(format(date, "PPPP"));
+                      }}
+                      disabled={(date) =>
+                        date &&
+                        (date <
+                          new Date(
+                            new Date().setDate(new Date().getDate() - 1)
+                          ) ||
+                          date >
+                            new Date(
+                              new Date().setDate(new Date().getDate() + 30)
+                            ))
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </>
+              )}
+            />
+          </Popover>
+        </div>
+      </section>
 
       <section id="payment-method-container">
         <Controller
