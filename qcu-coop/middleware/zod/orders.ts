@@ -8,8 +8,8 @@ export const OrderSchema = z.object({
   quantity: z.string(),
 });
 export const Order = z.object({
-  customer: z.array(CustomerSchema),
+  customer: CustomerSchema,
   orders: z.array(OrderSchema),
 });
 export type ValidateOrder = z.infer<typeof OrderSchema>;
-export type ValidateOrders = z.infer<typeof Order>;
+export type ValidateOrderData = z.infer<typeof Order>;
