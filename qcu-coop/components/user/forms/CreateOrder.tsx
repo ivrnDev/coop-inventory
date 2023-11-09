@@ -42,6 +42,7 @@ const CreateOrderForm = ({ orders, children }: Props) => {
   const closeRef = useRef<HTMLButtonElement | null>(null);
   const [isCash, setIsCash] = useState<boolean>(true);
   const [orderStatus, setOrderStatus] = useState<number>(0);
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const CustomerSchema = CustomerSchemaFunction(isCash);
   type ValidateCustomer = z.infer<typeof CustomerSchema>;
   const {
@@ -60,10 +61,14 @@ const CreateOrderForm = ({ orders, children }: Props) => {
       customer: data,
       orders,
     };
+
+    console.log(orderData);
     try {
       const order = await createOrder(orderData);
-      if (order.status === 201) return setOrderStatus(2);
-      return setOrderStatus(1);
+      if (order.status === 201) return setOrderStatus(1);
+      setErrorMessage(order.data.message);
+      setOrderStatus(2);
+      return;
     } catch (error) {
       toast({
         variant: "destructive",
@@ -218,7 +223,7 @@ const CreateOrderForm = ({ orders, children }: Props) => {
             <div className="flex space-x-3">
               <p className="text-blue-400">Order Options</p>
               <p className="text-blue-400">
-                {format(currentDate, "PPPP") === String(watch("pickup_date"))
+                {format(currentDate, "PP") === String(watch("pickup_date"))
                   ? "Immediate Pickup"
                   : "Scheduled Pickup"}
               </p>
@@ -238,7 +243,7 @@ const CreateOrderForm = ({ orders, children }: Props) => {
                         })}
                       >
                         {value ? (
-                          String(value)
+                          format(new Date(value), "PPPP")
                         ) : (
                           <span>
                             {errors.pickup_date ? (
@@ -258,7 +263,7 @@ const CreateOrderForm = ({ orders, children }: Props) => {
                         mode="single"
                         selected={new Date(value)}
                         onSelect={(date) => {
-                          date && onChange(format(date, "PPPP"));
+                          date && onChange(format(date, "PP"));
                         }}
                         disabled={(date) =>
                           date &&
@@ -366,13 +371,13 @@ const CreateOrderForm = ({ orders, children }: Props) => {
       {orderStatus === 1 && (
         <Alert>
           <AlertTitle>Success</AlertTitle>
-          <AlertDescription>The order is success</AlertDescription>
+          <AlertDescription>Order has placed successfully.</AlertDescription>
         </Alert>
       )}
       {orderStatus === 2 && (
         <Alert variant="destructive">
-          <AlertTitle>Failed</AlertTitle>
-          <AlertDescription>The order is failed</AlertDescription>
+          <AlertTitle>Failed to place order.</AlertTitle>
+          <AlertDescription>{errorMessage}.</AlertDescription>
         </Alert>
       )}
     </>

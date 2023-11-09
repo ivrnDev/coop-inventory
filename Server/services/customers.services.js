@@ -1,11 +1,11 @@
 const pool = require('../db/database')
 const { customerQueries } = require('../db/dbQueries.js')
-const { createCustomerQuery, getCustomersQuery, getCustomerbyIdQuery, verifyCustomerQuery,  } = customerQueries
+const { createCustomerQuery, getCustomersQuery, getCustomerbyIdQuery, verifyCustomerQuery, } = customerQueries
 module.exports = {
   createCustomerDB: (student_id, customer_name, customer_phone, customer_email) => {
-    return new Promise(async(resolve, reject) => {
-      const isVerified = await module.exports.verifyCustomerDB();
-      if(!isVerified) return resolve(null)
+    return new Promise(async (resolve, reject) => {
+      const isVerified = await module.exports.verifyCustomerDB(student_id, customer_name, student_id);
+      if (!isVerified) return resolve(null)
       pool.execute(createCustomerQuery, [student_id, customer_name, customer_phone,
         customer_email], (error, result) => {
           if (error) reject(error);

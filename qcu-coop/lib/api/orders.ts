@@ -13,12 +13,12 @@ export async function createOrder(orders: ValidateOrderData) {
     const data = await res.json();
     return {
       status: res.status,
-      data: data.result
-    }
+      data: data,
+    };
   } catch (error) {
     return {
       status: 500,
-      data: []
+      data: [],
     };
   }
 }

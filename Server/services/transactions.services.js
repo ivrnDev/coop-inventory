@@ -4,10 +4,9 @@ const { createTransactionQuery, getAllTransactionsQuery, updateTransactionAmount
 const { updateOrderStatusByIDQuery, updateOrderStatusByTransactionIDQuery } = orderQueries
 
 module.exports = {
-  //Create a new transaction
-  createTransactionDB: (student_id, payment_method, reference_number) => {
+  createTransactionDB: (student_id, payment_method, reference_number, pickup_date) => {
     return new Promise((resolve, reject) => {
-      pool.execute(createTransactionQuery, [student_id, payment_method, reference_number ?? null, pickup_date], (error, result) => {
+      pool.execute(createTransactionQuery, [student_id, payment_method, reference_number || null, pickup_date], (error, result) => {
         if (error) reject(error);
         const transaction_id = result.insertId;
         const transaction = {
@@ -20,7 +19,6 @@ module.exports = {
       });
     });
   },
-  //Get all transactions
   getAllTransactionsDB: () => {
     return new Promise((resolve, reject) => {
       pool.execute(getAllTransactionsQuery, [], (error, result) => {

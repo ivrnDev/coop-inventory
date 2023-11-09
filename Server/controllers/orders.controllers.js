@@ -1,17 +1,21 @@
 const { getAllOrdersDB, createOrderDB, updateOrderStatusDB, getOrderbyIdDB, getOrderbyTransactionIdDB } = require('../services/orders.services');
 const { createCustomerDB } = require('../services/customers.services')
 const { createTransactionDB, getTransactionByIdDB } = require('../services/transactions.services')
+const { parse, format } = require('date-fns')
 
 module.exports = {
-  //Create Customer, Transaction, and Order
   createOrder: async (req, res) => {
     const { customer, orders } = req.body
-    const { student_id, customer_name, customer_phone, customer_email, payment_method, reference_number, pickup_date } = customer;
     try {
-      const customer = await createCustomerDB(student_id, customer_name, customer_phone, customer_email);
-      if (!customer && customer === null) return res.status(400).json({ message: "Failed to create a new order, customer information is invalid" })
+      const { student_id, customer_name, customer_phone, customer_email, payment_method, reference_number, pickup_date } = customer;
+      const formattedDate = parse(pickup_date, 'PP', new Date())
+      const mysqlDateFormat = format(formattedDate, 'yyyy-MM-dd');
 
-      const transaction = await createTransactionDB(customer.student_id, payment_method, reference_number, pickup_date)
+      const createCustomer = await createCustomerDB(student_id, customer_name, Number(customer_phone), customer_email);
+
+      if (!createCustomer && createCustomer === null) return res.status(400).json({ message: "Customer information is invalid" })
+
+      const transaction = await createTransactionDB(customer.student_id, payment_method, reference_number, mysqlDateFormat)
       if (!transaction) return res.status(400).json({ message: "Failed to create a new order, transaction failed" });
 
       await createOrderDB(transaction.transaction_id, orders);
@@ -23,7 +27,7 @@ module.exports = {
       }
       return res.status(201).json(receipt)
     } catch (error) {
-      if (error) return res.status(500).json(error);
+      return res.status(500).json(error);
     }
   },
   getAllOrders: async (req, res) => {
