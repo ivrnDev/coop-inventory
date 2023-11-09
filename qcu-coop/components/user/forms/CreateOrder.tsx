@@ -30,12 +30,14 @@ import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { z } from "zod";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useToast } from "@/components/ui/use-toast";
 type Props = {
   orders: ValidateOrder[];
   children: React.ReactNode;
 };
 
 const CreateOrderForm = ({ orders, children }: Props) => {
+  const { toast } = useToast();
   const currentDate = new Date();
   const closeRef = useRef<HTMLButtonElement | null>(null);
   const [isCash, setIsCash] = useState<boolean>(true);
@@ -60,10 +62,13 @@ const CreateOrderForm = ({ orders, children }: Props) => {
     };
     try {
       const order = await createOrder(orderData);
-      if (!order) return setOrderStatus(2);
+      if (order.status === 201) return setOrderStatus(2);
       return setOrderStatus(1);
     } catch (error) {
-      console.error("Failed to create order", error);
+      toast({
+        variant: "destructive",
+        description: "Something went wrong",
+      });
     }
   };
   useEffect(() => {

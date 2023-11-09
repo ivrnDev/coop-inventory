@@ -11,9 +11,14 @@ export async function createOrder(orders: ValidateOrderData) {
     });
 
     const data = await res.json();
-    return data.result;
+    return {
+      status: res.status,
+      data: data.result
+    }
   } catch (error) {
-    console.error("Failed to create order", error);
-    return [];
+    return {
+      status: 500,
+      data: []
+    };
   }
 }
