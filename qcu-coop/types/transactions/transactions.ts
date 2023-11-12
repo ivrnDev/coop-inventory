@@ -7,6 +7,8 @@ export type TransactionsType = {
   payment_method: string;
   order_status: string;
   transaction_date: string;
+  pickup_date: string | Date;
+  reference_number: string;
 };
 
 export type TransactionOrdersType = {

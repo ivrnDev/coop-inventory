@@ -21,17 +21,24 @@ const AdminRenderOrders = async ({ orders, transactionById }: Props) => {
           <h2>Receipt No.</h2>
           <p>#{orders[0].transaction_id}</p>
         </div>
+        {transactionById.payment_method !== "cash" && (
+          <div>
+            <h2>Reference Number.</h2>
+            <p>#{transactionById.reference_number}</p>
+          </div>
+        )}
+
         <div className="flex flex-col">
           <div>
-            <h2 className="float-left">Date:</h2>
+            <h2 className="float-left">Pickup Date:</h2>
             <h2 className="float-right">Time: </h2>
           </div>
           <div className="">
             <p className="float-left">
-              {format(new Date(orders[0].date), "MMMM-dd-yyyy")}
+              {format(new Date(transactionById.pickup_date), "MMMM dd, yyyy")}
             </p>
             <p className="float-right">
-              {format(new Date(orders[0].date), "h:mm:ss b")}
+             
             </p>
           </div>
         </div>

@@ -170,18 +170,18 @@ module.exports = {
             INSERT INTO transactions (student_id, payment_method, reference_number, pickup_date) VALUES (?, ?, ?, ?)
         `,
         getAllTransactionsQuery: `
-            SELECT t.transaction_id, c.customer_name, c.customer_phone, c.customer_email, t.transaction_amount, t.payment_method, t.status as order_status, t.transaction_date
+            SELECT t.transaction_id, c.customer_name, c.customer_phone, c.customer_email, t.transaction_amount, t.payment_method, t.status as order_status, t.reference_number, t.pickup_date, t.transaction_date
             FROM transactions as t
             JOIN customers AS c ON t.student_id = c.student_id
         `,
         getAllFilteredTransactionsQuery: `
-            SELECT t.transaction_id, c.customer_name, c.customer_phone, c.customer_email, t.transaction_amount, t.payment_method, t.status as order_status, t.transaction_date
+            SELECT t.transaction_id, c.customer_name, c.customer_phone, c.customer_email, t.transaction_amount, t.payment_method, t.status as order_status, t.reference_number, t.pickup_date, t.transaction_date
             FROM transactions as t
             JOIN customers AS c ON t.student_id = c.student_id
             WHERE t.status = ?
         `,
         getTransactionByIdQuery: `
-            SELECT t.transaction_id, c.customer_name, c.customer_phone, c.customer_email, t.transaction_amount, t.payment_method, t.status as order_status, t.transaction_date
+            SELECT t.transaction_id, c.customer_name, c.customer_phone, c.customer_email, t.transaction_amount, t.payment_method, t.status as order_status, t.reference_number, t.pickup_date, t.transaction_date
             FROM transactions as t
             JOIN customers AS c ON t.student_id = c.student_id
             WHERE transaction_id = ?

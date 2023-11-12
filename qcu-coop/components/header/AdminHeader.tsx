@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Input } from "../ui/input";
 import Image from "next/image";
+import { format } from "date-fns";
 
 const AdminHeader = () => {
   return (
@@ -17,7 +18,9 @@ const AdminHeader = () => {
         </Link>
         <div className="w-fit">
           <p className="font-bold text-lg">Welcome, Admin</p>
-          <p className=" font-semilight text-xs">7 October 2023 | 11:59 GMT</p>
+          <p className=" font-semilight text-xs">
+            {format(new Date(), "MMMM dd, yyyy")}
+          </p>
         </div>
       </div>
 

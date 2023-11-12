@@ -8,12 +8,14 @@ import {
 } from "@/components/ui/table";
 import { TransactionsType } from "@/types/transactions/transactions";
 import ViewButton from "./transactions/ViewOrder";
+import { format } from "date-fns";
 
 type Params = {
   transactions: TransactionsType[] | undefined;
 };
 
 const AdminRenderTransactions = async ({ transactions }: Params) => {
+  console.log(transactions);
   return (
     <div className="border border-black w-[70%]">
       <Table className="">
@@ -25,6 +27,8 @@ const AdminRenderTransactions = async ({ transactions }: Params) => {
             <TableHead>Customer Phone</TableHead>
             <TableHead>Payment Method</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead>Date</TableHead>
+            <TableHead>Time</TableHead>
             <TableHead>Options</TableHead>
           </TableRow>
         </TableHeader>
@@ -46,6 +50,15 @@ const AdminRenderTransactions = async ({ transactions }: Params) => {
                 </TableCell>
                 <TableCell className="capitalize">
                   {transaction.order_status}
+                </TableCell>
+                <TableCell className="capitalize">
+                  {format(
+                    new Date(transaction.transaction_date),
+                    "MMMM dd, yyyy"
+                  )}
+                </TableCell>
+                <TableCell className="capitalize">
+                  {format(new Date(transaction.transaction_date), "h:mm:ss b")}
                 </TableCell>
                 <TableCell>
                   <ViewButton transactionId={transaction.transaction_id} />
