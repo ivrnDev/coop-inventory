@@ -14,23 +14,25 @@ const Checkout = async ({ searchParams }: Params) => {
   const parsedOrders: Order[] = typeof order === "string" && JSON.parse(order);
 
   let orderArray: OrderProduct[] = [];
-
-  for (const parsedOrder of parsedOrders) {
-    if (parsedOrder && parsedOrder.product_id) {
-      const product: Product[] = await getProductById(parsedOrder.product_id);
-      const findVariant = product[0]?.variants.filter(
-        (v) => v.variant_id === Number(parsedOrder.variant_id)
-      );
-      const insertOrderDetails = {
-        ...product[0],
-        quantity: Number(parsedOrder.quantity),
-        amount:
-          findVariant[0].variant_price ?? 0 * Number(parsedOrder.quantity),
-        variantPrice: findVariant[0].variant_price ?? 0,
-      };
-      orderArray.push(insertOrderDetails);
+  if (parsedOrders) {
+    for (const parsedOrder of parsedOrders) {
+      if (parsedOrder && parsedOrder.product_id) {
+        const product: Product[] = await getProductById(parsedOrder.product_id);
+        const findVariant = product[0]?.variants.filter(
+          (v) => v.variant_id === Number(parsedOrder.variant_id)
+        );
+        const insertOrderDetails = {
+          ...product[0],
+          quantity: Number(parsedOrder.quantity),
+          amount: findVariant[0].variant_price * Number(parsedOrder.quantity),
+          variantPrice: findVariant[0].variant_price ?? 0,
+        };
+        orderArray.push(insertOrderDetails);
+      }
     }
   }
+  console.log(orderArray[0].amount);
+  console.log(orderArray[0].variantPrice);
 
   return (
     <>
