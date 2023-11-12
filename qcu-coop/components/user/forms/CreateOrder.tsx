@@ -40,6 +40,7 @@ const CreateOrderForm = ({ orders, children }: Props) => {
   const { toast } = useToast();
   const currentDate = new Date();
   const closeRef = useRef<HTMLButtonElement | null>(null);
+  const exitRef = useRef<HTMLButtonElement | null>(null);
   const [isCash, setIsCash] = useState<boolean>(true);
   const [orderStatus, setOrderStatus] = useState<number>(0);
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -332,7 +333,9 @@ const CreateOrderForm = ({ orders, children }: Props) => {
                     </div>
                   </RadioGroup>
                   <Dialog>
-                    <DialogTrigger>Input Transaction Details</DialogTrigger>
+                    <DialogTrigger ref={exitRef}>
+                      Input Transaction Details
+                    </DialogTrigger>
                     <DialogContent>
                       <div className="flex flex-col space-y-1.5">
                         <Label htmlFor="reference_number">
@@ -345,9 +348,9 @@ const CreateOrderForm = ({ orders, children }: Props) => {
                           className={classNames({
                             "border-red-600": errors.reference_number,
                           })}
-                          // onKeyDown={(e) =>
-                          //   e.code === "Enter" && closeRef.current?.click()
-                          // }
+                          onKeyDown={(e) =>
+                            e.code === "Enter" && exitRef.current?.click()
+                          }
                         />
                         {errors.reference_number && (
                           <p className="text-red-600 text-sm mt-2">

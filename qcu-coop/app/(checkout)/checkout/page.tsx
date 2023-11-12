@@ -11,6 +11,7 @@ type Params = {
 
 const Checkout = async ({ searchParams }: Params) => {
   const { order } = searchParams;
+
   const parsedOrders: Order[] = typeof order === "string" && JSON.parse(order);
 
   let orderArray: OrderProduct[] = [];
@@ -31,8 +32,6 @@ const Checkout = async ({ searchParams }: Params) => {
       }
     }
   }
-  console.log(orderArray[0].amount);
-  console.log(orderArray[0].variantPrice);
 
   return (
     <>
