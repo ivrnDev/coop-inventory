@@ -13,7 +13,6 @@ export async function createActivity(activity: ActivitiesForm, id: number) {
       }
     );
 
-    if (!res.ok) throw new Error("Failed to send data");
     const data = await res.json();
     return {
       status: res.status,

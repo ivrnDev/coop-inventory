@@ -102,13 +102,8 @@ module.exports = {
           if (error) return reject(error);
           if (result.length === 0) {
             return resolve(null)
-          } else {
-            const admin = result.map((value) => ({
-              admin_id: value.admin_id,
-              role: value.role
-            }))
-            return resolve(admin);
           }
+          return resolve(result);
         }
       );
     })
@@ -134,7 +129,6 @@ module.exports = {
                 admin_username: value.admin_username,
                 admin_password: value.admin_password,
                 role: value.role,
-                profile_picture: value.profile_picture.toString('base64'),
               }))
               return resolve(admin);
             }
@@ -150,7 +144,6 @@ module.exports = {
       pool.execute(createNewActivityQuery,
         [admin_id, action, target, object, change ? change : null, message],
         (error, result) => {
-          console.log(error)
           if (error) return reject(error);
           return resolve(result);
         }

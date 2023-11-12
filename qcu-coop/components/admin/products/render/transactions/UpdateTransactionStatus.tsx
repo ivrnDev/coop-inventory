@@ -10,40 +10,137 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 import { updateTransactionStatus } from "@/lib/api/transaction";
 import { useRouter } from "next/navigation";
 import { TransactionsType } from "@/types/transactions/transactions";
+import { useEffect, useRef, useState } from "react";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import Permission from "@/components/admin/Permission";
+import { rolePermissions } from "@/lib/permission";
+import { createActivity } from "@/lib/api/activity";
+import { useToast } from "@/components/ui/use-toast";
 
 type Props = {
   transactionById: TransactionsType;
 };
-export const UpdateTransactionStatus = ({ transactionById }: Props) => {
-  const router = useRouter();
 
-  const onSubmit = async (status: string | null) => {
-    if (status) {
+const UpdateTransactionStatus = ({ transactionById }: Props) => {
+  const router = useRouter();
+  const { toast } = useToast();
+  const employeeRef = useRef<HTMLButtonElement | null>(null);
+  const adminRef = useRef<HTMLButtonElement | null>(null);
+  const { restricted, unrestricted } = rolePermissions;
+  const [isAllowed, setIsAllowed] = useState(false);
+  const [adminId, setadminId] = useState(0);
+  const [status, setStatus] = useState<string | null>(null);
+
+  const handlePermissionEmployee = async (permission: boolean, id?: number) => {
+    if (permission) {
+      setIsAllowed(true);
+      id && setadminId(id);
+    }
+    !isAllowed && employeeRef.current && employeeRef.current.click();
+  };
+  const handlePermissionAdmin = async (permission: boolean, id?: number) => {
+    if (permission) {
+      setIsAllowed(true);
+      id && setadminId(id);
+    }
+    !isAllowed && adminRef.current && adminRef.current.click();
+  };
+
+  const onSubmit = async () => {
+    if (isAllowed) {
       try {
         const updateStatus = await updateTransactionStatus(
           status,
           transactionById.transaction_id
         );
         if (updateStatus.status === 200) {
-          console.log("Status successfully updated");
+          await createActivity(
+            {
+              action:
+                status === "pending"
+                  ? "restore"
+                  : status === "completed"
+                  ? "confirmed"
+                  : status,
+              target: "transaction",
+              object: String(transactionById.transaction_id),
+            },
+            adminId
+          );
+          toast({
+            title: "Success",
+            description: `You have successfully ${
+              status === "pending" ? "restore" : status
+            } transaction order with Transaction No.${
+              transactionById.transaction_id
+            }!`,
+          });
         } else {
-          console.error("Failed to update the status");
+          toast({
+            variant: "destructive",
+            title: `Failed to ${
+              status === "pending"
+                ? "restore"
+                : status === "completed"
+                ? "confirmed"
+                : status
+            } transactions `,
+            description: `${updateStatus.data.message}`,
+          });
         }
       } catch (error) {
-        console.error("Error:", error);
+        toast({
+          variant: "destructive",
+          title: "Internal Server Error.",
+          description: `Something went wrong.`,
+        });
       }
     }
     router.refresh();
   };
 
+  useEffect(() => {
+    if (isAllowed) {
+      onSubmit();
+      setIsAllowed(false);
+    }
+  }, [isAllowed, status]);
+
   return (
     <>
       {transactionById.order_status === "cancelled" && (
-        <Button onClick={() => onSubmit("pending")}>RESTORE</Button>
+        <AlertDialog>
+          <AlertDialogTrigger className="capitalize bg-gray-400  p-4 rounded-md">
+            RESTORE
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{`Do you want to restore this transaction?`}</AlertDialogTitle>
+              <AlertDialogDescription>
+                {`This action will restore the Transaction No.${transactionById.transaction_id}.`}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => {
+                  adminRef.current?.click();
+                  setStatus("pending");
+                }}
+              >
+                Confirm
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       )}
 
       {transactionById.order_status === "pending" && (
@@ -60,7 +157,12 @@ export const UpdateTransactionStatus = ({ transactionById }: Props) => {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={() => onSubmit("completed")}>
+              <AlertDialogAction
+                onClick={() => {
+                  employeeRef.current?.click();
+                  setStatus("completed");
+                }}
+              >
                 Confirm
               </AlertDialogAction>
             </AlertDialogFooter>
@@ -74,14 +176,21 @@ export const UpdateTransactionStatus = ({ transactionById }: Props) => {
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Do you want to make changes?</AlertDialogTitle>
+              <AlertDialogTitle>
+                Are you sure you want to reject this order?
+              </AlertDialogTitle>
               <AlertDialogDescription>
-                This action will update the transaction status to completed.
+                This action will reject the order.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={() => onSubmit(null)}>
+              <AlertDialogAction
+                onClick={() => {
+                  employeeRef.current?.click();
+                  setStatus(null);
+                }}
+              >
                 Confirm
               </AlertDialogAction>
             </AlertDialogFooter>
@@ -92,24 +201,51 @@ export const UpdateTransactionStatus = ({ transactionById }: Props) => {
       {transactionById.order_status === "completed" && (
         <AlertDialog>
           <AlertDialogTrigger className="capitalize bg-red-400 p-3 rounded-md">
-            Cancel Order
+            Cancel
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Do you want to make changes?</AlertDialogTitle>
+              <AlertDialogTitle>
+                Do you want to cancel the transaction?
+              </AlertDialogTitle>
               <AlertDialogDescription>
-                This action will cancel the transaction.
+                This action will cancel the transaction and revert all changes.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={() => onSubmit("cancelled")}>
+              <AlertDialogAction
+                onClick={() => {
+                  adminRef.current?.click();
+                  setStatus("cancelled");
+                }}
+              >
                 Confirm
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
       )}
+      <Dialog>
+        <DialogTrigger ref={employeeRef}></DialogTrigger>
+        <DialogContent>
+          <Permission
+            roles={unrestricted}
+            handlePermission={handlePermissionEmployee}
+          />
+        </DialogContent>
+      </Dialog>
+      <Dialog>
+        <DialogTrigger ref={adminRef}></DialogTrigger>
+        <DialogContent>
+          <Permission
+            roles={restricted}
+            handlePermission={handlePermissionAdmin}
+          />
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
+
+export default UpdateTransactionStatus;

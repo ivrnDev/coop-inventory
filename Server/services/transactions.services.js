@@ -62,6 +62,8 @@ module.exports = {
   },
   updateTransactionStatusDB: (transaction_id, transaction_status, action, orders) => {
     return new Promise(async (resolve, reject) => {
+      let status = transaction_status !== null ? transaction_status : 'cancelled'
+
       if (transaction_status !== 'pending' && action) {
         for (const order of orders) {
           const { variant_name, order_quantity, product_id } = order
@@ -69,7 +71,7 @@ module.exports = {
           if (!updateStocks || updateStocks === null) return reject(error)
         }
       }
-      pool.execute(updateTransactionStatusQuery, [transaction_status, transaction_id], (error, result) => {
+      pool.execute(updateTransactionStatusQuery, [status, transaction_id], (error, result) => {
         if (error) return reject(error);
         return resolve(result)
       })

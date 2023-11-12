@@ -1,5 +1,5 @@
 export type ActivitiesForm = {
-  action: string;
+  action: string | null;
   target: string;
   object: string;
   change?: string;

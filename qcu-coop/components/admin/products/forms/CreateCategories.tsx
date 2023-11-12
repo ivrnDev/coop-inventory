@@ -84,7 +84,11 @@ const CreateCategoriesForm = () => {
           });
         }
       } catch (error) {
-        console.error("Error:", error);
+        toast({
+          variant: "destructive",
+          title: "Internal Server Error.",
+          description: `Something went wrong.`,
+        });
       }
     }
     return;
@@ -145,10 +149,8 @@ const CreateCategoriesForm = () => {
             )}
             <DialogFooter>
               <Dialog>
-                <DialogTrigger>
-                  <Button type="button" variant="submit" ref={buttonRef}>
-                    {isSubmitting ? "Submitting" : "Submit"}
-                  </Button>
+                <DialogTrigger ref={buttonRef}>
+                  {isSubmitting ? "Submitting" : "Submit"}
                 </DialogTrigger>
                 <DialogContent>
                   <Permission

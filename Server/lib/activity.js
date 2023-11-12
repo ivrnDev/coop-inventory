@@ -1,6 +1,6 @@
 
 class Validate {
-  static validAction = ['created', 'updated', 'confirmed', 'deleted', 'changed', 'remove', 'restore', 'create', 'update', 'delete', 'change', 'rejected', "demoted", 'promoted'];
+  static validAction = ['created', 'updated', 'confirmed', 'deleted', 'changed', 'remove', 'restore', 'create', 'update', 'delete', 'change', 'rejected', 'cancelled', 'set', "demoted", 'promoted'];
 
   static validTarget = ['transaction', 'order', 'account', 'category', 'product', 'variants']
 

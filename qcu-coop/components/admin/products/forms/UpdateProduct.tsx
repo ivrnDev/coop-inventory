@@ -196,7 +196,11 @@ const UpdateProductForm = ({ categories, id }: Props) => {
           });
         }
       } catch (error) {
-        console.error("Error:", error);
+      toast({
+        variant: "destructive",
+        title: "Internal Server Error.",
+        description: `Something went wrong.`,
+      });
       }
     }
   };

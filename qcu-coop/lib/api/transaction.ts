@@ -92,9 +92,14 @@ export async function updateTransactionStatus(
     );
 
     const data = await res.json();
-    return data.result;
+    return {
+      status: res.status,
+      data
+    };
   } catch (error) {
-    console.error("Error fetching data", error);
-    return [];
+    return {
+      status: 500,
+      data: null
+    };
   }
 }
