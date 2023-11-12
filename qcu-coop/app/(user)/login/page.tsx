@@ -1,9 +1,10 @@
-import LoginForm from "@/components/user/forms/Login";
+import LoginForm from "@/components/user/render/LoginForm";
 
 const Login = () => {
+  
   return (
-    <section className="display-flex justify-center items-center">
-      <LoginForm /> 
+    <section className="flex justify-center items-center w-[inherit] min-h-user-main">
+      <LoginForm />
     </section>
   );
 };

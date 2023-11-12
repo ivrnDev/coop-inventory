@@ -8,7 +8,8 @@ const {
   createNewActivityDB,
   getAllActivitiesDB,
   getAllActivitiesSearchDB,
-  getActivityByIdDB
+  getActivityByIdDB,
+  verifyAdminDB
 
 } = require("../services/admins.services");
 
@@ -147,6 +148,16 @@ module.exports = {
       if (result === null) return res.status(400).json({ message: `There is no available activity with an ID of ${id}` })
       if (!result) return res.status(400).json({ message: 'Failed to get activity' })
       return res.status(200).json({ message: `Successfully get activity with an ID of ${id}`, result: result })
+    } catch (error) {
+      res.status(500).json({ message: 'Internal Server Error', error: error })
+    }
+  },
+  verifyAdmin: async (req, res) => {
+    const { admin_username, admin_password } = req.body;
+    try {
+      const result = await verifyAdminDB(admin_username, admin_password);
+      if (!result || result === null) return res.status(401).json({ message: `Failed to login` })
+      return res.status(200).json({ message: `Successfully Login`, result: result })
     } catch (error) {
       res.status(500).json({ message: 'Internal Server Error', error: error })
     }

@@ -223,6 +223,9 @@ module.exports = {
         getAdminByIdQuery: `
            SELECT * FROM admin WHERE admin_id = ?
         `,
+        verifyAdminQuery: `
+          SELECT COUNT(*) as count FROM users WHERE admin_username = ? AND admin_password = ? AND admin_id = '1000'
+        `,
         getAdminPermissionQuery: `
            SELECT * FROM admin WHERE admin_id = ? and role = ?
         `,

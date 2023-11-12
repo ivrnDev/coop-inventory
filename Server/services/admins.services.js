@@ -9,7 +9,8 @@ const {
   createNewActivityQuery,
   getAllActivitiesQuery,
   getAllActivitiesSearchQuery,
-  getActivityByIdQuery
+  getActivityByIdQuery,
+  verifyAdminQuery
 } = adminQueries;
 const pool = require('../db/database');
 
@@ -175,6 +176,17 @@ module.exports = {
       pool.execute(getActivityByIdQuery,
         [id], (error, result) => {
           if (error) return reject(error);
+          return resolve(result);
+        }
+      )
+    })
+  },
+  verifyAdminDB: (username, password) => {
+    return new Promise(async (resolve, reject) => {
+      pool.execute(verifyAdminQuery,
+        [username, password], (error, result) => {
+          if (error) return reject(error);
+          if(result.length === 0) return resolve(null)
           return resolve(result);
         }
       )
