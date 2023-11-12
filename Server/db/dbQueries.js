@@ -19,15 +19,15 @@ module.exports = {
     },
     orderQueries: {
         createOrderQuery: `
-            INSERT INTO orders (transaction_id, product_id, variant_name, quantity, order_total, order_status) VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO orders (transaction_id, product_id, variant_name, quantity, order_total) VALUES (?, ?, ?, ?, ?)
         `,
         getAllOrdersQuery: `
-            SELECT o.id as order_id, p.product_name, o.variant_name, o.quantity as order_quantity, o.order_status, o.order_total
+            SELECT o.id as order_id, p.product_name, o.variant_name, o.quantity as order_quantity, o.order_total
             FROM orders as o
             JOIN products AS p ON o.product_id = p.product_id;
         `,
         getOrderbyIdQuery: `
-            SELECT o.id as order_id, o.transaction_id, p.product_name, o.variant_name, o.quantity as order_quantity, o.order_status, o.order_total
+            SELECT o.id as order_id, o.transaction_id, p.product_name, o.variant_name, o.quantity as order_quantity, o.order_total
             FROM orders as o
             JOIN products AS p ON o.product_id = p.product_id
             WHERE id = ?
@@ -36,10 +36,10 @@ module.exports = {
             SELECT
             o.id as order_id,
             o.transaction_id,
+            p.product_id,
             p.product_name,
             o.variant_name,
             o.quantity as order_quantity,
-            o.order_status,
             o.order_total,
             o.date_created as date,
             SUM(o.order_total) OVER () as overall_total
@@ -49,12 +49,6 @@ module.exports = {
         `,
         getVariantPriceQuery: `
             SELECT variant_price, variant_name FROM variants WHERE product_id = ? AND variant_id = ?
-        `,
-        updateOrderStatusByIDQuery: `
-            UPDATE orders SET order_status = ? WHERE id = ?
-        `,
-        updateOrderStatusByTransactionIDQuery: `
-            UPDATE orders SET order_status = ? WHERE transaction_id = ?
         `,
 
     },
@@ -133,10 +127,10 @@ module.exports = {
             UPDATE products SET product_sold = product_sold - ? WHERE product_id = ?
         `,
         addVariantStocksQuery: `
-            UPDATE variants SET variant_stocks = variant_stocks + ? WHERE id = ?
+            UPDATE variants SET variant_stocks = variant_stocks + ? WHERE variant_name = ? AND product_id = ?
         `,
         subtractVariantStocksQuery: `
-           UPDATE variants SET variant_stocks = variant_stocks - ? WHERE id = ?
+           UPDATE variants SET variant_stocks = variant_stocks - ? WHERE variant_name = ? AND product_id = ?
         `,
         updateProductImageQuery: `
             UPDATE products SET display_image = ? WHERE product_id = ?

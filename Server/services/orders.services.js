@@ -7,7 +7,7 @@ const {
   getOrderbyIdQuery,
   getOrderbyTransactionIdQuery,
 } = orderQueries;
-const { updateTransactionAmountDB, getTransactionByIdDB } = require('./transactions.services');
+const { updateTransactionAmountDB } = require('./transactions.services');
 
 module.exports = {
   createOrderDB: (transaction_id, order_data) => {
@@ -17,14 +17,13 @@ module.exports = {
       for (const order of order_data) {
         const { product_id, variant_id, quantity } = order;
 
-        // Get Total Price of each order
         const orderPrice = await module.exports.getVariantPriceDB(product_id, variant_id, quantity);
         if (orderPrice === null) reject({ error: "Item has not been found, order is invalid" });
 
         const { order_total, variant_name } = orderPrice;
         total_transaction_amount += order_total;
 
-        pool.execute(createOrderQuery, [transaction_id, product_id, variant_name, quantity, order_total, "unpaid"], async (error, result) => {
+        pool.execute(createOrderQuery, [transaction_id, product_id, variant_name, quantity, order_total], async (error, result) => {
           if (error) reject(error);
           await updateTransactionAmountDB(transaction_id, total_transaction_amount);
           resolve(result);
@@ -59,7 +58,6 @@ module.exports = {
       })
     })
   },
-  //Get the total Price of orders according to its variant
   getVariantPriceDB: (product_id, variant_id, quantity) => {
     return new Promise((resolve, reject) => {
       pool.execute(getVariantPriceQuery, [product_id, variant_id], (error, result) => {

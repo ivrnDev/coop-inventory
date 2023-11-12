@@ -11,11 +11,10 @@ import ViewButton from "./transactions/ViewOrder";
 import { format } from "date-fns";
 
 type Params = {
-  transactions: TransactionsType[] | undefined;
+  transactions: TransactionsType[] | null;
 };
 
 const AdminRenderTransactions = async ({ transactions }: Params) => {
-  console.log(transactions);
   return (
     <div className="border border-black w-[70%]">
       <Table className="">

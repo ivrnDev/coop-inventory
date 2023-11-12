@@ -63,7 +63,6 @@ const CreateOrderForm = ({ orders, children }: Props) => {
       orders,
     };
 
-    console.log(orderData);
     try {
       const order = await createOrder(orderData);
       if (order.status === 201) return setOrderStatus(1);

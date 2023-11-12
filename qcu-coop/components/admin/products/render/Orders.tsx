@@ -5,8 +5,8 @@ import {
 import { format } from "date-fns";
 import { UpdateTransactionStatus } from "./transactions/UpdateTransactionStatus";
 type Props = {
-  orders: TransactionOrdersType[];
-  transactionById: TransactionsType;
+  orders: TransactionOrdersType[] | null;
+  transactionById: TransactionsType | null;
 };
 
 const AdminRenderOrders = async ({ orders, transactionById }: Props) => {
@@ -21,10 +21,10 @@ const AdminRenderOrders = async ({ orders, transactionById }: Props) => {
           <h2>Receipt No.</h2>
           <p>#{orders[0].transaction_id}</p>
         </div>
-        {transactionById.payment_method !== "cash" && (
+        {transactionById?.payment_method !== "cash" && (
           <div>
             <h2>Reference Number.</h2>
-            <p>#{transactionById.reference_number}</p>
+            <p>#{transactionById?.reference_number}</p>
           </div>
         )}
 
@@ -35,11 +35,11 @@ const AdminRenderOrders = async ({ orders, transactionById }: Props) => {
           </div>
           <div className="">
             <p className="float-left">
-              {format(new Date(transactionById.pickup_date), "MMMM dd, yyyy")}
+              {transactionById?.pickup_date
+                ? format(new Date(transactionById.pickup_date), "MMMM dd, yyyy")
+                : "Pickup date not available"}
             </p>
-            <p className="float-right">
-             
-            </p>
+            <p className="float-right"></p>
           </div>
         </div>
         <div>
@@ -57,7 +57,9 @@ const AdminRenderOrders = async ({ orders, transactionById }: Props) => {
           <p className="float-right text-sm">{orders[0].overall_total}</p>
         </div>
         <div>
-          <UpdateTransactionStatus transactionById={transactionById} />
+          {transactionById && (
+            <UpdateTransactionStatus transactionById={transactionById} />
+          )}
         </div>
       </section>
     )

@@ -1,4 +1,5 @@
-const { getAllTransactionsDB, getAllFilteredTransactionsDB, updateTransactionStatusDB, getTransactionByIdDB, updateOrderStatusDB } = require('../services/transactions.services');
+const { getOrderbyTransactionIdDB } = require('../services/orders.services');
+const { getAllTransactionsDB, getAllFilteredTransactionsDB, updateTransactionStatusDB, getTransactionByIdDB } = require('../services/transactions.services');
 
 module.exports = {
   getAllTransactions: async (req, res) => {
@@ -33,29 +34,18 @@ module.exports = {
   updateTransactionStatus: async (req, res) => {
     const { id } = req.params;
     const { set } = req.query
+    let operation = set === 'completed' ? 'subtract' : set === 'cancelled' ? 'add' : null
+  
     try {
-
-      const getTransactionById = await getTransactionByIdDB(id)
-      if (!getTransactionById) return res.status(400).json({ error: `Failed to get transaction with an ID of ${id}` });
-      if (getTransactionById === null) return res.status(404).json({ error: `There is no transaction with an ID of ${id}` })
-
-      const result = await updateTransactionStatusDB(id, set);
-      if (!result) return res.status({ message: "Failed to update transaction status" });
+      const transactionbyID = await getTransactionByIdDB(id)
+      if (!transactionbyID || transactionbyID === null) return res.status(404).json({ message: `There is no transaction with an id of ${id}` });
+      const orders = await getOrderbyTransactionIdDB(id)
+      if (!orders || orders === null) return res.status(404).json({ message: `There is no order with transaction id of ${id}` });
+      const result = await updateTransactionStatusDB(id, set, operation, orders);
+      if (!result) return res.status(400).json({ message: "Failed to update transaction status" });
       return res.status(200).json({ message: `Transaction status was successfully set to ${set}` })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }
   },
-  updateOrderStatus: async (req, res) => {
-    const { id } = req.params;
-    const { set } = req.query
-    try {
-      const result = await updateOrderStatusDB(id, set)
-      if (!result) return res.status(400).json({ message: "Failed to updated order status" })
-      return res.status(200).json({ message: "Successfully updated the order status", result: result })
-    } catch (error) {
-      return res.status(500).json({ message: "Internal Server Error", error: error })
-    }
-
-  }
 }

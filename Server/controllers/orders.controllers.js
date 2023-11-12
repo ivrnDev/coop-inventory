@@ -1,4 +1,4 @@
-const { getAllOrdersDB, createOrderDB, updateOrderStatusDB, getOrderbyIdDB, getOrderbyTransactionIdDB } = require('../services/orders.services');
+const { getAllOrdersDB, createOrderDB, getOrderbyIdDB, getOrderbyTransactionIdDB } = require('../services/orders.services');
 const { createCustomerDB } = require('../services/customers.services')
 const { createTransactionDB, getTransactionByIdDB } = require('../services/transactions.services')
 const { parse, format } = require('date-fns')

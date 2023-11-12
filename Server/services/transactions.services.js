@@ -1,7 +1,7 @@
 const pool = require('../db/database')
-const { transactionQueries, orderQueries } = require('../db/dbQueries.js')
+const { transactionQueries } = require('../db/dbQueries.js');
+const { updateVariantStocksDB } = require('./products.services.js');
 const { createTransactionQuery, getAllTransactionsQuery, updateTransactionAmountQuery, updateTransactionStatusQuery, getTransactionByIdQuery, getAllFilteredTransactionsQuery } = transactionQueries;
-const { updateOrderStatusByIDQuery, updateOrderStatusByTransactionIDQuery } = orderQueries
 
 module.exports = {
   createTransactionDB: (student_id, payment_method, reference_number, pickup_date) => {
@@ -60,33 +60,19 @@ module.exports = {
       })
     })
   },
-  updateTransactionStatusDB: (transaction_id, transaction_status) => {
-
+  updateTransactionStatusDB: (transaction_id, transaction_status, action, orders) => {
     return new Promise(async (resolve, reject) => {
-      let status;
-      status = (transaction_status === 'completed') ? 'paid' : (transaction_status === 'pending') ? 'pending' : 'cancelled';
-      await module.exports.updateOrderStatusDB(null, null, transaction_id, status); //Update all
+      if (transaction_status !== 'pending' && action) {
+        for (const order of orders) {
+          const { variant_name, order_quantity, product_id } = order
+          const updateStocks = await updateVariantStocksDB(variant_name, product_id, action, order_quantity);
+          if (!updateStocks || updateStocks === null) return reject(error)
+        }
+      }
       pool.execute(updateTransactionStatusQuery, [transaction_status, transaction_id], (error, result) => {
         if (error) return reject(error);
         return resolve(result)
       })
     })
-
-
-
   },
-  updateOrderStatusDB: (order_id, order_status, transaction_id, setAllStatus) => {
-    const id = order_id || transaction_id;
-    const status = order_id ? order_status : setAllStatus;
-    const query = order_id ? updateOrderStatusByIDQuery : updateOrderStatusByTransactionIDQuery;
-    return new Promise((resolve, reject) => {
-      pool.execute(query, [status, id], (error, result) => {
-        if (error) return reject(error);
-        return resolve(result)
-      })
-
-    })
-
-  }
-
 }

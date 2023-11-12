@@ -159,8 +159,6 @@ module.exports = {
             return resolve(result)
           })
         }
-
-
       })
     })
   },
@@ -187,11 +185,14 @@ module.exports = {
       })
     })
   },
-  updateVariantStocksDB: (id, operation, value) => {
+  updateVariantStocksDB: (variant_name, product_id, operation, quantity) => {
     let updateVariantStocksQuery;
     operation === 'add' ? updateVariantStocksQuery = addVariantStocksQuery : updateVariantStocksQuery = subtractVariantStocksQuery
+
     return new Promise((resolve, reject) => {
-      pool.execute(updateVariantStocksQuery, [value, id], (error, result) => {
+      const updateProductStocks = module.exports.updateProductStocksDB(product_id, operation, quantity)
+      if (!updateProductStocks || updateProductStocks === null) return resolve(null)
+      pool.execute(updateVariantStocksQuery, [quantity, variant_name, product_id], (error, result) => {
         if (error) return reject(error)
         return resolve(result)
       })

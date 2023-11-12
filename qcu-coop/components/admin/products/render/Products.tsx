@@ -50,7 +50,7 @@ const AdminRenderProducts = ({ products }: Props) => {
               <TableCell>{product.product_name}</TableCell>
               <TableCell>{product.category_name}</TableCell>
               <TableCell>{product.product_stocks}</TableCell>
-              <TableCell>${product.display_price}</TableCell>
+              <TableCell>₱{product.display_price}</TableCell>
               <TableCell>{product.status}</TableCell>
               <TableCell>{product.isFeatured === 1 ? "Yes" : "No"}</TableCell>
               <TableCell>

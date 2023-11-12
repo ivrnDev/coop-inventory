@@ -79,7 +79,10 @@ export async function getTransactionByFilter(filter: string) {
   }
 }
 
-export async function updateTransactionStatus(status: string, id: number) {
+export async function updateTransactionStatus(
+  status: string | null,
+  id: number
+) {
   try {
     const res = await fetch(
       `http://localhost:3000/api/transactions/${id}/status?set=${status}`,
@@ -87,8 +90,6 @@ export async function updateTransactionStatus(status: string, id: number) {
         method: "PATCH",
       }
     );
-
-    if (!res.ok) throw new Error("Failed to fetch Data");
 
     const data = await res.json();
     return data.result;
