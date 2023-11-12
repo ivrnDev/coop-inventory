@@ -31,7 +31,6 @@ const AdminRenderOrders = async ({ orders, transactionById }: Props) => {
         <div className="flex flex-col">
           <div>
             <h2 className="float-left">Pickup Date:</h2>
-            <h2 className="float-right">Time: </h2>
           </div>
           <div className="">
             <p className="float-left">
@@ -39,7 +38,6 @@ const AdminRenderOrders = async ({ orders, transactionById }: Props) => {
                 ? format(new Date(transactionById.pickup_date), "MMMM dd, yyyy")
                 : "Pickup date not available"}
             </p>
-            <p className="float-right"></p>
           </div>
         </div>
         <div>

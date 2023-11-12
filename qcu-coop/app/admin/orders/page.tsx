@@ -1,6 +1,8 @@
+import CreateTransactions from "@/components/admin/products/forms/CreateTransactions";
 import AdminRenderOrders from "@/components/admin/products/render/Orders";
 import AdminRenderTransactions from "@/components/admin/products/render/Transactions";
 import TransactionFilter from "@/components/admin/products/render/transactions/filter";
+import { getAllProducts } from "@/lib/api/products";
 
 import {
   getOrdersById,
@@ -15,6 +17,7 @@ type Params = {
 const Orders = async ({ searchParams }: Params) => {
   const transactionId = searchParams.id as string;
   const filter = searchParams.filter as string;
+  const products = await getAllProducts();
   const orders = transactionId ? await getOrdersById(transactionId) : null;
   const transactions = filter ? await getTransactionByFilter(filter) : null;
   const transactionById = orders
@@ -25,6 +28,7 @@ const Orders = async ({ searchParams }: Params) => {
     <>
       <section className="">
         <TransactionFilter />
+        {products && <CreateTransactions products={products} />}
       </section>
       <section className="mt-10">
         <AdminRenderTransactions transactions={transactions} />

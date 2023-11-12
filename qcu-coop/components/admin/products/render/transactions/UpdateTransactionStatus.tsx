@@ -14,12 +14,7 @@ import { updateTransactionStatus } from "@/lib/api/transaction";
 import { useRouter } from "next/navigation";
 import { TransactionsType } from "@/types/transactions/transactions";
 import { useEffect, useRef, useState } from "react";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import Permission from "@/components/admin/Permission";
 import { rolePermissions } from "@/lib/permission";
 import { createActivity } from "@/lib/api/activity";
