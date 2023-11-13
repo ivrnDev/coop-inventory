@@ -156,8 +156,10 @@ module.exports = {
     const { admin_username, admin_password } = req.body;
     try {
       const result = await verifyAdminDB(admin_username, admin_password);
-      if (!result || result === null) return res.status(401).json({ message: `Failed to login` })
-      return res.status(200).json({ message: `Successfully Login`, result: result })
+      if (!result || result[0].count === 0) return res.status(401).json({ message: `Failed to login` })
+      if (result[0].count === 1) {
+        return res.status(200).json({ message: `Successfully Login`, result: result })
+      }
     } catch (error) {
       res.status(500).json({ message: 'Internal Server Error', error: error })
     }

@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { TransactionsType } from "@/types/transactions/transactions";
-import ViewButton from "./transactions/ViewOrder";
+import ViewButton from "./ViewOrder";
 import { format } from "date-fns";
 
 type Params = {

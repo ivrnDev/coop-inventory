@@ -7,7 +7,7 @@ const AdminNavBar = () => {
       "
     >
       <div className="hidden md:flex flex-col justify-center items-center w-fit mb-5 space-y-4">
-        <Link href="/">
+        <Link href="/admin/dashboard">
           <Image
             src="/images/qcu-logo.png"
             alt="QCU-Logo"

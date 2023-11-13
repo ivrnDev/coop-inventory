@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
 import {
   Card,
   CardContent,
@@ -6,23 +8,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import CalendarDateRangePicker from "@/components/admin/dashboard/render/DateRangePicker";
-import { getAllActivities } from "@/lib/api/activity";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { CheckCircle2 } from "lucide-react";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Activities } from "@/types/activities/activities";
-import FilteredActivities from "@/components/admin/dashboard/render/FilteredActivities";
 
-const AdminDashboard = async () => {
-  const activities: Activities[] = await getAllActivities();
-
+export default function AdminDashboard() {
   return (
     <>
       <div className="hidden flex-col md:flex">
@@ -137,46 +124,18 @@ const AdminDashboard = async () => {
             </Card>
           </div>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="col-span-3 h-64 bg-[#101536] overflow-hidden">
-              <div className="flex justify-between p-4">
-                <h1 className="text-lg font-semibold text-white">
-                  Recent Activity
-                </h1>
-                <Dialog>
-                  <DialogTrigger>
-                    <h2 className="text-md text-[#3751FF]">View all</h2>
-                  </DialogTrigger>
-                  <DialogContent className="bg-[#101536] h-80 w-[800px]">
-                    <FilteredActivities activities={activities} />
-                  </DialogContent>
-                </Dialog>
-              </div>
-              <CardContent className="overflow-y-scroll h-[inherit]">
-                <Table>
-                  <TableBody>
-                    {activities ? (
-                      activities.map((activity) => (
-                        <>
-                          <TableRow>
-                            <TableCell className="flex gap-3">
-                              <CheckCircle2 color="blue" />
-                              <p className="text-white">{activity.message}</p>
-                            </TableCell>
-                          </TableRow>
-                        </>
-                      ))
-                    ) : (
-                      <p>No Available Activities</p>
-                    )}
-                  </TableBody>
-                </Table>
-              </CardContent>
+            <Card className="col-span-3">
+              <CardHeader>
+                <CardTitle>Recent Activity</CardTitle>
+                <CardDescription>
+                  You made 265 sales this month.
+                </CardDescription>
+              </CardHeader>
+              <CardContent></CardContent>
             </Card>
           </div>
         </div>
       </div>
     </>
   );
-};
-
-export default AdminDashboard;
+}

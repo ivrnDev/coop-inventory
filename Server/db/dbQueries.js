@@ -224,7 +224,7 @@ module.exports = {
            SELECT * FROM admin WHERE admin_id = ?
         `,
         verifyAdminQuery: `
-          SELECT COUNT(*) as count FROM users WHERE admin_username = ? AND admin_password = ? AND admin_id = '1000'
+          SELECT COUNT(*) as count FROM admin WHERE admin_username = ? AND admin_password = ? AND admin_id = '1000'
         `,
         getAdminPermissionQuery: `
            SELECT * FROM admin WHERE admin_id = ? and role = ?
@@ -239,7 +239,7 @@ module.exports = {
            SELECT * FROM activity WHERE CONCAT(id, admin_id, message, date) REGEXP ?;
         `,
         getAllActivitiesQuery: `
-           SELECT * FROM activity;
+           SELECT * FROM activity ORDER BY date DESC;
         `,
         getActivityByIdQuery: `
            SELECT * FROM activity WHERE id = ?

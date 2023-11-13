@@ -1,7 +1,7 @@
 import CreateTransactions from "@/components/admin/products/forms/CreateTransactions";
-import AdminRenderOrders from "@/components/admin/products/render/Orders";
-import AdminRenderTransactions from "@/components/admin/products/render/Transactions";
-import TransactionFilter from "@/components/admin/products/render/transactions/filter";
+import AdminRenderOrders from "@/components/admin/orders/render/Orders";
+import AdminRenderTransactions from "@/components/admin/orders/render/Transactions";
+import TransactionFilter from "@/components/admin/orders/render/filter";
 import { getAllProducts } from "@/lib/api/products";
 
 import {
@@ -28,7 +28,6 @@ const Orders = async ({ searchParams }: Params) => {
     <>
       <section className="">
         <TransactionFilter />
-        {products && <CreateTransactions products={products} />}
       </section>
       <section className="mt-10">
         <AdminRenderTransactions transactions={transactions} />

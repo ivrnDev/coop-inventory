@@ -3,7 +3,7 @@ import {
   TransactionsType,
 } from "@/types/transactions/transactions";
 import { format } from "date-fns";
-import UpdateTransactionStatus from "./transactions/UpdateTransactionStatus";
+import UpdateTransactionStatus from "./UpdateTransactionStatus";
 type Props = {
   orders: TransactionOrdersType[] | null;
   transactionById: TransactionsType | null;
