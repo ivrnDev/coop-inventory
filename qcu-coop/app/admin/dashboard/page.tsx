@@ -5,7 +5,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import CalendarDateRangePicker from "@/components/admin/dashboard/render/DateRangePicker";
 import { getAllActivities } from "@/lib/api/activity";
 import {
   Table,
@@ -20,10 +19,13 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Activities } from "@/types/activities/activities";
 import FilteredActivities from "@/components/admin/dashboard/render/FilteredActivities";
 import Image from "next/image";
+import { OrderAnalytics } from "@/types/analytics/analytics";
+import { getOrderAnalytics } from "@/lib/api/analytics";
 
 const AdminDashboard = async () => {
   const activities: Activities[] = await getAllActivities();
-
+  const orderCount: OrderAnalytics[] = await getOrderAnalytics();
+  const { new_orders, pending_orders, completed_orders } = orderCount[0];
   return (
     <>
       <section className="flex-col md:flex h-admin-main overflow-hidden">
@@ -32,7 +34,7 @@ const AdminDashboard = async () => {
             id="orders-container"
             className="grid gap-4 md:grid-cols-2 lg:grid-cols-3"
           >
-            <Card className="bg-gradient-to-r from-[#CB0000] to-[#0000FE] relative overflow-hidden text-white">
+            <Card className="bg-gradient-to-r from-[#CB0000] to-[#0000FE] relative overflow-hidden text-white h-36">
               <Image
                 src="/icons/dashboard/new-order.svg"
                 alt="new-order-icon"
@@ -44,7 +46,9 @@ const AdminDashboard = async () => {
                 <CardTitle className="text-lg">New Orders</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold float-right">+2350</div>
+                <div className="text-4xl font-bold float-right">
+                  {new_orders}
+                </div>
               </CardContent>
             </Card>
             <Card className="bg-gradient-to-r from-[#9B6601] to-[#F8F902] relative overflow-hidden text-white">
@@ -56,12 +60,12 @@ const AdminDashboard = async () => {
                 className="absolute top-5 left-[22%]"
               />
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Pending Orders
-                </CardTitle>
+                <CardTitle className="text-lg">Pending Orders</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">+12,234</div>
+                <div className="text-4xl font-bold float-right">
+                  {pending_orders}
+                </div>
               </CardContent>
             </Card>
             <Card className="bg-gradient-to-r from-[#0000FE] to-[#37B3E2] relative overflow-hidden text-white">
@@ -73,12 +77,12 @@ const AdminDashboard = async () => {
                 className="absolute -top-5 left-[22%]"
               />
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Completed Orders
-                </CardTitle>
+                <CardTitle className="text-lg">Completed Orders</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">+573</div>
+                <div className="text-4xl font-bold float-right">
+                  {completed_orders}
+                </div>
               </CardContent>
             </Card>
           </div>
