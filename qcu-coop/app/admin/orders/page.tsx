@@ -17,7 +17,6 @@ type Params = {
 const Orders = async ({ searchParams }: Params) => {
   const transactionId = searchParams.id as string;
   const filter = searchParams.filter as string;
-  const products = await getAllProducts();
   const orders = transactionId ? await getOrdersById(transactionId) : null;
   const transactions = filter ? await getTransactionByFilter(filter) : null;
   const transactionById = orders
@@ -26,7 +25,7 @@ const Orders = async ({ searchParams }: Params) => {
 
   return (
     <>
-      <section className="">
+      <section>
         <TransactionFilter />
       </section>
       <section className="mt-10">
