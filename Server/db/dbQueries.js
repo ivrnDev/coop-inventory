@@ -202,7 +202,6 @@ module.exports = {
             COUNT(CASE WHEN status = 'completed' THEN 1 END) AS completed_orders
             FROM transactions;
         `
-
     },
     bannerQueries: {
         createBannerQuery: `

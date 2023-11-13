@@ -7,6 +7,7 @@ const albumsRouter = require('./routes/albums.router');
 const transactionsRouter = require('./routes/transactions.router');
 const adminsRouter = require('./routes/admins.router');
 const bannersRouter = require('./routes/banners.router');
+const analyticsRouter = require('./routes/analytics.router');
 const cors = require('cors');
 const app = express();
 
@@ -20,6 +21,7 @@ app.use('/api/customers', customersRouter);
 app.use('/api/transactions', transactionsRouter);
 app.use('/api/banners', bannersRouter);
 app.use('/api/admin', adminsRouter);
+app.use('/api/analytics', analyticsRouter);
 
 
 
