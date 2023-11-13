@@ -6,6 +6,7 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       const isVerified = await module.exports.verifyCustomerDB(student_id, customer_name, student_id);
       if (!isVerified) return resolve(null)
+      console.log(customer_phone)
       pool.execute(createCustomerQuery, [student_id, customer_name, customer_phone,
         customer_email], (error, result) => {
           if (error) reject(error);

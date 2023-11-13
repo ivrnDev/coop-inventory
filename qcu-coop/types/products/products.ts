@@ -5,7 +5,6 @@ export type Products = {
   display_price: string;
   product_stocks: number;
   product_description: string;
-  product_sold: number;
   status: string;
   isFeatured: number;
   isDeleted: number;
@@ -23,7 +22,6 @@ export type Product = {
   display_price: string;
   product_stocks: number;
   product_description: string;
-  product_sold: number;
   status: string;
   isFeatured: number;
   isDeleted: number;

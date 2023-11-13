@@ -6,7 +6,6 @@ const { parse, format } = require('date-fns')
 module.exports = {
   createOrder: async (req, res) => {
     const { customer, orders } = req.body
-    console.log(req.body)
     try {
       const { student_id, customer_name, customer_phone, customer_email, payment_method, reference_number, pickup_date } = customer;
       const formattedDate = parse(pickup_date, 'PP', new Date())
