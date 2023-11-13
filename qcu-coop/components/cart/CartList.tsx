@@ -25,54 +25,29 @@ const CartItem = () => {
     setTotal(priceTotal);
   }, [prices]);
 
-  const isEqual = (obj1: Variant, obj2: Variant): boolean => {
-    const keys1 = Object.keys(obj1) as (keyof Variant)[];
-    const keys2 = Object.keys(obj2) as (keyof Variant)[];
-
-    if (keys1.length !== keys2.length) {
-      return false;
-    }
-
-    for (const key of keys1) {
-      const val1 = obj1[key];
-      const val2 = obj2[key];
-      console.log({ val1, val2 });
-      if (val1 !== val2) {
-        return false;
-      }
-    }
-
-    return true;
-  };
-
   const handleVariantClick = (variant: Variant, productIndex: number) => {
     if (variant) {
-      const hasVariant = selectedVariants.some((v) => isEqual(variant, v));
-      const hasProduct = selectedVariants.some(
-        (v) => v.product_id === variant.product_id
+      const existingIndex = selectedVariants.findIndex(
+        (v) => v?.product_id === variant?.product_id
       );
 
-      if (!hasVariant && !hasProduct) {
-        setSelectedVariants((prev) => [...prev, variant]);
-        const newPrices = [...prices];
-        newPrices[productIndex] = Number(variant.variant_price);
-        setPrices(newPrices);
-      }
+      const newSelectedVariants = [...selectedVariants];
+      const newQuantities = [...quantities];
+      const newPrices = [...prices];
 
-      if (hasProduct && !hasVariant) {
-        const newQuantities = [...quantities];
+      if (existingIndex !== -1) {
+        newSelectedVariants[existingIndex] = variant;
+        newQuantities[existingIndex] = 1;
+        newPrices[existingIndex] = Number(variant.variant_price);
+      } else {
+        newSelectedVariants[productIndex] = variant;
         newQuantities[productIndex] = 1;
-        setQuantities(newQuantities);
-
-        setSelectedVariants((prev) => {
-          const newSelectedVariants = [...prev];
-          newSelectedVariants.splice(productIndex, 1, variant);
-          return newSelectedVariants;
-        });
-        const newPrices = [...prices];
         newPrices[productIndex] = Number(variant.variant_price);
-        setPrices(newPrices);
       }
+
+      setSelectedVariants(newSelectedVariants);
+      setQuantities(newQuantities);
+      setPrices(newPrices);
     }
   };
 
@@ -98,6 +73,7 @@ const CartItem = () => {
   };
 
   const decreaseQuantity = (productIndex: number) => {
+    console.log({ selectedVariants, quantities, prices });
     if (quantities[productIndex] <= 1) return;
 
     const newQuantities = [...quantities];
@@ -128,18 +104,17 @@ const CartItem = () => {
     });
 
     if (selectedVariants[productIndex]) {
-      setTotal((prev) => {
-        const currentPrice =
-          Number(selectedVariants[productIndex].variant_price) *
-          quantities[productIndex];
-        return prev - currentPrice;
-      });
+      const currentPrice = Number(selectedVariants[productIndex].variant_price);
+      const newPrices = [...prices];
+      newPrices[productIndex] =
+        newPrices[productIndex] - currentPrice * quantities[productIndex];
+      setPrices(newPrices);
     }
   };
 
   const orders = selectedVariants.map((variant, orderIndex) => ({
-    product_id: variant.product_id,
-    variant_id: variant.variant_id,
+    product_id: variant?.product_id,
+    variant_id: variant?.variant_id,
     quantity: quantities[orderIndex],
   }));
 
