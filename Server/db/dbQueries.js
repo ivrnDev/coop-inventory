@@ -194,6 +194,14 @@ module.exports = {
             JOIN products as p ON o.product_id = p.product_id
             GROUP BY o.product_id
         `,
+        getOrdersDetailStatus: `
+            SELECT
+            COUNT(*) AS total_orders,
+            COUNT(CASE WHEN DATE(transaction_date) = CURRENT_DATE THEN 1 END) as new_orders,
+            COUNT(CASE WHEN status = 'pending' THEN 1 END) AS pending_orders,
+            COUNT(CASE WHEN status = 'completed' THEN 1 END) AS completed_orders
+            FROM transactions;
+        `
 
     },
     bannerQueries: {
