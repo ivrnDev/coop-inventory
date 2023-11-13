@@ -30,6 +30,10 @@ const Item = ({ product }: Props) => {
     ]);
   }, [count, selectedVariant]);
 
+  useEffect(() => {
+    setCount(1);
+  }, [selectedVariant]);
+
   return (
     <>
       {product && (
@@ -68,7 +72,10 @@ const Item = ({ product }: Props) => {
             <div id="quantity-container" className="flex">
               <Button
                 variant="secondary"
-                onClick={() => setCount((prev) => prev + 1)}
+                onClick={() =>
+                  selectedVariant.variant_stocks >= count + 1 &&
+                  setCount((prev) => prev + 1)
+                }
               >
                 <p>+</p>
               </Button>

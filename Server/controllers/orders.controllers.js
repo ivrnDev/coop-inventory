@@ -6,12 +6,13 @@ const { parse, format } = require('date-fns')
 module.exports = {
   createOrder: async (req, res) => {
     const { customer, orders } = req.body
+    console.log(req.body)
     try {
       const { student_id, customer_name, customer_phone, customer_email, payment_method, reference_number, pickup_date } = customer;
       const formattedDate = parse(pickup_date, 'PP', new Date())
       const mysqlDateFormat = format(formattedDate, 'yyyy-MM-dd');
 
-      const createCustomer = await createCustomerDB(student_id, customer_name, Number(customer_phone), customer_email);
+      const createCustomer = await createCustomerDB(student_id, customer_name, customer_phone, customer_email);
 
       if (!createCustomer && createCustomer === null) return res.status(400).json({ message: "Customer information is invalid" })
 

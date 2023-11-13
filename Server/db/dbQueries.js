@@ -14,7 +14,6 @@ module.exports = {
             REGEXP_REPLACE(LOWER(student_name), '[[:space:]]', '') REGEXP REVERSE(REPLACE(LOWER(?), ' ', ''))) AS match_found
             FROM student
             WHERE student_id = ?;
-
         `
     },
     orderQueries: {
@@ -164,14 +163,37 @@ module.exports = {
             INSERT INTO transactions (student_id, payment_method, reference_number, pickup_date) VALUES (?, ?, ?, ?)
         `,
         getAllTransactionsQuery: `
-            SELECT t.transaction_id, c.customer_name, c.customer_phone, c.customer_email, t.transaction_amount, t.payment_method, t.status as order_status, t.reference_number, t.pickup_date, t.transaction_date
-            FROM transactions as t
-            JOIN customers AS c ON t.student_id = c.student_id
+            SELECT
+            t.transaction_id,
+            c.customer_name,
+            c.customer_phone,
+            c.customer_email,
+            t.transaction_amount,
+            t.payment_method,
+            t.status AS order_status,
+            t.reference_number,
+            t.pickup_date,
+            t.transaction_date
+            FROM
+            transactions AS t
+            JOIN (
+                SELECT student_id, customer_name, customer_phone, customer_email
+            FROM
+                customers
+            GROUP BY
+                student_id
+            ) AS c ON t.student_id = c.student_id;
         `,
         getAllFilteredTransactionsQuery: `
-            SELECT t.transaction_id, c.customer_name, c.customer_phone, c.customer_email, t.transaction_amount, t.payment_method, t.status as order_status, t.reference_number, t.pickup_date, t.transaction_date
-            FROM transactions as t
-            JOIN customers AS c ON t.student_id = c.student_id
+            SELECT t.transaction_id, c.customer_name, c.customer_phone, c.customer_email,
+            t.transaction_amount, t.payment_method, t.status AS order_status, 
+            t.reference_number, t.pickup_date, t.transaction_date
+            FROM transactions AS t
+            JOIN (
+                SELECT student_id, customer_name, customer_phone, customer_email
+            FROM customers
+            GROUP BY student_id
+            ) AS c ON t.student_id = c.student_id
             WHERE t.status = ?
         `,
         getTransactionByIdQuery: `

@@ -13,7 +13,6 @@ module.exports = {
   },
   getAllFilteredTransactions: async (req, res) => {
     const { filter } = req.query;
-
     try {
       const result = await getAllFilteredTransactionsDB(filter);
       if (result === null) return res.status(404).json({ message: `There is no record of transaction with an filter of ${filter}` })
@@ -35,7 +34,7 @@ module.exports = {
     const { id } = req.params;
     const { set } = req.query
     let operation = set === 'completed' ? 'subtract' : set === 'cancelled' ? 'add' : null
-  
+
     try {
       const transactionbyID = await getTransactionByIdDB(id)
       if (!transactionbyID || transactionbyID === null) return res.status(404).json({ message: `There is no transaction with an id of ${id}` });

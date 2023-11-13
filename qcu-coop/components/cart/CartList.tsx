@@ -14,64 +14,86 @@ const CartItem = () => {
 
   const [selectedVariants, setSelectedVariants] = useState<Variant[]>([]);
   const [quantities, setQuantities] = useState<number[]>(cart.map(() => 1));
-  const [previousPrice, setPreviousPrice] = useState<number[]>(
-    cart.map(() => 0)
-  );
+  const [prices, setPrices] = useState<number[]>(cart.map(() => 0));
   const [total, setTotal] = useState<number>(0);
+
+  useEffect(() => {
+    const priceTotal = prices.reduce(
+      (accumulator, value) => accumulator + value,
+      0
+    );
+    setTotal(priceTotal);
+  }, [prices]);
+
+  const isEqual = (obj1: Variant, obj2: Variant): boolean => {
+    const keys1 = Object.keys(obj1) as (keyof Variant)[];
+    const keys2 = Object.keys(obj2) as (keyof Variant)[];
+
+    if (keys1.length !== keys2.length) {
+      return false;
+    }
+
+    for (const key of keys1) {
+      const val1 = obj1[key];
+      const val2 = obj2[key];
+      console.log({ val1, val2 });
+      if (val1 !== val2) {
+        return false;
+      }
+    }
+
+    return true;
+  };
 
   const handleVariantClick = (variant: Variant, productIndex: number) => {
     if (variant) {
-      const currentPrice =
-        Number(variant.variant_price) * quantities[productIndex];
-      const hasVariant = selectedVariants.some((v) => variant === v);
+      const hasVariant = selectedVariants.some((v) => isEqual(variant, v));
       const hasProduct = selectedVariants.some(
         (v) => v.product_id === variant.product_id
       );
 
       if (!hasVariant && !hasProduct) {
         setSelectedVariants((prev) => [...prev, variant]);
-        setTotal((prev) => prev + currentPrice);
-        setPreviousPrice((prev) => {
-          const prevPrice = [...prev];
-          prevPrice[productIndex] = currentPrice;
-          return prevPrice;
-        });
+        const newPrices = [...prices];
+        newPrices[productIndex] = Number(variant.variant_price);
+        setPrices(newPrices);
       }
 
       if (hasProduct && !hasVariant) {
+        const newQuantities = [...quantities];
+        newQuantities[productIndex] = 1;
+        setQuantities(newQuantities);
+
         setSelectedVariants((prev) => {
           const newSelectedVariants = [...prev];
           newSelectedVariants.splice(productIndex, 1, variant);
           return newSelectedVariants;
         });
-        setTotal((currentTotal) => {
-          const subtractedTotal =
-            currentTotal - previousPrice[productIndex] ?? 0;
-          return subtractedTotal + currentPrice;
-        });
-        setPreviousPrice((prev) => {
-          const prevPrice = [...prev];
-          prevPrice[productIndex] = currentPrice;
-          return prevPrice;
-        });
+        const newPrices = [...prices];
+        newPrices[productIndex] = Number(variant.variant_price);
+        setPrices(newPrices);
       }
     }
   };
+
   const increaseQuantity = (productIndex: number) => {
     const newQuantities = [...quantities];
-    newQuantities[productIndex] += 1;
-    setQuantities(newQuantities);
+    if (
+      selectedVariants[productIndex]?.variant_stocks >=
+      quantities[productIndex] + 1
+    ) {
+      newQuantities[productIndex] += 1;
+      setQuantities(newQuantities);
 
-    if (selectedVariants[productIndex]) {
-      const currentPrice = Number(selectedVariants[productIndex].variant_price);
+      if (selectedVariants[productIndex]) {
+        const currentPrice = Number(
+          selectedVariants[productIndex].variant_price
+        );
 
-      setTotal((prev) => prev + currentPrice);
-
-      setPreviousPrice((prev) => {
-        const prevPrice = [...prev];
-        prevPrice[productIndex] = currentPrice * newQuantities[productIndex];
-        return prevPrice;
-      });
+        const newPrices = [...prices];
+        newPrices[productIndex] += currentPrice;
+        setPrices(newPrices);
+      }
     }
   };
 
@@ -84,12 +106,10 @@ const CartItem = () => {
 
     if (total > 0 && selectedVariants[productIndex]) {
       const currentPrice = Number(selectedVariants[productIndex].variant_price);
-      setTotal((prev) => prev - currentPrice);
-      setPreviousPrice((prev) => {
-        const prevPrice = [...prev];
-        prevPrice[productIndex] = currentPrice * newQuantities[productIndex];
-        return prevPrice;
-      });
+
+      const newPrices = [...prices];
+      newPrices[productIndex] -= currentPrice;
+      setPrices(newPrices);
     }
   };
 
@@ -105,12 +125,6 @@ const CartItem = () => {
       const newSelectedVariants = [...prev];
       newSelectedVariants.splice(productIndex, 1);
       return newSelectedVariants;
-    });
-
-    setPreviousPrice((prev) => {
-      const prevPrice = [...prev];
-      prevPrice.splice(productIndex, 1);
-      return prevPrice;
     });
 
     if (selectedVariants[productIndex]) {
@@ -147,7 +161,14 @@ const CartItem = () => {
               </div>
               <div>
                 <h2>{product.display_name}</h2>
-                <p>{product.display_price}</p>
+                <p>
+                  {selectedVariants[productIndex]?.variant_stocks ??
+                    product.product_stocks}
+                </p>
+                <p>
+                  {selectedVariants[productIndex]?.variant_price ??
+                    product.display_price}
+                </p>
                 <div className="flex gap-4">
                   {product.variants &&
                     product.variants.map((variant, variantIndex) => (
@@ -199,7 +220,7 @@ const CartItem = () => {
         )}
       </section>
       <section className="bg-red-400 flex flex-col h-[80%] w-60 absolute top-0 right-0 mt-[124px] p-7">
-        <p className="font-bold text-white text-[1.8rem]">TOTAL: {total}</p>
+        <p className="font-bold text-white text-[1.8rem]">TOTAL: {total} </p>
 
         <Link
           href={{

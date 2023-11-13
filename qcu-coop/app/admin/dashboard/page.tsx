@@ -108,15 +108,13 @@ const AdminDashboard = async () => {
                 <Table>
                   <TableBody>
                     {activities ? (
-                      activities.map((activity) => (
-                        <>
-                          <TableRow>
-                            <TableCell className="flex gap-3">
-                              <CheckCircle2 color="blue" />
-                              <p className="text-white">{activity.message}</p>
-                            </TableCell>
-                          </TableRow>
-                        </>
+                      activities.map((activity, index) => (
+                        <TableRow key={index}>
+                          <TableCell className="flex gap-3">
+                            <CheckCircle2 color="blue" />
+                            <p className="text-white">{activity.message}</p>
+                          </TableCell>
+                        </TableRow>
                       ))
                     ) : (
                       <p>No Available Activities</p>
