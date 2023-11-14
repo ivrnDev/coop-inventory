@@ -60,22 +60,6 @@ const AdminRenderTransactions = ({ transactions }: Params) => {
     );
   });
 
-  const isDateInRange = (transactionDate: Date): boolean => {
-    if (!dateRange) return true;
-
-    const { from, to } = dateRange;
-
-    if (from && to) {
-      return transactionDate >= from && transactionDate <= to;
-    } else if (from) {
-      return transactionDate >= from;
-    } else if (to) {
-      return transactionDate <= to;
-    }
-
-    return false;
-  };
-
   return (
     <>
       <div id="filter-button-container" className="flex space-x-6">
