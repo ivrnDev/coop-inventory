@@ -19,7 +19,6 @@ export async function createActivity(activity: ActivitiesForm, id: number) {
       data,
     };
   } catch (error) {
-    console.error("Error sending data", error);
     return {
       status: 500,
       data: null,
@@ -29,11 +28,14 @@ export async function createActivity(activity: ActivitiesForm, id: number) {
 
 export async function getAllActivities() {
   try {
-    const res = await fetch("http://localhost:3000/api/admin/activity/recent/list", {
-      next: {
-        revalidate: 0,
-      },
-    });
+    const res = await fetch(
+      "http://localhost:3000/api/admin/activity/recent/list",
+      {
+        next: {
+          revalidate: 0,
+        },
+      }
+    );
 
     const data = await res.json();
     return data.result;

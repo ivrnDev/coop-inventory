@@ -13,6 +13,7 @@ import { Admin } from "@/types/admins/admins";
 import { Search } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import UpdateAccount from "../forms/UpdateAccount";
 
 type Props = {
   admins: Admin[];
@@ -20,7 +21,7 @@ type Props = {
 const FilteredAdmins = ({ admins }: Props) => {
   const [filter, setFilter] = useState<string>("");
 
-  const filteredAdmins = admins.filter((admin) => {
+  const filteredAdmins = admins?.filter((admin) => {
     const { profile_picture, ...newAdmin } = admin;
     const adminValues = Object.values(newAdmin).join(" ").toLowerCase();
     return adminValues.includes(filter.toLowerCase());
@@ -77,7 +78,9 @@ const FilteredAdmins = ({ admins }: Props) => {
                       height={20}
                     />
                   </DialogTrigger>
-                  <DialogContent></DialogContent>
+                  <DialogContent>
+                    <UpdateAccount admin_id={admin.admin_id}/>
+                  </DialogContent>
                 </Dialog>
                 <Dialog>
                   <DialogTrigger className="bg-[#FB392D] rounded-md p-1">

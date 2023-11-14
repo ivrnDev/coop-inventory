@@ -25,7 +25,9 @@ class Phrases {
         `${this.name} ${this.action} ${this.object} ${this.target} `,
       product: `${this.name} ${this.action} ${this.object} ${this.target}`,
       transaction: `${this.name} ${this.action} ${this.target} No.${this.object}`,
-      account: `${this.name} ${this.action} ${this.object} in ${this.target} as ${change} `,
+      account: this.change ?
+        `${this.name} ${this.action} ${this.object} in ${this.target} as ${change}` :
+        `${this.name} ${this.action} ${this.target} ID #${this.object}`,
       variants: `${this.name} ${this.action} ${this.object} ${this.target}`,
     }
   }

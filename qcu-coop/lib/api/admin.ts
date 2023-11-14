@@ -74,9 +74,43 @@ export async function createAdmin(form: FormData) {
   }
 }
 
+export async function updateAdmin(form: FormData, id: number) {
+  try {
+    const res = await fetch(`http://localhost:3000/api/admin/${id}`, {
+      method: "PATCH",
+      body: form,
+    });
+    const data = await res.json();
+    return {
+      status: res.status,
+      data,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      data: null,
+    };
+  }
+}
+
 export async function getAllAdmin() {
   try {
     const res = await fetch("http://localhost:3000/api/admin", {
+      next: {
+        revalidate: 0,
+      },
+    });
+
+    const data = await res.json();
+    return data.result;
+  } catch (error) {
+    return null;
+  }
+}
+
+export async function getAdminByID(id: number) {
+  try {
+    const res = await fetch(`http://localhost:3000/api/admin/list/${id}`, {
       next: {
         revalidate: 0,
       },

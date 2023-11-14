@@ -5,4 +5,5 @@ export type Admin = {
   admin_password: string;
   role: string;
   profile_picture: string;
+  isDeleted: number;
 };

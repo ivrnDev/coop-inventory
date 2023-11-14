@@ -113,7 +113,6 @@ module.exports = {
       const message = Messages.getPhrase();
       if (message === null) return res.status(400).json({ message: "Couldn't create activity message" })
 
-
       const result = await createNewActivityDB(id, action, target, object, change, message)
 
       if (!result) return res.status(400).json({ message: 'Failed to create new activity' })
