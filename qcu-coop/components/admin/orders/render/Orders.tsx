@@ -12,7 +12,7 @@ type Props = {
 const AdminRenderOrders = async ({ orders, transactionById }: Props) => {
   return (
     orders &&
-    orders.length > 0 && (
+    orders?.length > 0 && (
       <section className="fixed top-4 right-4 mt-admin-header-y h-[70%] w-[25%] rounded-xl border border-black p-3 flex flex-col space-y-5">
         <h1 className="font-semibold text-lg border-b-2 border-black">
           Order Details

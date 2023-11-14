@@ -115,33 +115,33 @@ const UpdateTransactionStatus = ({ transactionById }: Props) => {
 
   return (
     <>
-      {transactionById.order_status === "cancelled" ||
-        (transactionById.order_status === "rejected" && (
-          <AlertDialog>
-            <AlertDialogTrigger className="capitalize bg-gray-400  p-4 rounded-md">
-              RESTORE
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>{`Do you want to restore this transaction?`}</AlertDialogTitle>
-                <AlertDialogDescription>
-                  {`This action will restore the Transaction No.${transactionById.transaction_id}.`}
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={() => {
-                    adminRef.current?.click();
-                    setStatus("pending");
-                  }}
-                >
-                  Confirm
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        ))}
+      {(transactionById.order_status === "rejected" ||
+        transactionById.order_status === "cancelled") && (
+        <AlertDialog>
+          <AlertDialogTrigger className="capitalize bg-gray-400  p-4 rounded-md">
+            RESTORE
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{`Do you want to restore this transaction?`}</AlertDialogTitle>
+              <AlertDialogDescription>
+                {`This action will restore the Transaction No.${transactionById.transaction_id}.`}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => {
+                  adminRef.current?.click();
+                  setStatus("pending");
+                }}
+              >
+                Confirm
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
 
       {transactionById.order_status === "pending" && (
         <AlertDialog>
