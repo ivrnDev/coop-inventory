@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import CalendarDateRangePicker from "@/components/admin/dashboard/render/DateRangePicker";
+import CalendarDateRangePicker from "@/components/admin/orders/render/OrderDateRange";
 
 export default function AdminDashboard() {
   return (

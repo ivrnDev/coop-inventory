@@ -79,7 +79,7 @@ const FilteredAdmins = ({ admins }: Props) => {
                     />
                   </DialogTrigger>
                   <DialogContent>
-                    <UpdateAccount admin_id={admin.admin_id}/>
+                    <UpdateAccount admin_id={admin.admin_id} />
                   </DialogContent>
                 </Dialog>
                 <Dialog>

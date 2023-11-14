@@ -9,7 +9,7 @@ const link = [
   },
   {
     name: "Orders",
-    href: "/admin/orders?filter=all",
+    href: "/admin/orders",
     image: "/icons/orders-icon.png",
   },
   {

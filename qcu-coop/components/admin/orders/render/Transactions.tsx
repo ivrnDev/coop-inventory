@@ -9,11 +9,14 @@ import {
 } from "@/components/ui/table";
 import { TransactionsType } from "@/types/transactions/transactions";
 import ViewButton from "./ViewOrder";
-import { format } from "date-fns";
+import { addDays, format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import classNames from "classnames";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
+import CalendarRangePicker from "./OrderDateRange";
+import { DateRange } from "react-day-picker";
 
 type Params = {
   transactions: TransactionsType[] | null;
@@ -22,34 +25,60 @@ type Params = {
 const AdminRenderTransactions = ({ transactions }: Params) => {
   const [filter, setFilter] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
   const handleFilter = (filter: string) => {
     setStatusFilter(filter);
   };
 
-  const statusFiltered = transactions?.filter((transaction) => {
-    if (statusFilter === "all") return transaction;
-    return transaction.order_status.includes(statusFilter.toLowerCase());
-  });
+  const onDateSelect = (selectedDate: DateRange) => {
+    setDateRange(selectedDate);
+  };
 
-  const filteredTransactions = statusFiltered?.filter((transaction) => {
+  const filteredByDate = transactions?.filter((transaction) => {
+    const transactionDate = new Date(transaction.transaction_date);
+    return (
+      !dateRange ||
+      (transactionDate >= (dateRange?.from ?? new Date(0)) &&
+        transactionDate <= (dateRange?.to ?? new Date()))
+    );
+  });
+  const filteredTransactions = filteredByDate?.filter((transaction) => {
     const { transaction_date, ...newAdmin } = transaction;
     const transactionValues = Object.values(newAdmin).join(" ").toLowerCase();
 
     return (
-      transactionValues.includes(filter.toLowerCase()) ||
-      format(new Date(transaction_date), "MMMM dd, yyyy")
-        .toLowerCase()
-        .includes(filter.toLowerCase()) ||
-      format(new Date(transaction_date), "h:mm:ss b")
-        .toLowerCase()
-        .includes(filter.toLowerCase())
+      (statusFilter === "all" ||
+        transaction.order_status.includes(statusFilter.toLowerCase())) &&
+      (transactionValues.includes(filter.toLowerCase()) ||
+        format(new Date(transaction_date), "MMMM dd, yyyy")
+          .toLowerCase()
+          .includes(filter.toLowerCase()) ||
+        format(new Date(transaction_date), "h:mm:ss b")
+          .toLowerCase()
+          .includes(filter.toLowerCase()))
     );
   });
 
+  const isDateInRange = (transactionDate: Date): boolean => {
+    if (!dateRange) return true;
+
+    const { from, to } = dateRange;
+
+    if (from && to) {
+      return transactionDate >= from && transactionDate <= to;
+    } else if (from) {
+      return transactionDate >= from;
+    } else if (to) {
+      return transactionDate <= to;
+    }
+
+    return false;
+  };
+
   return (
     <>
-      <div className="flex space-x-6">
+      <div id="filter-button-container" className="flex space-x-6">
         <Button
           onClick={() => handleFilter("all")}
           className={classNames({
@@ -96,10 +125,27 @@ const AdminRenderTransactions = ({ transactions }: Params) => {
           Rejected
         </Button>
       </div>
-      <Input value={filter} onChange={(e) => setFilter(e.target.value)} />
 
-      <div className="border border-black w-[70%]">
-        <Table className="">
+      <div
+        id="table-container"
+        className="h-full border border-black w-full mt-5 p-2"
+      >
+        <div id="table-upper-header" className="flex justify-between">
+          <div className="w-1/2 h-8 relative">
+            <Search
+              className="absolute top-[50%] left-2 translate-y-[-50%]"
+              size="20"
+            />
+            <Input
+              type="search"
+              placeholder="Search"
+              onChange={(e) => setFilter(e.target.value)}
+              className="w-full h-full pl-8"
+            />
+          </div>
+          <CalendarRangePicker onDateSelect={onDateSelect} />
+        </div>
+        <Table className="h-[inherit]">
           <TableHeader>
             <TableRow>
               <TableHead>Transaction ID</TableHead>

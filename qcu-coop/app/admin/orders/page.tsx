@@ -25,10 +25,12 @@ const Orders = async ({ searchParams }: Params) => {
   );
   return (
     <>
-      <section>
-        <AdminRenderTransactions transactions={transactions} />
+      <section className="h-admin-main p-5 w-[74%]">
+        <div className="h-full w-full">
+          <AdminRenderTransactions transactions={transactions} />
+        </div>
       </section>
-      <section>
+      <section className="">
         <AdminRenderOrders
           orders={orders}
           transactionById={transactionById[0]}
