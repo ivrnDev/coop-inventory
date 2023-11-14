@@ -112,7 +112,17 @@ const CreateAccount = () => {
   return (
     <>
       <Dialog>
-        <DialogTrigger>Add User</DialogTrigger>
+        <DialogTrigger className="bg-blue-500 p-2 flex items-center space-x-2">
+          <div className="relative w-3 h-3">
+            <Image
+              src="/icons/add-sign-icon.svg"
+              alt="add-sign"
+              sizes="min-w-1"
+              fill
+            />
+          </div>
+          <p className="text-md text-white whitespace-nowrap">Add User</p>
+        </DialogTrigger>
         <DialogContent>
           <form onSubmit={handleSubmit(onSubmit)} className="w-full h-full">
             <div id="first-section" className="p-5 flex flex-col space-y-5">

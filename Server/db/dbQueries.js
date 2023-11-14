@@ -250,7 +250,7 @@ module.exports = {
             UPDATE admin SET admin_name = ?, admin_username = ?, admin_password = ?, role = ?, profile_picture = ? WHERE admin_id = ?
         `,
         getAllAdminsQuery: `
-            SELECT * FROM admin
+            SELECT * FROM admin WHERE role <> 'admin' ;
         `,
         getAdminByIdQuery: `
            SELECT * FROM admin WHERE admin_id = ?

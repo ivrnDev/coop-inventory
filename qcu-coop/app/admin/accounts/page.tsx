@@ -1,11 +1,21 @@
 import CreateAccount from "@/components/admin/accounts/forms/CreateAccount";
+import FilteredAdmins from "@/components/admin/accounts/render/FilteredAdmins";
+import { getAllAdmin } from "@/lib/api/admin";
 
-const Accounts = () => {
+const Accounts = async () => {
+  const admins = await getAllAdmin();
   return (
-    <section>
-      <CreateAccount />
+    <section className="h-admin-main p-6">
+      <div className="border border-black h-full p-4 overflow-clip">
+        <div>
+          <div className="float-right">
+            <CreateAccount />
+          </div>
+          <FilteredAdmins admins={admins} />
+        </div>
+      </div>
     </section>
-  )
-}
+  );
+};
 
 export default Accounts;

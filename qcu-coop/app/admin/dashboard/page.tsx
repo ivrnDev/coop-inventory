@@ -90,7 +90,7 @@ const AdminDashboard = async () => {
             id="recent-activity-container"
             className="grid gap-4 md:grid-cols-2 lg:grid-cols-7"
           >
-            <Card className="col-span-3 h-72 bg-[#101536]">
+            <Card className="col-span-3 h-72 bg-[#101536] overflow-y-auto">
               <div className="flex justify-between p-4">
                 <h1 className="text-lg font-semibold text-white">
                   Recent Activity

@@ -73,3 +73,18 @@ export async function createAdmin(form: FormData) {
     };
   }
 }
+
+export async function getAllAdmin() {
+  try {
+    const res = await fetch("http://localhost:3000/api/admin", {
+      next: {
+        revalidate: 0,
+      },
+    });
+
+    const data = await res.json();
+    return data.result;
+  } catch (error) {
+    return null;
+  }
+}
