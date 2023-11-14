@@ -1,6 +1,6 @@
 
 class Validate {
-  static validAction = ['created', 'updated', 'confirmed', 'deleted', 'changed', 'remove', 'restore', 'create', 'update', 'delete', 'change', 'rejected', 'cancelled', 'set', "demoted", 'promoted'];
+  static validAction = ['created', 'updated', 'confirmed', 'deleted', 'added', 'changed', 'remove', 'restore', 'create', 'update', 'delete', 'change', 'rejected', 'cancelled', 'set', "demoted", 'promoted'];
 
   static validTarget = ['transaction', 'order', 'account', 'category', 'product', 'variants']
 
@@ -25,7 +25,7 @@ class Phrases {
         `${this.name} ${this.action} ${this.object} ${this.target} `,
       product: `${this.name} ${this.action} ${this.object} ${this.target}`,
       transaction: `${this.name} ${this.action} ${this.target} No.${this.object}`,
-      account: `${this.name} ${this.action} ${this.object}`,
+      account: `${this.name} ${this.action} ${this.object} in ${this.target} as ${change} `,
       variants: `${this.name} ${this.action} ${this.object} ${this.target}`,
     }
   }

@@ -26,7 +26,10 @@ export async function adminPermission(roles: string[], password: string) {
   }
 }
 
-export async function loginAdmin(admin_username: string, admin_password: string) {
+export async function loginAdmin(
+  admin_username: string,
+  admin_password: string
+) {
   try {
     const res = await fetch(
       `http://localhost:3000/api/admin/verify/user/login`,
@@ -43,6 +46,25 @@ export async function loginAdmin(admin_username: string, admin_password: string)
     return {
       status: res.status,
       data: data.result,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      data: null,
+    };
+  }
+}
+
+export async function createAdmin(form: FormData) {
+  try {
+    const res = await fetch("http://localhost:3000/api/admin", {
+      method: "POST",
+      body: form,
+    });
+    const data = await res.json();
+    return {
+      status: res.status,
+      data,
     };
   } catch (error) {
     return {

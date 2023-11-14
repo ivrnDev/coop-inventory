@@ -90,7 +90,7 @@ const AdminDashboard = async () => {
             id="recent-activity-container"
             className="grid gap-4 md:grid-cols-2 lg:grid-cols-7"
           >
-            <Card className="col-span-3 h-2/3 bg-[#101536]">
+            <Card className="col-span-3 h-72 bg-[#101536]">
               <div className="flex justify-between p-4">
                 <h1 className="text-lg font-semibold text-white">
                   Recent Activity
@@ -104,10 +104,10 @@ const AdminDashboard = async () => {
                   </DialogContent>
                 </Dialog>
               </div>
-              <CardContent className="overflow-y-scroll h-[inherit]">
+              <CardContent className="overflow-y-auto h-[inherit]">
                 <Table>
                   <TableBody>
-                    {activities ? (
+                    {activities.length > 0 ? (
                       activities.map((activity, index) => (
                         <TableRow key={index}>
                           <TableCell className="flex gap-3">
@@ -117,7 +117,7 @@ const AdminDashboard = async () => {
                         </TableRow>
                       ))
                     ) : (
-                      <p>No Available Activities</p>
+                        <p className="text-white text-lg text-center">No Available Activities</p>
                     )}
                   </TableBody>
                 </Table>
