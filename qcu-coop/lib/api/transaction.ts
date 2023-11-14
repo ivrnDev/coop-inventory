@@ -6,7 +6,6 @@ export async function getAllTransactions() {
       },
     });
 
-    if (!res.ok) throw new Error("Failed to fetch Data");
 
     const data = await res.json();
     return data.result;

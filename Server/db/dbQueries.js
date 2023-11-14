@@ -20,16 +20,16 @@ module.exports = {
     },
     orderQueries: {
         createOrderQuery: `
-            INSERT INTO order (transaction_id, product_id, variant_name, quantity, order_total) VALUES (?, ?, ?, ?, ?)
+            INSERT INTO order_data (transaction_id, product_id, variant_name, quantity, order_total) VALUES (?, ?, ?, ?, ?)
         `,
         getAllOrdersQuery: `
             SELECT o.id as order_id, p.product_name, o.variant_name, o.quantity as order_quantity, o.order_total
-            FROM order as o
+            FROM order_data as o
             JOIN product AS p ON o.product_id = p.product_id;
         `,
         getOrderbyIdQuery: `
             SELECT o.id as order_id, o.transaction_id, p.product_name, o.variant_name, o.quantity as order_quantity, o.order_total
-            FROM order as o
+            FROM order_data as o
             JOIN product AS p ON o.product_id = p.product_id
             WHERE id = ?
         `,
@@ -44,7 +44,7 @@ module.exports = {
             o.order_total,
             o.date_created as date,
             SUM(o.order_total) OVER () as overall_total
-            FROM order as o
+            FROM order_data as o
             JOIN product AS p ON o.product_id = p.product_id
             WHERE transaction_id = ?;
         `,
@@ -165,38 +165,10 @@ module.exports = {
             INSERT INTO transaction (student_id, payment_method, reference_number, pickup_date) VALUES (?, ?, ?, ?)
         `,
         getAllTransactionsQuery: `
-            SELECT
-            t.transaction_id,
-            c.customer_name,
-            c.customer_phone,
-            c.customer_email,
-            t.transaction_amount,
-            t.payment_method,
-            t.status AS order_status,
-            t.reference_number,
-            t.pickup_date,
-            t.transaction_date
-            FROM
-            transaction AS t
-            JOIN (
-                SELECT student_id, customer_name, customer_phone, customer_email
-            FROM
-                customer
-            GROUP BY
-                student_id
-            ) AS c ON t.student_id = c.student_id;
-        `,
-        getAllFilteredTransactionsQuery: `
-            SELECT t.transaction_id, c.customer_name, c.customer_phone, c.customer_email,
-            t.transaction_amount, t.payment_method, t.status AS order_status, 
-            t.reference_number, t.pickup_date, t.transaction_date
-            FROM transaction AS t
-            JOIN (
-                SELECT student_id, customer_name, customer_phone, customer_email
-            FROM customer
-            GROUP BY student_id
-            ) AS c ON t.student_id = c.student_id
-            WHERE t.status = ?
+            SELECT t.transaction_id, s.student_name, c.student_phone, s.student_email, t.transaction_amount, t.payment_method, t.status as order_status, t.reference_number, t.pickup_date, t.transaction_date
+            FROM customer as c
+            JOIN transaction AS t ON c.transaction_id = t.transaction_id
+            JOIN student AS s ON c.student_id = s.student_id
         `,
         getTransactionByIdQuery: `
             SELECT t.transaction_id, s.student_name, c.student_phone, s.student_email, t.transaction_amount, t.payment_method, t.status as order_status, t.reference_number, t.pickup_date, t.transaction_date
@@ -215,8 +187,10 @@ module.exports = {
     analyticsQueries: {
         getProductSalesQuery: `
             SELECT o.product_id, p.product_name, SUM(quantity) as total_orders, SUM(order_total) as total_amount
-            FROM order as o
+            FROM order_data as o
             JOIN product as p ON o.product_id = p.product_id
+            JOIN transaction as t ON o.transaction_id = t.transaction_id
+            WHERE t.status = "completed"
             GROUP BY o.product_id
         `,
         getOrdersDetailStatus: `

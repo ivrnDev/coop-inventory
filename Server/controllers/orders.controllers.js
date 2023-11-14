@@ -18,7 +18,6 @@ module.exports = {
       if (!transaction) return res.status(400).json({ message: "Failed to create a new order, transaction failed" });
 
       await createOrderDB(transaction.transaction_id, orders);
-
       const createCustomer = await createCustomerDB(transaction.transaction_id, student_id, customer_phone);
       if (!createCustomer) return res.status(400).json({ message: "Failed to create customer" })
 

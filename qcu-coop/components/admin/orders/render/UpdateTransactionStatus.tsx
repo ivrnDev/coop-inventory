@@ -32,7 +32,7 @@ const UpdateTransactionStatus = ({ transactionById }: Props) => {
   const { restricted, unrestricted } = rolePermissions;
   const [isAllowed, setIsAllowed] = useState(false);
   const [adminId, setadminId] = useState(0);
-  const [status, setStatus] = useState<string | null>(null);
+  const [status, setStatus] = useState<string>("");
 
   const handlePermissionEmployee = async (permission: boolean, id?: number) => {
     if (permission) {
@@ -73,7 +73,11 @@ const UpdateTransactionStatus = ({ transactionById }: Props) => {
           toast({
             title: "Success",
             description: `You have successfully ${
-              status === "pending" ? "restore" : status
+              status === "pending"
+                ? "restore"
+                : status === "completed"
+                ? "confirmed"
+                : status
             } transaction order with Transaction No.${
               transactionById.transaction_id
             }!`,
@@ -111,37 +115,38 @@ const UpdateTransactionStatus = ({ transactionById }: Props) => {
 
   return (
     <>
-      {transactionById.order_status === "cancelled" && (
-        <AlertDialog>
-          <AlertDialogTrigger className="capitalize bg-gray-400  p-4 rounded-md">
-            RESTORE
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>{`Do you want to restore this transaction?`}</AlertDialogTitle>
-              <AlertDialogDescription>
-                {`This action will restore the Transaction No.${transactionById.transaction_id}.`}
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={() => {
-                  adminRef.current?.click();
-                  setStatus("pending");
-                }}
-              >
-                Confirm
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      )}
+      {transactionById.order_status === "cancelled" ||
+        (transactionById.order_status === "rejected" && (
+          <AlertDialog>
+            <AlertDialogTrigger className="capitalize bg-gray-400  p-4 rounded-md">
+              RESTORE
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>{`Do you want to restore this transaction?`}</AlertDialogTitle>
+                <AlertDialogDescription>
+                  {`This action will restore the Transaction No.${transactionById.transaction_id}.`}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => {
+                    adminRef.current?.click();
+                    setStatus("pending");
+                  }}
+                >
+                  Confirm
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        ))}
 
       {transactionById.order_status === "pending" && (
         <AlertDialog>
           <AlertDialogTrigger className="capitalize bg-green-400  p-4 rounded-md">
-            {transactionById.order_status}
+            Confirm Order
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
@@ -183,7 +188,7 @@ const UpdateTransactionStatus = ({ transactionById }: Props) => {
               <AlertDialogAction
                 onClick={() => {
                   employeeRef.current?.click();
-                  setStatus(null);
+                  setStatus("rejected");
                 }}
               >
                 Confirm

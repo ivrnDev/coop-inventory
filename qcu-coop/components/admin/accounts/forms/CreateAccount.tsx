@@ -33,10 +33,12 @@ import { createActivity } from "@/lib/api/activity";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { ValidateAccount, AccountSchema } from "@/middleware/zod/accounts";
 import { createAdmin } from "@/lib/api/admin";
+import { useRouter } from "next/navigation";
 
 const roles = ["administrator", "moderator", "employee"];
 
 const CreateAccount = () => {
+  const router = useRouter();
   const { toast } = useToast();
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const { restricted } = rolePermissions;
@@ -85,6 +87,7 @@ const CreateAccount = () => {
             description: `You have successfully added ${admin_name} as ${role}`,
           });
           reset();
+          router.refresh();
         } else {
           toast({
             variant: "destructive",

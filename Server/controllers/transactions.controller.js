@@ -11,16 +11,6 @@ module.exports = {
       return res.status(500).json({ message: 'Internal Server Error', error: error });
     }
   },
-  getAllFilteredTransactions: async (req, res) => {
-    const { filter } = req.query;
-    try {
-      const result = await getAllFilteredTransactionsDB(filter);
-      if (result === null) return res.status(404).json({ message: `There is no record of transaction with an filter of ${filter}` })
-      return res.status(201).json({ message: `Successfully get transaction with a filter of ${filter}`, result: result });
-    } catch (error) {
-      return res.status(500).json({ message: 'Internal Server Error', error: error });
-    }
-  },
   getTransactionById: async (req, res) => {
     try {
       const result = await getTransactionByIdDB(req.params.id);

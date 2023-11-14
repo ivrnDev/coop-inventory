@@ -1,4 +1,5 @@
 const { Validate, Phrases } = require("../lib/activity");
+const fs = require('fs').promises;
 const {
   createNewAdminDB,
   updateAdminDB,
@@ -22,11 +23,11 @@ module.exports = {
       if (req.file) {
         profilePicture = req.file.buffer;
       } else {
-        const defaultprofilePicture = './public/profile-picture.jpg';
+        const defaultprofilePicture = './public/default-profile.jpg';
         try {
           profilePicture = await fs.readFile(defaultprofilePicture);
         } catch (error) {
-          return res.status(500).json({ message: "Error reading default image" });
+          return res.status(500).json({ message: "Error reading default profile picture" });
         }
       };
 
@@ -45,7 +46,7 @@ module.exports = {
       if (req.file) {
         profilePicture = req.file.buffer;
       } else {
-        const defaultprofilePicture = './public/profile-picture.jpg';
+        const defaultprofilePicture = './public/default-profile.png';
         try {
           profilePicture = await fs.readFile(defaultprofilePicture);
         } catch (error) {
