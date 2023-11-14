@@ -2,22 +2,16 @@ const pool = require('../db/database')
 const { customerQueries } = require('../db/dbQueries.js')
 const { createCustomerQuery, getCustomersQuery, getCustomerbyIdQuery, verifyCustomerQuery, } = customerQueries
 module.exports = {
-  createCustomerDB: (student_id, customer_name, customer_phone, customer_email) => {
+  createCustomerDB: (transaction_id, student_id, student_phone) => {
     return new Promise(async (resolve, reject) => {
-      const isVerified = await module.exports.verifyCustomerDB(student_id, customer_name, student_id);
-      if (!isVerified) return resolve(null)
-      pool.execute(createCustomerQuery, [student_id, customer_name, customer_phone,
-        customer_email], (error, result) => {
-          if (error) reject(error);
-          const student_id = result.insertId;
-          const customer = {
-            student_id,
-            customer_name,
-            customer_phone,
-            customer_email,
-          };
-          resolve(customer);
-        })
+      pool.execute(createCustomerQuery, [transaction_id, student_id, student_phone], (error, result) => {
+        if (error) reject(error);
+        const customer = {
+          transaction_id,
+          student_id,
+        };
+        resolve(customer);
+      })
     })
   },
   getCustomersDB: () => {
@@ -28,11 +22,11 @@ module.exports = {
       })
     })
   },
-  verifyCustomerDB: (student_id, student_name) => {
+  verifyCustomerDB: (student_id, student_name, student_email) => {
     return new Promise((resolve, reject) => {
-      pool.execute(verifyCustomerQuery, [student_name, student_name, student_id], (error, result) => {
+      pool.execute(verifyCustomerQuery, [student_name, student_name, student_id, student_email, student_id], (error, result) => {
         if (error) return reject(error);
-        if (result.length === 0) return resolve(null)
+        if (result[0].verified === 0) return resolve(null)
         return resolve(result)
       })
     })

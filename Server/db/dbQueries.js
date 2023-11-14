@@ -1,34 +1,36 @@
 module.exports = {
     customerQueries: {
         createCustomerQuery: `
-            INSERT INTO customers (student_id, customer_name, customer_phone, customer_email) VALUES (?, ?, ?, ?)`,
+            INSERT INTO customer (transaction_id, student_id, student_phone) VALUES (?, ?, ?)`,
         getCustomersQuery: `
-            SELECT * FROM customers
+            SELECT * FROM customer
         `,
         getCustomerbyIdQuery: `
-            SELECT * FROM customers WHERE student_id = ?
+            SELECT * FROM customer WHERE student_id = ?
         `,
         verifyCustomerQuery: `
-            SELECT *,
-            (REGEXP_REPLACE(LOWER(student_name), '[[:space:]]', '') REGEXP REPLACE(LOWER(?), ' ', '') OR
-            REGEXP_REPLACE(LOWER(student_name), '[[:space:]]', '') REGEXP REVERSE(REPLACE(LOWER(?), ' ', ''))) AS match_found
-            FROM student
-            WHERE student_id = ?;
+            SELECT CASE WHEN(
+                  REPLACE(LOWER(student_name), ' ', '') LIKE REPLACE(LOWER(?), ' ', '') || '%' OR
+                  REPLACE(REPLACE(LOWER(student_name), ' ', ''), ' ', '') LIKE REPLACE(LOWER(?), ' ', '') || '%'
+            ) AND student_id = ? AND student_email = ?
+            THEN TRUE ELSE FALSE END AS verified
+            FROM student WHERE student_id = ?;
+
         `
     },
     orderQueries: {
         createOrderQuery: `
-            INSERT INTO orders (transaction_id, product_id, variant_name, quantity, order_total) VALUES (?, ?, ?, ?, ?)
+            INSERT INTO order (transaction_id, product_id, variant_name, quantity, order_total) VALUES (?, ?, ?, ?, ?)
         `,
         getAllOrdersQuery: `
             SELECT o.id as order_id, p.product_name, o.variant_name, o.quantity as order_quantity, o.order_total
-            FROM orders as o
-            JOIN products AS p ON o.product_id = p.product_id;
+            FROM order as o
+            JOIN product AS p ON o.product_id = p.product_id;
         `,
         getOrderbyIdQuery: `
             SELECT o.id as order_id, o.transaction_id, p.product_name, o.variant_name, o.quantity as order_quantity, o.order_total
-            FROM orders as o
-            JOIN products AS p ON o.product_id = p.product_id
+            FROM order as o
+            JOIN product AS p ON o.product_id = p.product_id
             WHERE id = ?
         `,
         getOrderbyTransactionIdQuery: `
@@ -42,33 +44,33 @@ module.exports = {
             o.order_total,
             o.date_created as date,
             SUM(o.order_total) OVER () as overall_total
-            FROM orders as o
-            JOIN products AS p ON o.product_id = p.product_id
+            FROM order as o
+            JOIN product AS p ON o.product_id = p.product_id
             WHERE transaction_id = ?;
         `,
         getVariantPriceQuery: `
-            SELECT variant_price, variant_name FROM variants WHERE product_id = ? AND variant_id = ?
+            SELECT variant_price, variant_name FROM variant WHERE product_id = ? AND variant_id = ?
         `,
 
     },
     productQueries: {
         createProductQuery: `
-            INSERT INTO products (category_id, product_name, display_name, display_price, product_stocks, product_description, display_image) VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO product (category_id, product_name, display_name, display_price, product_stocks, product_description, display_image) VALUES (?, ?, ?, ?, ?, ?, ?)
         `,
         createVariantQuery: `
-            INSERT INTO variants (variant_id, product_id, variant_name, variant_symbol, variant_price, variant_stocks) VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO variant (variant_id, product_id, variant_name, variant_symbol, variant_price, variant_stocks) VALUES (?, ?, ?, ?, ?, ?)
         `,
         getAllVariantsQuery: `
-            SELECT * FROM variants
+            SELECT * FROM variant
         `,
         getVariantByIdQuery: `
-            SELECT * FROM variants WHERE id = ?
+            SELECT * FROM variant WHERE id = ?
         `,
         getVariantByProductIdQuery: `
-            SELECT * FROM variants WHERE product_id = ?
+            SELECT * FROM variant WHERE product_id = ?
         `,
         deleteVariantsQuery: `
-            DELETE FROM variants WHERE product_id = ?
+            DELETE FROM variant WHERE product_id = ?
         `,
         getAllCategoryQuery: `
             SELECT * FROM category WHERE isDeleted = '0';
@@ -89,78 +91,78 @@ module.exports = {
           UPDATE category SET isDeleted = ? WHERE category_id = ? 
         `,
         updateIsDeletedById: `
-          UPDATE products SET isDeleted = ? WHERE product_id = ? 
+          UPDATE product SET isDeleted = ? WHERE product_id = ? 
         `,
         getAllProductsQuery: `
-            SELECT * FROM products as p
+            SELECT * FROM product as p
             JOIN category as ct ON p.category_id = ct.category_id
             WHERE p.isDeleted = '0' AND ct.isDeleted = '0'
         `,
         getProductByIdQuery: `
-            SELECT * FROM products as p
+            SELECT * FROM product as p
             JOIN category as ct ON p.category_id = ct.category_id
             WHERE p.product_id = ? AND p.isDeleted = '0'
         `,
         getProductByNameQuery: `
-            SELECT product_name FROM products WHERE product_name = ?
+            SELECT product_name FROM product WHERE product_name = ?
         `,
         updateProductQuery: `
-            UPDATE products SET category_id = ?, display_name = ?, display_price = ?, product_description = ?, status = ?, isFeatured = ?, display_image = ? WHERE product_id = ?
+            UPDATE product SET category_id = ?, display_name = ?, display_price = ?, product_description = ?, status = ?, isFeatured = ?, display_image = ? WHERE product_id = ?
         `,
         updateVariantQuery: `
-            UPDATE variants SET variant_name = ?, variant_symbol = ?, variant_price = ?, variant_stocks = ? WHERE product_id = ? AND variant_id = ?
+            UPDATE variant SET variant_name = ?, variant_symbol = ?, variant_price = ?, variant_stocks = ? WHERE product_id = ? AND variant_id = ?
         `,
         updateProductStocksQuery: `
-            UPDATE products SET product_stocks = ? WHERE product_id = ?        
+            UPDATE product SET product_stocks = ? WHERE product_id = ?        
         `,
         addProductStocksQuery: `
-            UPDATE products SET product_stocks = product_stocks + ? WHERE product_id = ?
+            UPDATE product SET product_stocks = product_stocks + ? WHERE product_id = ?
         `,
         subtractProductStocksQuery: `
-            UPDATE products SET product_stocks = product_stocks - ? WHERE product_id = ?
+            UPDATE product SET product_stocks = product_stocks - ? WHERE product_id = ?
         `,
         addProductSoldQuery: `
-            UPDATE products SET product_sold = product_sold + ? WHERE product_id = ?
+            UPDATE product SET product_sold = product_sold + ? WHERE product_id = ?
         `,
         subtractProductSoldQuery: `
-            UPDATE products SET product_sold = product_sold - ? WHERE product_id = ?
+            UPDATE product SET product_sold = product_sold - ? WHERE product_id = ?
         `,
         addVariantStocksQuery: `
-            UPDATE variants SET variant_stocks = variant_stocks + ? WHERE variant_name = ? AND product_id = ?
+            UPDATE variant SET variant_stocks = variant_stocks + ? WHERE variant_name = ? AND product_id = ?
         `,
         subtractVariantStocksQuery: `
-           UPDATE variants SET variant_stocks = variant_stocks - ? WHERE variant_name = ? AND product_id = ?
+           UPDATE variant SET variant_stocks = variant_stocks - ? WHERE variant_name = ? AND product_id = ?
         `,
         updateProductImageQuery: `
-            UPDATE products SET display_image = ? WHERE product_id = ?
+            UPDATE product SET display_image = ? WHERE product_id = ?
         `
 
     },
     albumQueries: {
         createProductAlbumQuery: `
-            INSERT INTO albums (product_id, product_photo) VALUES (?, ?)    
+            INSERT INTO album (product_id, product_photo) VALUES (?, ?)    
         `,
         updateProductAlbumImageQuery: `
-            UPDATE albums SET product_photo = ? WHERE photo_id = ?
+            UPDATE album SET product_photo = ? WHERE photo_id = ?
         `,
         getAllAlbumsQuery: `
-            SELECT * FROM albums
+            SELECT * FROM album
         `,
         getAlbumByIdQuery: `
-            SELECT * FROM albums WHERE photo_id = ?
+            SELECT * FROM album WHERE photo_id = ?
         `,
         getProductAlbumByIDQuery: `
-            SELECT * FROM albums WHERE product_id = ?
+            SELECT * FROM album WHERE product_id = ?
         `,
         deleteAlbumByProductIdQuery: `
-            DELETE FROM albums WHERE product_id = ?
+            DELETE FROM album WHERE product_id = ?
         `,
 
 
     },
     transactionQueries: {
         createTransactionQuery: `
-            INSERT INTO transactions (student_id, payment_method, reference_number, pickup_date) VALUES (?, ?, ?, ?)
+            INSERT INTO transaction (student_id, payment_method, reference_number, pickup_date) VALUES (?, ?, ?, ?)
         `,
         getAllTransactionsQuery: `
             SELECT
@@ -175,11 +177,11 @@ module.exports = {
             t.pickup_date,
             t.transaction_date
             FROM
-            transactions AS t
+            transaction AS t
             JOIN (
                 SELECT student_id, customer_name, customer_phone, customer_email
             FROM
-                customers
+                customer
             GROUP BY
                 student_id
             ) AS c ON t.student_id = c.student_id;
@@ -188,32 +190,33 @@ module.exports = {
             SELECT t.transaction_id, c.customer_name, c.customer_phone, c.customer_email,
             t.transaction_amount, t.payment_method, t.status AS order_status, 
             t.reference_number, t.pickup_date, t.transaction_date
-            FROM transactions AS t
+            FROM transaction AS t
             JOIN (
                 SELECT student_id, customer_name, customer_phone, customer_email
-            FROM customers
+            FROM customer
             GROUP BY student_id
             ) AS c ON t.student_id = c.student_id
             WHERE t.status = ?
         `,
         getTransactionByIdQuery: `
-            SELECT t.transaction_id, c.customer_name, c.customer_phone, c.customer_email, t.transaction_amount, t.payment_method, t.status as order_status, t.reference_number, t.pickup_date, t.transaction_date
-            FROM transactions as t
-            JOIN customers AS c ON t.student_id = c.student_id
-            WHERE transaction_id = ?
+            SELECT t.transaction_id, s.student_name, c.student_phone, s.student_email, t.transaction_amount, t.payment_method, t.status as order_status, t.reference_number, t.pickup_date, t.transaction_date
+            FROM customer as c
+            JOIN transaction AS t ON c.transaction_id = t.transaction_id
+            JOIN student AS s ON c.student_id = s.student_id
+            WHERE c.transaction_id = ?
         `,
         updateTransactionAmountQuery: `
-            UPDATE transactions SET transaction_amount = ? WHERE transaction_id = ?
+            UPDATE transaction SET transaction_amount = ? WHERE transaction_id = ?
         `,
         updateTransactionStatusQuery: `
-            UPDATE transactions SET status = ? WHERE transaction_id = ?
+            UPDATE transaction SET status = ? WHERE transaction_id = ?
             `,
     },
     analyticsQueries: {
         getProductSalesQuery: `
             SELECT o.product_id, p.product_name, SUM(quantity) as total_orders, SUM(order_total) as total_amount
-            FROM orders as o
-            JOIN products as p ON o.product_id = p.product_id
+            FROM order as o
+            JOIN product as p ON o.product_id = p.product_id
             GROUP BY o.product_id
         `,
         getOrdersDetailStatus: `
@@ -222,7 +225,7 @@ module.exports = {
             COUNT(CASE WHEN DATE(transaction_date) = CURRENT_DATE THEN 1 END) as new_orders,
             COUNT(CASE WHEN status = 'pending' THEN 1 END) AS pending_orders,
             COUNT(CASE WHEN status = 'completed' THEN 1 END) AS completed_orders
-            FROM transactions;
+            FROM transaction;
         `
     },
     bannerQueries: {

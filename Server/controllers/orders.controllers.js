@@ -1,5 +1,5 @@
 const { getAllOrdersDB, createOrderDB, getOrderbyIdDB, getOrderbyTransactionIdDB } = require('../services/orders.services');
-const { createCustomerDB } = require('../services/customers.services')
+const { createCustomerDB, verifyCustomerDB } = require('../services/customers.services')
 const { createTransactionDB, getTransactionByIdDB } = require('../services/transactions.services')
 const { parse, format } = require('date-fns')
 
@@ -11,14 +11,17 @@ module.exports = {
       const formattedDate = parse(pickup_date, 'PP', new Date())
       const mysqlDateFormat = format(formattedDate, 'yyyy-MM-dd');
 
-      const createCustomer = await createCustomerDB(student_id, customer_name, customer_phone, customer_email);
+      const isVerified = await verifyCustomerDB(student_id, customer_name, customer_email);
+      if (!isVerified || isVerified === null) return res.status(400).json({ message: "Customer information is invalid" })
 
-      if (!createCustomer && createCustomer === null) return res.status(400).json({ message: "Customer information is invalid" })
-
-      const transaction = await createTransactionDB(customer.student_id, payment_method, reference_number, mysqlDateFormat)
+      const transaction = await createTransactionDB(student_id, payment_method, reference_number, mysqlDateFormat)
       if (!transaction) return res.status(400).json({ message: "Failed to create a new order, transaction failed" });
 
       await createOrderDB(transaction.transaction_id, orders);
+
+      const createCustomer = await createCustomerDB(transaction.transaction_id, student_id, customer_phone);
+      if (!createCustomer) return res.status(400).json({ message: "Failed to create customer" })
+
       const transaction_receipt = await getTransactionByIdDB(transaction.transaction_id);
       const orderReceipt = await getOrderbyTransactionIdDB(transaction.transaction_id);
       const receipt = {

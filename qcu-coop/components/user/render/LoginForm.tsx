@@ -33,6 +33,7 @@ export default function LoginForm() {
     register,
     handleSubmit,
     control,
+    reset,
     formState: { errors, isSubmitSuccessful, isSubmitting },
   } = useForm<ValidateLoginForm>({
     resolver: zodResolver(LoginSchema),
@@ -43,6 +44,7 @@ export default function LoginForm() {
     try {
       const result = await loginAdmin(admin_username, admin_password);
       if (result.status === 200) return router.push("./admin/dashboard");
+      reset();
       return setError(true);
     } catch (error) {
       toast({

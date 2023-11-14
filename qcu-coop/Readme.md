@@ -18,24 +18,23 @@ variant_price:99
 variant_stocks:244
 
 interface Params {
-  searchParams: { [key: string]: string | string[] | undefined };
+searchParams: { [key: string]: string | string[] | undefined };
 }
 
+DELETE FROM customer;
 
-DELETE FROM customers;
-ALTER TABLE customers AUTO_INCREMENT = 1;
+DELETE FROM student;
 
 DELETE FROM orders;
-ALTER TABLE orders AUTO_INCREMENT = 1;
-
-DELETE FROM transactions;
-ALTER TABLE transactions AUTO_INCREMENT = 1;
+ALTER TABLE orders AUTO_INCREMENT = 1000;
 
 DELETE FROM variants;
-ALTER TABLE variants AUTO_INCREMENT = 1;
+
+DELETE FROM transactions;
+ALTER TABLE transactions AUTO_INCREMENT = 000001;
 
 DELETE FROM products;
-ALTER TABLE products AUTO_INCREMENT = 1;
+ALTER TABLE products AUTO_INCREMENT = 1000;
 
 DELETE FROM albums;
 ALTER TABLE albums AUTO_INCREMENT = 1;
@@ -44,16 +43,10 @@ DELETE FROM banner;
 ALTER TABLE banner AUTO_INCREMENT = 1;
 
 DELETE FROM category;
-ALTER TABLE category AUTO_INCREMENT = 1;
+ALTER TABLE category AUTO_INCREMENT = 100;
 
 DELETE FROM activity;
-ALTER TABLE activity AUTO_INCREMENT = 1;
+ALTER TABLE activity AUTO_INCREMENT = 100001;
 
 DELETE FROM admin;
 ALTER TABLE admin AUTO_INCREMENT = 1;
-
-
-
-
-
-
