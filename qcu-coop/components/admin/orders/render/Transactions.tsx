@@ -21,12 +21,14 @@ type Params = {
 
 const AdminRenderTransactions = ({ transactions }: Params) => {
   const [filter, setFilter] = useState<string>("");
-  const [statusFilter, setStatusFilter] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
 
-  const handleFilter = (filter: string) => {};
+  const handleFilter = (filter: string) => {
+    setStatusFilter(filter);
+  };
 
   const statusFiltered = transactions?.filter((transaction) => {
-    if (statusFilter === "") return transaction;
+    if (statusFilter === "all") return transaction;
     return transaction.order_status.includes(statusFilter.toLowerCase());
   });
 
@@ -47,12 +49,12 @@ const AdminRenderTransactions = ({ transactions }: Params) => {
 
   return (
     <>
-      {/* <div className="flex space-x-6">
+      <div className="flex space-x-6">
         <Button
           onClick={() => handleFilter("all")}
           className={classNames({
             "rounded-xl": true,
-            "bg-green-600": currentFilter === "all",
+            "bg-green-600": statusFilter === "all",
           })}
         >
           All
@@ -61,7 +63,7 @@ const AdminRenderTransactions = ({ transactions }: Params) => {
           onClick={() => handleFilter("pending")}
           className={classNames({
             "rounded-xl": true,
-            "bg-green-600": currentFilter === "pending",
+            "bg-green-600": statusFilter === "pending",
           })}
         >
           Pending
@@ -70,7 +72,7 @@ const AdminRenderTransactions = ({ transactions }: Params) => {
           onClick={() => handleFilter("completed")}
           className={classNames({
             "rounded-xl": true,
-            "bg-green-600": currentFilter === "completed",
+            "bg-green-600": statusFilter === "completed",
           })}
         >
           Completed
@@ -79,12 +81,21 @@ const AdminRenderTransactions = ({ transactions }: Params) => {
           onClick={() => handleFilter("cancelled")}
           className={classNames({
             "rounded-xl": true,
-            "bg-green-600": currentFilter === "cancelled",
+            "bg-green-600": statusFilter === "cancelled",
           })}
         >
           Cancelled
         </Button>
-      </div> */}
+        <Button
+          onClick={() => handleFilter("rejected")}
+          className={classNames({
+            "rounded-xl": true,
+            "bg-green-600": statusFilter === "rejected",
+          })}
+        >
+          Rejected
+        </Button>
+      </div>
       <Input value={filter} onChange={(e) => setFilter(e.target.value)} />
 
       <div className="border border-black w-[70%]">
