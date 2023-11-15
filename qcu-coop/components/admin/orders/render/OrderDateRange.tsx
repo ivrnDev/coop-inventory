@@ -14,7 +14,7 @@ import { DateRange } from "react-day-picker";
 
 type Props = {
   className?: string;
-  onDateSelect?: (selectedDate: DateRange) => void;
+  onDateSelect?: (selectedDate: DateRange | undefined) => void;
 };
 const CalendarRangePicker = ({ onDateSelect, className }: Props) => {
   const [date, setDate] = useState<DateRange | undefined>();
@@ -60,6 +60,16 @@ const CalendarRangePicker = ({ onDateSelect, className }: Props) => {
             }}
             numberOfMonths={2}
           />
+          <Button
+            size="icon"
+            className="absolute top-0 right-0 font-bold w-5 h-5 rounded-none bg-transparent text-black hover:bg-slate-300"
+            onClick={() => {
+              onDateSelect?.(undefined);
+              setDate(undefined);
+            }}
+          >
+            x
+          </Button>
         </PopoverContent>
       </Popover>
     </div>

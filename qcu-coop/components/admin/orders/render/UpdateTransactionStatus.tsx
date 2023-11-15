@@ -80,7 +80,7 @@ const UpdateTransactionStatus = ({ transactionById }: Props) => {
                 : status
             } transaction order with Transaction No.${
               transactionById.transaction_id
-            }!`,
+            }`,
           });
         } else {
           toast({
@@ -118,7 +118,7 @@ const UpdateTransactionStatus = ({ transactionById }: Props) => {
       {(transactionById.order_status === "rejected" ||
         transactionById.order_status === "cancelled") && (
         <AlertDialog>
-          <AlertDialogTrigger className="capitalize bg-gray-400  p-4 rounded-md">
+          <AlertDialogTrigger className="w-full rounded-2xl p-1 h-fit bg-transparent text-black text-md border-black border shadow-none">
             RESTORE
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -143,64 +143,67 @@ const UpdateTransactionStatus = ({ transactionById }: Props) => {
         </AlertDialog>
       )}
 
-      {transactionById.order_status === "pending" && (
-        <AlertDialog>
-          <AlertDialogTrigger className="capitalize bg-green-400  p-4 rounded-md">
-            Confirm Order
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Do you want to make changes?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action will update the transaction status to completed.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={() => {
-                  employeeRef.current?.click();
-                  setStatus("completed");
-                }}
-              >
-                Confirm
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      )}
-      {transactionById.order_status === "pending" && (
-        <AlertDialog>
-          <AlertDialogTrigger className="capitalize bg-red-400  p-4 rounded-md">
-            REJECT
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>
-                Are you sure you want to reject this order?
-              </AlertDialogTitle>
-              <AlertDialogDescription>
-                This action will reject the order.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={() => {
-                  employeeRef.current?.click();
-                  setStatus("rejected");
-                }}
-              >
-                Confirm
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      )}
-
+      <div className="grid grid-cols-2 gap-5 mt-3">
+        {transactionById.order_status === "pending" && (
+          <AlertDialog>
+            <AlertDialogTrigger className="w-full rounded-2xl p-1 h-fit bg-green-700 text-white text-md ">
+              Confirm Order
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  Do you want to make changes?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action will update the transaction status to completed.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => {
+                    employeeRef.current?.click();
+                    setStatus("completed");
+                  }}
+                >
+                  Confirm
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
+        {transactionById.order_status === "pending" && (
+          <AlertDialog>
+            <AlertDialogTrigger className="w-full rounded-2xl p-1 h-fit bg-red-700 text-white text-md">
+              Reject
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  Are you sure you want to reject this order?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action will reject the order.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => {
+                    employeeRef.current?.click();
+                    setStatus("rejected");
+                  }}
+                >
+                  Confirm
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
+      </div>
       {transactionById.order_status === "completed" && (
         <AlertDialog>
-          <AlertDialogTrigger className="capitalize bg-red-400 p-3 rounded-md">
+          <AlertDialogTrigger className="w-full rounded-2xl p-1 h-fit bg-red-700 text-white text-md mt-3">
             Cancel
           </AlertDialogTrigger>
           <AlertDialogContent>

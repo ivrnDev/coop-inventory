@@ -1,15 +1,7 @@
-import CreateTransactions from "@/components/admin/products/forms/CreateTransactions";
 import AdminRenderOrders from "@/components/admin/orders/render/Orders";
 import AdminRenderTransactions from "@/components/admin/orders/render/Transactions";
-// import TransactionFilter from "@/components/admin/orders/render/filter";
-import { getAllProducts } from "@/lib/api/products";
 
-import {
-  getAllTransactions,
-  getOrdersById,
-  getTransactionByFilter,
-  getTransactionById,
-} from "@/lib/api/transaction";
+import { getAllTransactions, getOrdersById } from "@/lib/api/transaction";
 import { TransactionsType } from "@/types/transactions/transactions";
 
 type Params = {
@@ -25,16 +17,16 @@ const Orders = async ({ searchParams }: Params) => {
   );
   return (
     <>
-      <section className="h-admin-main p-5 w-[74%]">
-        <div className="h-full w-full">
+      <section className="h-admin-main p-5 flex overflow-hidden">
+        <div className="w-[70%]">
           <AdminRenderTransactions transactions={transactions} />
         </div>
-      </section>
-      <section className="">
-        <AdminRenderOrders
-          orders={orders}
-          transactionById={transactionById[0]}
-        />
+        <div className="w-[30%]">
+          <AdminRenderOrders
+            orders={orders}
+            transactionById={transactionById[0]}
+          />
+        </div>
       </section>
     </>
   );

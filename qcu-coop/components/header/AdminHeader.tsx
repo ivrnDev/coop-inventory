@@ -17,15 +17,11 @@ const AdminHeader = () => {
           />
         </Link>
         <div className="w-fit">
-          <p className="font-bold text-lg">Welcome, Admin</p>
-          <p className=" font-semilight text-xs">
+          <p className="font-bold text-2xl">Welcome, Admin</p>
+          <p className=" font-light text-md text-center">
             {format(new Date(), "MMMM dd, yyyy")}
           </p>
         </div>
-      </div>
-
-      <div className="w-28 sm:w-60">
-        <Input type="text" placeholder="Search" className="w-full" />
       </div>
     </header>
   );

@@ -31,7 +31,7 @@ const AdminRenderTransactions = ({ transactions }: Params) => {
     setStatusFilter(filter);
   };
 
-  const onDateSelect = (selectedDate: DateRange) => {
+  const onDateSelect = (selectedDate: DateRange | undefined) => {
     setDateRange(selectedDate);
   };
 
@@ -51,10 +51,13 @@ const AdminRenderTransactions = ({ transactions }: Params) => {
       (statusFilter === "all" ||
         transaction.order_status.includes(statusFilter.toLowerCase())) &&
       (transactionValues.includes(filter.toLowerCase()) ||
+        format(new Date(transaction_date), "Pp")
+          .toLowerCase()
+          .includes(filter.toLowerCase()) ||
         format(new Date(transaction_date), "MMMM dd, yyyy")
           .toLowerCase()
           .includes(filter.toLowerCase()) ||
-        format(new Date(transaction_date), "h:mm:ss b")
+        format(new Date(transaction_date), "h:mm b")
           .toLowerCase()
           .includes(filter.toLowerCase()))
     );
@@ -109,12 +112,11 @@ const AdminRenderTransactions = ({ transactions }: Params) => {
           Rejected
         </Button>
       </div>
-
       <div
         id="table-container"
-        className="h-full border border-black w-full mt-5 p-2"
+        className="border border-black rounded-md mt-6 p-3 mx-auto"
       >
-        <div id="table-upper-header" className="flex justify-between">
+        <div id="table-header" className="flex justify-between">
           <div className="w-1/2 h-8 relative">
             <Search
               className="absolute top-[50%] left-2 translate-y-[-50%]"
@@ -127,66 +129,56 @@ const AdminRenderTransactions = ({ transactions }: Params) => {
               className="w-full h-full pl-8"
             />
           </div>
-          <CalendarRangePicker onDateSelect={onDateSelect} />
+          <div className="relative">
+            <CalendarRangePicker onDateSelect={onDateSelect} />
+          </div>
         </div>
-        <Table className="h-[inherit]">
-          <TableHeader>
-            <TableRow>
-              <TableHead>Transaction ID</TableHead>
-              <TableHead>Customer Name</TableHead>
-              <TableHead>Customer Email</TableHead>
-              <TableHead>Customer Phone</TableHead>
-              <TableHead>Payment Method</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Time</TableHead>
-              <TableHead>Options</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredTransactions && filteredTransactions.length > 0 ? (
-              filteredTransactions?.map((transaction, index) => (
-                <TableRow key={index} className="">
-                  <TableCell>{transaction.transaction_id}</TableCell>
-                  <TableCell className="capitalize">
-                    {transaction.student_name}
-                  </TableCell>
-                  <TableCell>{transaction.student_email}</TableCell>
-                  <TableCell>{transaction.student_phone}</TableCell>
-                  <TableCell>
-                    {transaction.payment_method === "cash"
-                      ? "Over the Counter"
-                      : "Online Payment"}
-                  </TableCell>
-                  <TableCell className="capitalize">
-                    {transaction.order_status}
-                  </TableCell>
-                  <TableCell className="capitalize">
-                    {format(
-                      new Date(transaction.transaction_date),
-                      "MMMM dd, yyyy"
-                    )}
-                  </TableCell>
-                  <TableCell className="capitalize">
-                    {format(
-                      new Date(transaction.transaction_date),
-                      "h:mm:ss b"
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <ViewButton transactionId={transaction.transaction_id} />
+        <div className=" h-[21rem] overflow-y-auto mt-5">
+          <Table>
+            <TableHeader>
+              <TableRow className="whitespace-nowrap">
+                <TableHead>Transaction ID</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Payment Method</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Checked Out</TableHead>
+                <TableHead>Options</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="overflow-x-hidden">
+              {filteredTransactions && filteredTransactions.length > 0 ? (
+                filteredTransactions?.map((transaction, index) => (
+                  <TableRow key={index} className="">
+                    <TableCell>{transaction.transaction_id}</TableCell>
+                    <TableCell className="capitalize whitespace-nowrap">
+                      {transaction.student_name}
+                    </TableCell>
+                    <TableCell>
+                      {transaction.payment_method === "cash"
+                        ? "Over the Counter"
+                        : "Online Payment"}
+                    </TableCell>
+                    <TableCell className="capitalize">
+                      {transaction.order_status}
+                    </TableCell>
+                    <TableCell className="capitalize">
+                      {format(new Date(transaction.transaction_date), "Pp")}
+                    </TableCell>
+                    <TableCell>
+                      <ViewButton transactionId={transaction.transaction_id} />
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={7} className="text-center">
+                    No transactions found.
                   </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={7} className="text-center">
-                  No transactions found.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </>
   );
