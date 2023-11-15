@@ -4,24 +4,24 @@ const getSales = (salesData) => {
   const previousYearDate = new Date(new Date());
   previousYearDate.setFullYear(new Date().getFullYear() - 1);
 
+  const previousMonthDate = new Date(new Date());
+  previousMonthDate.setMonth(new Date().getMonth() - 1);
 
   const filterDate = (dateKey, date2, formatting) => {
     return salesData.filter(item => String(item[dateKey]) === format(date2, formatting))
       .map(item => ({ sold: item.sold, revenue: item.revenue }));
+
   }
 
   const currentYearSales = filterDate('year', new Date(), 'yyyy').reduce((acc, sale) => acc + Number(sale.sold), 0);
 
   const previousYearSales = filterDate('year', previousYearDate, 'yyyy').reduce((acc, sale) => acc + Number(sale.sold), 0);
 
-  console.log(previousYearSales)
+  const currentMonthSales = salesData.filter((item) => format(item.transaction_date, 'M, yyyy') === format(new Date(), 'M, yyyy')).reduce((acc, sale) => acc + Number(sale.sold), 0);
+
+  const previousMonthSales = salesData.filter((item) => format(item.transaction_date, 'M, yyyy') === format(previousMonthDate, 'M, yyyy')).reduce((acc, sale) => acc + Number(sale.sold), 0);
 
 
-  // console.log(filterDate('year', new Date().getFullYear() - 1, 'yyyy'))
-
-  // // 3. Current Sales This Month (November 2023)
-  // const currentMonthSales = data.filter(item => item.month === 'November' && item.year === 2023)
-  //   .reduce((acc, item) => acc + parseInt(item.sold), 0);
 
   // // 4. Previous Month Sales (October 2023)
   // const prevMonthSales = data.filter(item => item.month === 'October' && item.year === 2023)

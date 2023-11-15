@@ -202,7 +202,7 @@ module.exports = {
             FROM transaction;
         `,
         salesQuery: `
-           SELECT SUM(o.quantity) as sold, SUM(o.order_total) as revenue, DAY(t.transaction_date) as day, WEEK(t.transaction_date) as week, MONTHNAME(t.transaction_date) as month, YEAR(t.transaction_date) as year
+           SELECT SUM(o.quantity) as sold, SUM(o.order_total) as revenue, DAY(t.transaction_date) as day, WEEK(t.transaction_date) as week, MONTH(t.transaction_date) as month, YEAR(t.transaction_date) as year, t.transaction_date as transaction_date
            FROM order_data as o
            JOIN transaction as t ON o.transaction_id = t.transaction_id
     	   WHERE t.status = "completed"
