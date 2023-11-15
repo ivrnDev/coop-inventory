@@ -19,12 +19,14 @@ type SalesValue = {
 export type SalesAnalytics = {
   sold: {
     year: SalesValue[];
+    day: SalesValue[];
     month: SalesValue[];
     date: SalesValue[];
     all: SalesValue[];
   };
   revenue: {
     year: SalesValue[];
+    day: SalesValue[];
     month: SalesValue[];
     date: SalesValue[];
     all: SalesValue[];

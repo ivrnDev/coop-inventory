@@ -59,17 +59,17 @@ const getSales = (salesData) => {
       ],
       day: [
         {
-          name: 'today',
+          name: 'today sales',
           value: currentDaySales.sold ?? 0
         },
         {
-          name: 'yesterday',
+          name: 'yesterday sales',
           value: previousDaySales.sold ?? 0
         },
       ],
       all: [
         {
-          name: 'total sales',
+          name: 'sales',
           value: allTimeSales.sold ?? 0
         },
       ]
@@ -107,7 +107,7 @@ const getSales = (salesData) => {
       ],
       all: [
         {
-          name: 'total sales',
+          name: 'revenue',
           value: allTimeSales.revenue ?? 0
         },
       ]
