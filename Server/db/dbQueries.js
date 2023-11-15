@@ -186,7 +186,7 @@ module.exports = {
     },
     analyticsQueries: {
         getProductSalesQuery: `
-            SELECT o.product_id, p.product_name, SUM(quantity) as total_orders, SUM(order_total) as total_amount
+            SELECT o.product_id, p.product_name, SUM(quantity) as sold, SUM(o.order_total) as revenue
             FROM order_data as o
             JOIN product as p ON o.product_id = p.product_id
             JOIN transaction as t ON o.transaction_id = t.transaction_id
@@ -200,7 +200,14 @@ module.exports = {
             COUNT(CASE WHEN status = 'pending' THEN 1 END) AS pending_orders,
             COUNT(CASE WHEN status = 'completed' THEN 1 END) AS completed_orders
             FROM transaction;
-        `
+        `,
+        salesQuery: `
+           SELECT SUM(o.quantity) as sold, SUM(o.order_total) as revenue, DAY(t.transaction_date) as day, WEEK(t.transaction_date) as week, MONTHNAME(t.transaction_date) as month, YEAR(t.transaction_date) as year
+           FROM order_data as o
+           JOIN transaction as t ON o.transaction_id = t.transaction_id
+    	   WHERE t.status = "completed"
+           GROUP BY MONTH(t.transaction_date), YEAR(t.transaction_date), WEEK(t.transaction_date), DAY(t.transaction_date)
+        `,
     },
     bannerQueries: {
         createBannerQuery: `
