@@ -5,6 +5,7 @@ import Permission from "../../Permission";
 import { toast } from "@/components/ui/use-toast";
 import { createActivity } from "@/lib/api/activity";
 import { handleAction } from "@/lib/delete";
+import Image from "next/image";
 type Props = {
   roles: string[];
   target: {
@@ -19,7 +20,7 @@ type Props = {
   deleteTarget: string;
 };
 const DeleteButton = ({ roles, target, message, deleteTarget }: Props) => {
-  const deleteBtnRef = useRef<HTMLDivElement | null>(null);
+  const deleteBtnRef = useRef<HTMLButtonElement | null>(null);
   const [adminId, setadminId] = useState<number>(0);
   const [isAllowed, setisAllowed] = useState<boolean>(false);
 
@@ -66,8 +67,17 @@ const DeleteButton = ({ roles, target, message, deleteTarget }: Props) => {
   return (
     <div>
       <Dialog>
-        <DialogTrigger>
-          <div ref={deleteBtnRef}>Delete</div>
+        <DialogTrigger
+          ref={deleteBtnRef}
+          className="bg-[#FB392D] rounded-md p-2 flex gap-2 justify-center items-center text-white"
+        >
+          <Image
+            src="/icons/trash-icon.svg"
+            alt="edit"
+            width={20}
+            height={20}
+          />
+          Delete
         </DialogTrigger>
         <DialogContent>
           <Permission roles={roles} handlePermission={handlePermission} />
