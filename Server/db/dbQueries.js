@@ -206,7 +206,7 @@ module.exports = {
            FROM order_data as o
            JOIN transaction as t ON o.transaction_id = t.transaction_id
     	   WHERE t.status = "completed"
-           GROUP BY MONTH(t.transaction_date), YEAR(t.transaction_date), WEEK(t.transaction_date), DAY(t.transaction_date)
+           GROUP BY DAY(t.transaction_date)
         `,
     },
     bannerQueries: {

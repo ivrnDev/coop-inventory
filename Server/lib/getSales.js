@@ -1,99 +1,120 @@
 const { format } = require('date-fns')
 const getSales = (salesData) => {
+  if (!salesData || salesData.length === 0) return null
 
-  const previousYearDate = new Date(new Date());
-  previousYearDate.setFullYear(new Date().getFullYear() - 1);
+  const currentDate = new Date();
+  const previousYearDate = new Date(currentDate);
+  const previousMonthDate = new Date(currentDate);
+  const previousDayDate = new Date(currentDate)
 
-  const previousMonthDate = new Date(new Date());
-  previousMonthDate.setMonth(new Date().getMonth() - 1);
+  previousYearDate.setFullYear(currentDate.getFullYear() - 1);
+  previousMonthDate.setMonth(currentDate.getMonth() - 1);
+  previousDayDate.setDate(currentDate.getDate() - 1);
 
-  const filterDate = (dateKey, date2, formatting) => {
-    return salesData.filter(item => String(item[dateKey]) === format(date2, formatting))
-      .map(item => ({ sold: item.sold, revenue: item.revenue }));
-
+  function filterDate(dateKey, date, formatting, strict) {
+    if (!strict) {
+      return salesData.filter(item => String(item[dateKey]) === format(date, formatting))
+        .reduce((acc, sale) => accumulateSales(acc, sale), { sold: 0, revenue: 0 })
+    }
+    return salesData.filter(item => format(item[dateKey], formatting) === format(date, formatting))
+      .reduce((acc, sale) => accumulateSales(acc, sale), { sold: 0, revenue: 0 })
   }
 
-  const currentYearSales = filterDate('year', new Date(), 'yyyy')
-    .reduce((acc, sale) => {
-      return {
-        sold: acc.sold + Number(sale.sold),
-        revenue: acc.revenue + Number(sale.revenue)
-      };
-    }, { sold: 0, revenue: 0 });
+  function accumulateSales(acc, sale) {
+    return {
+      sold: acc.sold + Number(sale.sold),
+      revenue: acc.revenue + Number(sale.revenue),
+    };
+  }
 
-
-  const previousYearSales = filterDate('year', previousYearDate, 'yyyy')
-    .reduce((acc, sale) => {
-      return {
-        sold: acc.sold + Number(sale.sold),
-        revenue: acc.revenue + Number(sale.revenue)
-      };
-    }, { sold: 0, revenue: 0 });
-
-
-  const currentMonthSales = salesData.filter((item) => format(item.transaction_date, 'M, yyyy') === format(new Date(), 'M, yyyy'))
-    .reduce((acc, sale) => {
-      return {
-        sold: acc.sold + Number(sale.sold),
-        revenue: acc.revenue + Number(sale.revenue)
-      };
-    }, { sold: 0, revenue: 0 });
-
-  const previousMonthSales = salesData.filter((item) => format(item.transaction_date, 'M, yyyy') === format(previousMonthDate, 'M, yyyy'))
-    .reduce((acc, sale) => {
-      return {
-        sold: acc.sold + Number(sale.sold),
-        revenue: acc.revenue + Number(sale.revenue)
-      };
-    }, { sold: 0, revenue: 0 });
-
-
-
-
-
-
-
-
-  // 5. Average Yearly Sales
-  // const averageYearlySales = currentYearSales / (new Set(data.map(item => item.year)).size);
-
-  // // 6. Average Monthly Sales This Year (up to November 2023)
-  // const averageMonthlySalesThisYear = currentYearSales / 11; // January to November
-
-  // // 7. This Week Sales (Week 48, November 2023)
-  // const thisWeekSales = data.filter(item => item.week === 48 && item.year === 2023)
-  //   .reduce((acc, item) => acc + parseInt(item.sold), 0);
-
-  // // 8. Average Weekly Sales This Year
-  // const averageWeeklySalesThisYear = currentYearSales / (new Set(data.map(item => item.week)).size);
-
-  // // 9. All-Time Sales
-  // const allTimeSales = currentYearSales + prevYearSales;
+  const currentYearSales = filterDate('year', currentDate, 'yyyy', false);
+  const previousYearSales = filterDate('year', previousYearDate, 'yyyy', false)
+  const currentMonthSales = filterDate('transaction_date', currentDate, 'M, yyyy', true)
+  const previousMonthSales = filterDate('transaction_date', previousMonthDate, 'M, yyyy', true)
+  const currentDaySales = filterDate('transaction_date', currentDate, 'PP', true);
+  const previousDaySales = filterDate('transaction_date', previousDayDate, 'PP', true);
+  const allTimeSales = salesData.reduce((acc, sales) => accumulateSales(acc, sales), { sold: 0, revenue: 0 })
 
   const sales = {
     sold: {
-      current_year: '',
-      prev_year: "",
-      yearly: "",
-      year_monthly: "",
-      all_time: 0
+      year: [
+        {
+          name: 'current year',
+          value: currentYearSales.sold ?? 0
+        },
+        {
+          name: 'previous year',
+          value: previousYearSales.sold ?? 0,
+        },
+      ],
+      month: [
+        {
+          name: 'current month',
+          value: currentMonthSales.sold ?? 0
+        },
+        {
+          name: 'previous month',
+          value: previousMonthSales.sold ?? 0
+        },
+      ],
+      day: [
+        {
+          name: 'today',
+          value: currentDaySales.sold ?? 0
+        },
+        {
+          name: 'yesterday',
+          value: previousDaySales.sold ?? 0
+        },
+      ],
+      all: [
+        {
+          name: 'total sales',
+          value: allTimeSales.sold ?? 0
+        },
+      ]
     },
     revenue: {
-      current_year: '',
-      prev_year: "",
-      yearly: "",
-      year_monthly: "",
-      all_time: 0
-
+      year: [
+        {
+          name: 'current year',
+          value: currentYearSales.revenue ?? 0
+        },
+        {
+          name: 'previous year',
+          value: previousYearSales.revenue ?? 0,
+        },
+      ],
+      month: [
+        {
+          name: 'current month',
+          value: currentMonthSales.revenue ?? 0
+        },
+        {
+          name: 'previous month',
+          value: previousMonthSales.revenue ?? 0
+        },
+      ],
+      day: [
+        {
+          name: 'today',
+          value: currentDaySales.revenue ?? 0
+        },
+        {
+          name: 'yesterday',
+          value: previousDaySales.revenue ?? 0
+        },
+      ],
+      all: [
+        {
+          name: 'total sales',
+          value: allTimeSales.revenue ?? 0
+        },
+      ]
     }
   }
 
-
-
-
-
-
-  return salesData
+  return sales
 }
 
 module.exports = getSales
