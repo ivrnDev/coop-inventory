@@ -13,21 +13,48 @@ const getSales = (salesData) => {
 
   }
 
-  const currentYearSales = filterDate('year', new Date(), 'yyyy').reduce((acc, sale) => acc + Number(sale.sold), 0);
+  const currentYearSales = filterDate('year', new Date(), 'yyyy')
+    .reduce((acc, sale) => {
+      return {
+        sold: acc.sold + Number(sale.sold),
+        revenue: acc.revenue + Number(sale.revenue)
+      };
+    }, { sold: 0, revenue: 0 });
 
-  const previousYearSales = filterDate('year', previousYearDate, 'yyyy').reduce((acc, sale) => acc + Number(sale.sold), 0);
 
-  const currentMonthSales = salesData.filter((item) => format(item.transaction_date, 'M, yyyy') === format(new Date(), 'M, yyyy')).reduce((acc, sale) => acc + Number(sale.sold), 0);
+  const previousYearSales = filterDate('year', previousYearDate, 'yyyy')
+    .reduce((acc, sale) => {
+      return {
+        sold: acc.sold + Number(sale.sold),
+        revenue: acc.revenue + Number(sale.revenue)
+      };
+    }, { sold: 0, revenue: 0 });
 
-  const previousMonthSales = salesData.filter((item) => format(item.transaction_date, 'M, yyyy') === format(previousMonthDate, 'M, yyyy')).reduce((acc, sale) => acc + Number(sale.sold), 0);
+
+  const currentMonthSales = salesData.filter((item) => format(item.transaction_date, 'M, yyyy') === format(new Date(), 'M, yyyy'))
+    .reduce((acc, sale) => {
+      return {
+        sold: acc.sold + Number(sale.sold),
+        revenue: acc.revenue + Number(sale.revenue)
+      };
+    }, { sold: 0, revenue: 0 });
+
+  const previousMonthSales = salesData.filter((item) => format(item.transaction_date, 'M, yyyy') === format(previousMonthDate, 'M, yyyy'))
+    .reduce((acc, sale) => {
+      return {
+        sold: acc.sold + Number(sale.sold),
+        revenue: acc.revenue + Number(sale.revenue)
+      };
+    }, { sold: 0, revenue: 0 });
 
 
 
-  // // 4. Previous Month Sales (October 2023)
-  // const prevMonthSales = data.filter(item => item.month === 'October' && item.year === 2023)
-  //   .reduce((acc, item) => acc + parseInt(item.sold), 0);
 
-  // // 5. Average Yearly Sales
+
+
+
+
+  // 5. Average Yearly Sales
   // const averageYearlySales = currentYearSales / (new Set(data.map(item => item.year)).size);
 
   // // 6. Average Monthly Sales This Year (up to November 2023)
