@@ -1,16 +1,17 @@
 "use client";
-import { Products } from "@/types/products/products";
+import { Featured, Products } from "@/types/products/products";
 import Image from "next/image";
 import Link from "next/link";
 
 type Props = {
-  featured: Products[];
+  featured: Featured[];
 };
 
 const FeaturedCarousel = ({ featured }: Props) => {
   return (
     <>
       {featured &&
+        featured.length > 0 &&
         featured.map((product, index) => (
           <Link
             key={index}
@@ -18,7 +19,7 @@ const FeaturedCarousel = ({ featured }: Props) => {
             /products/${product.product_name.toLowerCase()}?id=${
               product.product_id
             }`}
-            className="flex flex-col"
+            className="flex flex-col hover: -80"
           >
             <div className="relative h-full w-20 overflow-hidden flex flex-col">
               <Image

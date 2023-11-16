@@ -53,3 +53,10 @@ export type ProductAlbum = {
   product_id: number;
   product_photo: any;
 };
+
+export type Featured = {
+  display_image: string;
+  display_price: string;
+  product_name: string;
+  product_id: number;
+};

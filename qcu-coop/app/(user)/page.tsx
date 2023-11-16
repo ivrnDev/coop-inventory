@@ -3,11 +3,12 @@ import CategoriesCarousel from "@/components/user/carousel/Categories";
 import FeaturedCarousel from "@/components/user/carousel/Featured";
 import { getAllCategories } from "@/lib/api/categories";
 import { getProductByFeatured } from "@/lib/api/products";
+import { Categories, Featured } from "@/types/products/products";
 import Image from "next/image";
 
 const Home = async () => {
-  const featured = await getProductByFeatured();
-  const categories = await getAllCategories();
+  const featured: Featured[] = await getProductByFeatured();
+  const categories: Categories[] = await getAllCategories();
   return (
     <>
       <section className="min-h-user-main-mobile md:min-h-user-main mb-9">

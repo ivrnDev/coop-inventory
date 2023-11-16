@@ -357,6 +357,8 @@ module.exports = {
         if (error) return reject(error)
         if (result) {
           const product = result.map((product) => ({
+            product_name: product.product_name,
+            product_id: product.product_id,
             display_price: product.display_price,
             display_image: product.display_image.toString('base64'),
           }

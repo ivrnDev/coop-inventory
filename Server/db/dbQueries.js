@@ -137,7 +137,7 @@ module.exports = {
             UPDATE product SET display_image = ? WHERE product_id = ?
         `,
         getProductByFeaturedQuery: `
-            SELECT display_image, display_price FROM product WHERE isFeatured = 1 AND isDeleted = 0
+            SELECT display_image, display_price, product_name, product_id FROM product WHERE isFeatured = 1 AND isDeleted = 0
         `,
 
     },
