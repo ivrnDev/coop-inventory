@@ -27,6 +27,7 @@ const {
   updateCategoryByIdQuery,
   deleteCategoryByIdQuery,
   updateProductImageQuery,
+  getProductByFeaturedQuery,
 } = productQueries
 const { getProductAlbumByIdDB } = require('./albums.services.js')
 
@@ -326,8 +327,8 @@ module.exports = {
   },
   updateCategoryByIdDB: (category_name, category_image, id) => {
     return new Promise(async (resolve, reject) => {
-      const isExist = await module.exports.getCategoryByNameDB(category_name)
-      if (isExist) return resolve(1)
+      // const isExist = await module.exports.getCategoryByNameDB(category_name)
+      // if (isExist) return resolve(1)
       pool.execute(updateCategoryByIdQuery, [category_name, category_image, id], (error, result) => {
         if (error) return reject(error)
         return resolve(result)
@@ -349,7 +350,22 @@ module.exports = {
         return resolve(result)
       })
     })
-  }
+  },
+  getProductByFeaturedDB: () => {
+    return new Promise((resolve, reject) => {
+      pool.execute(getProductByFeaturedQuery, [], (error, result) => {
+        if (error) return reject(error)
+        if (result) {
+          const product = result.map((product) => ({
+            display_price: product.display_price,
+            display_image: product.display_image.toString('base64'),
+          }
+          ))
+          return resolve(product);
+        }
+      })
+    })
+  },
 };
 
 

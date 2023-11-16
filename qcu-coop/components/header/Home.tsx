@@ -27,7 +27,7 @@ const HomeHeader = () => {
   const pathname = usePathname();
   return (
     <>
-      <header className="flex justify-between items-center px-3 bg-custom-blue-background fixed top-0 left-0 w-full h-user-header-mobile md:bg-gradient-to-r md:from-white md:h-user-header">
+      <header className="flex justify-between items-center px-3 z-50 bg-custom-blue-background fixed top-0 left-0 w-full h-user-header-mobile md:bg-gradient-to-r md:from-white md:to-white md:h-user-header">
         <div
           id="logo-heading-container"
           className="flex space-x-3 items-center"
@@ -73,7 +73,7 @@ const HomeHeader = () => {
         </div>
       </header>
 
-      <nav className="bg-navbar-user w-screen h-user-navbar-mobile fixed left-0 max-md:bottom-0 md:top-[var(--h-user-header)] md:bg-custom-blue-background md:h-user-navbar md:flex md:justify-between md:items-center">
+      <nav className="bg-navbar-user w-screen h-user-navbar-mobile fixed left-0 max-md:bottom-0 md:top-[var(--h-user-header)] md:bg-custom-blue-background md:h-user-navbar md:flex md:justify-between md:items-center z-50">
         <div
           id="mobile-icon-container"
           className="flex justify-around md:hidden"

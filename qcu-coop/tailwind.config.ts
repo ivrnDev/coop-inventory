@@ -18,6 +18,8 @@ module.exports = {
     extend: {
       backgroundImage: {
         "custom-blue-background": "url('/background/home-background.svg')",
+        "featured-background": "url('/background/featured-background.svg')",
+        "categories-background": "url('/background/categories-background.svg')",
       },
       colors: {
         border: "hsl(var(--border))",

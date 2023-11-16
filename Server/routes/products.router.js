@@ -19,6 +19,7 @@ const {
   deleteCategoryById,
   updateCategoryById,
   updateProductImage,
+  getProductByFeatured
 
 } = require('../controllers/products.controller')
 const express = require('express');
@@ -28,6 +29,7 @@ const upload = require('../middleware/multer');
 router.get('/', getAllProducts);
 router.post('/', upload.fields([{ name: 'display_image', maxCount: 1 }, { name: 'product_album', maxCount: 10 }]), createProduct);
 router.get('/:id', getProductById)
+router.get('/featured/list', getProductByFeatured)
 router.patch('/:id', upload.fields([{ name: 'display_image', maxCount: 1 }, { name: 'product_album', maxCount: 10 }]), updateProducts);
 router.patch('/image/:id', upload.single('display_image'), updateProductImage);
 

@@ -14,7 +14,7 @@ export default function HomeLayout({
   return (
     <>
       <HomeHeader />
-      <main className="bg-main-user mt-user-header-mobile min-h-user-main-mobile md:min-h-user-main md:mt-user-header">
+      <main className="bg-main-user mt-user-header-mobile min-h-user-main-mobile md:min-h-user-main md:mt-user-header overflow-y-auto">
         {children}
       </main>
     </>

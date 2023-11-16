@@ -21,7 +21,8 @@ const {
   createNewCategoryDB,
   deleteCategoryByIdDB,
   updateCategoryByIdDB,
-  updateProductImageDB
+  updateProductImageDB,
+  getProductByFeaturedDB,
 } = require('../services/products.services')
 
 module.exports = {
@@ -332,6 +333,15 @@ module.exports = {
       const result = await updateProductImageDB(imagePath, id)
       if (!result) return res.status(400).json({ message: "Failed to update product image" });
       return res.status(200).json({ message: `Successfully update image with ID of ${id}` })
+    } catch (error) {
+      return res.status(500).json({ message: "Internal Server Error", error: error })
+    }
+  },
+  getProductByFeatured: async (req, res) => {
+    try {
+      const result = await getProductByFeaturedDB()
+      if (result === null) return res.status(400).json({ error: `There is no featured products` })
+      return res.status(201).json({ message: `Successfully get featured products`, result: result })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }

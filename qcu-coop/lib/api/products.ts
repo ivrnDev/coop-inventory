@@ -94,3 +94,21 @@ export async function deleteProduct(productId: number) {
     }
   }
 }
+
+export async function getProductByFeatured() {
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/products/featured/list`,
+        {
+          next: {
+            revalidate: 0,
+          },
+        }
+      );
+
+      const data = await res.json();
+      return data.result;
+    } catch (error) {
+      return [];
+    }
+  }
