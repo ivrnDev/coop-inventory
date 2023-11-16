@@ -9,10 +9,10 @@
   padding: 0;
   margin: 0;
 }
-body {
+/* body {
   overflow-x: hidden;
   min-height: 100vh;
-}
+} */
 
 /* .home-main {
   padding-top: 124px;
@@ -37,9 +37,11 @@ body {
   :root {
     --h-admin-header: 5rem;
     --h-admin-navbar: 3.5rem;
-    --h-user-header: 5rem;
-    --h-user-navbar: 3rem;
-    --h-user-navbar-mobile: 2.5rem;
+    /* --h-user-header: 5rem; */
+    --h-user-header: 3rem;
+    --h-user-header-mobile: 3rem;
+    --h-user-navbar: 2.5rem;
+    --h-user-navbar-mobile: 2.3rem;
 
     --w-admin-navbar: 11rem;
 

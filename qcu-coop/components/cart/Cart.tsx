@@ -9,14 +9,19 @@ const Cart = () => {
   return (
     <>
       <Link href="/products/cart">
-        <div className="relative w-10 h-10 object-contain">
-          <Image src="/icons/cart.svg" alt="cart" fill />
+        <div className="relative w-10 h-10 object-cover md:w-11 md:h-11">
+          <Image
+            src="/icons/cart.svg"
+            alt="cart"
+            sizes="min-w-1"
+            fill
+            className="mt-1"
+          />
+          <p className="text-black font-semibold text-[0.9rem] absolute top-[48%] left-[44%] translate-y-[-50%]">
+            {cartNumber}
+          </p>
         </div>
       </Link>
-
-      <div className="text-white font-semibold text-[0.9rem] absolute top-0 left-4">
-        {cartNumber}
-      </div>
     </>
   );
 };

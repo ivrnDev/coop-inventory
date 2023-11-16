@@ -16,6 +16,9 @@ module.exports = {
       },
     },
     extend: {
+      backgroundImage: {
+        "custom-blue-background": "url('/background/home-background.svg')",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -64,7 +67,7 @@ module.exports = {
           user: "#D9D9D9",
           admin: "#D9D9D9",
         },
-        inputColor: "#D9D9D9"
+        inputColor: "#D9D9D9",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -92,8 +95,13 @@ module.exports = {
         "admin-main-mobile":
           "calc(100vh - (var(--h-admin-header) + var(--h-admin-navbar)))",
         "user-header": "var(--h-user-header)",
+        "user-header-mobile": "var(--h-user-header-mobile)",
         "user-navbar": "var(--h-user-navbar)",
         "user-navbar-mobile": "var(--h-user-navbar-mobile)",
+        "user-main-mobile":
+          "calc(100vh - (var(--h-user-header-mobile) + var(--h-user-navbar-mobile)))",
+        "user-main":
+          "calc(100vh - (var(--h-user-header) + var(--h-user-navbar)))",
       },
       width: {
         "admin-header": "calc(100vw - var(--w-admin-navbar))",
@@ -105,7 +113,7 @@ module.exports = {
         "admin-header-x": "var(--w-admin-navbar)",
         "admin-header-y": "var(--h-admin-header)",
         "admin-main": "var(--w-admin-navbar)",
-        "user-header-mobile": "var(--h-user-header)",
+        "user-header-mobile": "var(--h-user-header-mobile)",
         "user-header": "calc((var(--h-user-header) + var(--h-user-navbar)))",
         "products-section": "var(--m-product-section))",
       },
@@ -117,7 +125,7 @@ module.exports = {
         "admin-main-mobile":
           "calc(100vh - (var(--h-admin-header) + var(--h-admin-navbar)))",
         "user-main-mobile":
-          "calc(100vh - (var(--h-user-header) + var(--h-user-navbar-mobile)))",
+          "calc(100vh - (var(--h-user-header-mobile) + var(--h-user-navbar-mobile)))",
         "user-main":
           "calc(100vh - (var(--h-user-header) + var(--h-user-navbar)))",
         "products-section": "calc(100vh / 2 )",
