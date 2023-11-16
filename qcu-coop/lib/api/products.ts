@@ -5,7 +5,6 @@ export async function getAllProducts() {
         revalidate: 0,
       },
     });
-
     const data = await res.json();
     return data.result;
   } catch (error) {

@@ -19,9 +19,9 @@ const FeaturedCarousel = ({ featured }: Props) => {
             /products/${product.product_name.toLowerCase()}?id=${
               product.product_id
             }`}
-            className="flex flex-col hover: -80"
+            className="flex flex-col hover:opacity-80"
           >
-            <div className="relative h-full w-20 overflow-hidden flex flex-col">
+            <div className="relative h-full w-24 md:w-64 overflow-hidden flex flex-col border border-black rounded-md">
               <Image
                 src={`data:image/png;base64,${product.display_image}`}
                 alt={product.product_name}
@@ -29,7 +29,7 @@ const FeaturedCarousel = ({ featured }: Props) => {
                 className="object-contain"
               />
             </div>
-            <p className=" font-bold mt-2 text-center">
+            <p className=" font-bold mt-2 text-center md:text-xl">
               ₱ {product.display_price}
             </p>
           </Link>

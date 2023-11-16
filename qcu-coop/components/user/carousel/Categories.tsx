@@ -19,7 +19,7 @@ const CategoriesCarousel = ({ categories }: Props) => {
             href={`/products?category=${category.category_name}&id=${category.category_id}`}
             className="flex flex-col bg-white rounded-md shadow-md hover:opacity-80"
           >
-            <div className="relative h-full w-36 overflow-hidden flex flex-col ">
+            <div className="relative h-full w-36  overflow-hidden flex flex-col md:w-60">
               <Image
                 src={`data:image/png;base64,${category.category_image}`}
                 alt={category.category_name}
@@ -27,7 +27,7 @@ const CategoriesCarousel = ({ categories }: Props) => {
                 fill
               />
             </div>
-            <p className=" font-bold mt-2 text-center capitalize">
+            <p className=" font-bold mt-2 text-center capitalize md:text-xl">
               {category.category_name}
             </p>
           </Link>
