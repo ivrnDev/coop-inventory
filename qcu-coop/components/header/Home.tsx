@@ -100,20 +100,18 @@ const HomeHeader = () => {
         </div>
         <div className="hidden md:flex items-center h-full bg-navbar-user ">
           {navigation.map((nav, index) => (
-            <div
+            <Link
               key={index}
+              href={nav.link}
               className={classNames({
-                "bg-navbar-user h-full flex justify-center items-center p-5 ":
-                  true,
+                "bg-navbar-user h-full": true,
                 "bg-[#5CD2E6] ": pathname === nav.link,
               })}
             >
-              <Link href={nav.link}>
-                <p className="capitalize font-bold text-xl text-white hover:-translate-y-1 transition-all"> 
-                  {nav.name}
-                </p>
-              </Link>
-            </div>
+              <p className="flex justify-center items-center capitalize font-bold text-xl h-full w-full text-white hover:-translate-y-1 transition-all px-7">
+                {nav.name}
+              </p>
+            </Link>
           ))}
         </div>
         <div
