@@ -17,7 +17,7 @@ export default function HomeLayout({
     <>
       <HomeHeader />
       <CategoriesSidebar />
-      <main className="bg-main-user mt-user-header-mobile min-h-user-main-mobile md:min-h-user-main md:mt-user-header overflow-hidden">
+      <main className="bg-main-user mt-user-header-mobile min-h-user-main-mobile md:min-h-user-main md:mt-user-header overflow-hidden md:flex md:justify-end">
         {children}
       </main>
     </>

@@ -87,13 +87,7 @@ const HomeHeader = () => {
                   "-translate-y-1": pathname === nav.link,
                 })}
               >
-                <Image
-                  src={nav.src}
-                  alt={nav.name}
-                  sizes="min-w-1"
-                  color={pathname === nav.link ? "#5CD2E6" : "white"}
-                  fill
-                />
+                <Image src={nav.src} alt={nav.name} sizes="min-w-1" fill />
               </div>
             </Link>
           ))}
@@ -104,11 +98,12 @@ const HomeHeader = () => {
               key={index}
               href={nav.link}
               className={classNames({
-                "bg-navbar-user h-full": true,
-                "bg-[#5CD2E6] ": pathname === nav.link,
+                "bg-[#5CD2E6] text-black": pathname === nav.link,
+                "bg-navbar-user text-white": pathname !== nav.link,
+                " h-full": true,
               })}
             >
-              <p className="flex justify-center items-center capitalize font-bold text-xl h-full w-full text-white hover:-translate-y-1 transition-all px-7">
+              <p className="flex justify-center items-center capitalize font-bold text-xl h-full w-full white hover:-translate-y-1 transition-all px-7">
                 {nav.name}
               </p>
             </Link>

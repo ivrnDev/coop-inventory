@@ -2,9 +2,9 @@ export async function getAllProducts(category_name?: string | null) {
   if (category_name) {
     try {
       const res = await fetch(`http://localhost:3000/api/products?category=${category_name}`, {
-        next: {
-          revalidate: 0,
-        },
+        // next: {
+        //   revalidate: 0,
+        // },
       });
       const data = await res.json();
       return data.result;

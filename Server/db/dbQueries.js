@@ -196,12 +196,13 @@ module.exports = {
             JOIN product as p ON o.product_id = p.product_id
             JOIN transaction as t ON o.transaction_id = t.transaction_id
             WHERE t.status = "completed"
-            GROUP BY o.product_id
+            GROUP BY o.product_id 
+            ORDER BY SUM(quantity) DESC
         `,
         getOrdersDetailStatus: `
             SELECT
             COUNT(*) AS total_orders,
-            COUNT(CASE WHEN DATE(transaction_date) = CURRENT_DATE THEN 1 END) as new_orders,
+            COUNT(CASE WHEN DATE(transaction_date) = CURRENT_DATE AND status='pending' THEN 1 END) as new_orders,
             COUNT(CASE WHEN status = 'pending' THEN 1 END) AS pending_orders,
             COUNT(CASE WHEN status = 'completed' THEN 1 END) AS completed_orders
             FROM transaction;

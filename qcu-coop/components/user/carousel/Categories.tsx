@@ -16,7 +16,7 @@ const CategoriesCarousel = ({ categories }: Props) => {
         categories.map((category, index) => (
           <Link
             key={index}
-            href={`/products?category=${category.category_name}&id=${category.category_id}`}
+            href={`/products?category=${category.category_name}`}
             className="flex flex-col bg-white rounded-md shadow-md hover:opacity-80"
           >
             <div className="relative h-full w-36  overflow-hidden flex flex-col md:w-60">

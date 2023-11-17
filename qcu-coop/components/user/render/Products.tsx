@@ -1,23 +1,29 @@
+"use client";
 import { Products } from "@/types/products/products";
 import Image from "next/image";
 import Link from "next/link";
 
 type Props = {
   products: Products[];
+  search: string;
 };
-const RenderProducts = ({ products }: Props) => {
+
+const RenderProducts = ({ products, search }: Props) => {
+  const filteredProducts = products.filter((product) =>
+    product?.category_name.toLowerCase().includes(search ?? "".toLowerCase())
+  );
   return (
     <>
       {products &&
-        products.length > 0 &&
-        products.map((product, index) => (
+        filteredProducts.length > 0 &&
+        filteredProducts.map((product, index) => (
           <Link
             href={`
             /products/${product.product_name.toLowerCase()}?id=${
               product.product_id
             }`}
             key={index}
-            className=""
+            className="h-fit "
           >
             <div className="bg-white h-64 w-full shadow-xl rounded-lg flex flex-col p-2 hover:opacity-80 flex-1 md:h-72">
               <div className="relative w-full h-32 overflow-hidden rounded-md border border-black">
@@ -33,7 +39,9 @@ const RenderProducts = ({ products }: Props) => {
                 <p className="text-custom-orange mt-2 text-sm">
                   ₱ {product.display_price}
                 </p>
-                <p className="mt-2 text-sm opacity-75 max-w-xs text-ellipsis overflow-hidden whitespace-nowrap">{product.product_stocks} stocks</p>
+                <p className="mt-2 text-sm opacity-75 max-w-xs text-ellipsis overflow-hidden whitespace-nowrap">
+                  {product.product_stocks} stocks
+                </p>
               </div>
             </div>
           </Link>

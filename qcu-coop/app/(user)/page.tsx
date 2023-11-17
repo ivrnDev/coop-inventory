@@ -6,7 +6,12 @@ import { getAllCategories } from "@/lib/api/categories";
 import { getAllProducts, getProductByFeatured } from "@/lib/api/products";
 import { Categories, Featured, Products } from "@/types/products/products";
 
-const Home = async () => {
+type Props = {
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+const Home = async ({ searchParams }: Props) => {
+  const search = searchParams?.search as string;
   const products: Products[] = await getAllProducts();
   const featured: Featured[] = await getProductByFeatured();
   const categories: Categories[] = await getAllCategories();
@@ -43,8 +48,11 @@ const Home = async () => {
             </div>
           </div>
         </div>
-        <div id="products-container" className="mt-5 grid grid-cols-3 md:grid-cols-6 gap-4 p-4">
-          <RenderProducts products={products} /> 
+        <div
+          id="products-container"
+          className="mt-5 grid grid-cols-3 md:grid-cols-6 gap-4 p-4"
+        >
+          <RenderProducts search={search} products={products} />
         </div>
       </section>
     </>
