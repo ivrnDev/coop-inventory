@@ -14,7 +14,7 @@ module.exports = {
                   REPLACE(REPLACE(LOWER(student_name), ' ', ''), ' ', '') LIKE REPLACE(LOWER(?), ' ', '') || '%'
             ) AND student_id = ? AND student_email = ?
             THEN TRUE ELSE FALSE END AS verified
-            FROM student WHERE student_id = ?;
+            FROM student WHERE student_id = ?;x
 
         `
     },
