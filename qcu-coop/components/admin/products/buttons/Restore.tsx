@@ -5,6 +5,7 @@ import Permission from "../../Permission";
 import { toast } from "@/components/ui/use-toast";
 import { createActivity } from "@/lib/api/activity";
 import { handleAction } from "@/lib/delete";
+
 type Props = {
   roles: string[];
   target: {
@@ -52,7 +53,7 @@ const RestoreButton = ({
         }
         return toast({
           variant: "destructive",
-          title: `Failed to delete ${target.object}`,
+          title: `Failed to restore ${target.object}`,
           description: `${message.failed}`,
         });
       } catch (error) {

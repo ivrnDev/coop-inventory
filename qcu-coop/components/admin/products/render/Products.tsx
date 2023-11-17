@@ -18,7 +18,6 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import CreateCategoriesForm from "../forms/CreateCategories";
 import UpdateCategoriesForm from "../forms/UpdateCategories";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import TrashArchive from "../archive/Archive";
 
 type Props = {
@@ -42,16 +41,16 @@ const AdminRenderProducts = ({ products }: Props) => {
   });
   return (
     <>
-      <div className="w-full flex flex-row p-3 gap-3">
+      <div className="w-full flex flex-row items-center p-3 gap-3">
         <Link
           href="products/new"
-          className="bg-green-600 text-white text-lg p-5 flex align-middle justify-center w-fit h-fit"
+          className="w-fit h-fit"
         >
-          ADD PRODUCT
+          <Button variant='outline'>Add Product</Button>
         </Link>
         <CreateCategoriesForm />
         <UpdateCategoriesForm />
-        <div className="w-1/2 h-8 relative">
+        <div className="w-1/2 h-8 relative ml-15">
           <Search
             className="absolute top-[50%] left-2 translate-y-[-50%]"
             size="20"
@@ -60,7 +59,7 @@ const AdminRenderProducts = ({ products }: Props) => {
             type="search"
             placeholder="Search"
             onChange={(e) => setFilter(e.target.value)}
-            className="w-full h-full pl-8"
+            className="w-[50%] h-full pl-8"
           />
         </div>
         <TrashArchive />

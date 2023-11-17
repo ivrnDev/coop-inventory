@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Products } from "@/types/products/products";
 import { getAllProducts } from "@/lib/api/products";
 import AdminRenderProducts from "@/components/admin/products/render/Products";

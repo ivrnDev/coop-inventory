@@ -1,3 +1,4 @@
+"use client";
 import { DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
   Table,
@@ -10,9 +11,9 @@ import {
 import { getDeletedProducts } from "@/lib/api/products";
 import { DeletedProducts } from "@/types/products/products";
 import { Dialog } from "@radix-ui/react-dialog";
-import DeleteButton from "../buttons/DeleteButton";
 import { rolePermissions } from "@/lib/permission";
 import RestoreButton from "../buttons/Restore";
+import { Trash2 } from "lucide-react";
 
 const TrashArchive = async () => {
   const { restricted } = rolePermissions;
@@ -20,7 +21,11 @@ const TrashArchive = async () => {
   return (
     <>
       <Dialog>
-        <DialogTrigger>TRASH</DialogTrigger>
+        <DialogTrigger>
+          <div className="bg-red-600 rounded-md p-1">
+            <Trash2 color="white" />
+          </div>
+        </DialogTrigger>
         <DialogContent>
           <Table>
             <TableHeader>
