@@ -43,7 +43,7 @@ const Home = async () => {
             </div>
           </div>
         </div>
-        <div id="products-container" className="mt-5 grid grid-cols-3 md:grid-cols-5 gap-4 p-4">
+        <div id="products-container" className="mt-5 grid grid-cols-3 md:grid-cols-6 gap-4 p-4">
           <RenderProducts products={products} /> 
         </div>
       </section>

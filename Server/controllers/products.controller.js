@@ -72,7 +72,8 @@ module.exports = {
   },
   getAllProducts: async (req, res) => {
     try {
-      const result = await getAllProductsDB();
+      const { category } = req.query
+      const result = await getAllProductsDB(category);
       if (result === null) return res.status(404).json({ error: "There is no existing products" })
       return res.status(200).json({ message: "Successfully get all the products", result: result })
     } catch (error) {

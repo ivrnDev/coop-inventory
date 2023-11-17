@@ -19,7 +19,7 @@ const RenderProducts = ({ products }: Props) => {
             key={index}
             className=""
           >
-            <div className="bg-white h-64 w-full shadow-xl rounded-lg flex flex-col items-center p-2 hover:opacity-80 flex-1 md:h-72">
+            <div className="bg-white h-64 w-full shadow-xl rounded-lg flex flex-col p-2 hover:opacity-80 flex-1 md:h-72">
               <div className="relative w-full h-32 overflow-hidden rounded-md border border-black">
                 <Image
                   src={`data:image/png;base64,${product.display_image}`}
@@ -28,12 +28,12 @@ const RenderProducts = ({ products }: Props) => {
                   className="object-contain"
                 />
               </div>
-              <div className="mt-3">
-                <h1>{product.display_name}</h1>
-                <p className="text-custom-orange mt-2">
+              <div className="mt-3 px-1">
+                <h1 className="text-sm">{product.display_name}</h1>
+                <p className="text-custom-orange mt-2 text-sm">
                   ₱ {product.display_price}
                 </p>
-                <p className="mt-2">{product.product_stocks} stocks</p>
+                <p className="mt-2 text-sm opacity-75 max-w-xs text-ellipsis overflow-hidden whitespace-nowrap">{product.product_stocks} stocks</p>
               </div>
             </div>
           </Link>

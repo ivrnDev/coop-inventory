@@ -96,7 +96,9 @@ module.exports = {
         getAllProductsQuery: `
             SELECT * FROM product as p
             JOIN category as ct ON p.category_id = ct.category_id
-            WHERE p.isDeleted = '0' AND ct.isDeleted = '0'
+            WHERE p.isDeleted = '0' AND ct.isDeleted = '0' 
+            AND (ct.category_name = ? OR ? IS NULL);
+
         `,
         getProductByIdQuery: `
             SELECT * FROM product as p

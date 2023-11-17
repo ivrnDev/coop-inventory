@@ -1,6 +1,5 @@
 import CategoriesSidebar from "@/components/header/Categories";
 import HomeHeader from "@/components/header/Home";
-import "@/styles/globals.css";
 
 import type { Metadata } from "next";
 
@@ -18,7 +17,7 @@ export default function HomeLayout({
     <>
       <HomeHeader />
       <CategoriesSidebar />
-      <main className="bg-main-user mt-user-header-mobile min-h-user-main-mobile md:min-h-user-main md:mt-user-header">
+      <main className="bg-main-user mt-user-header-mobile min-h-user-main-mobile md:min-h-user-main md:mt-user-header overflow-hidden">
         {children}
       </main>
     </>

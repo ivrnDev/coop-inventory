@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function Loading() {
   const skeletonCards = new Array(8).fill(null);
   return (
-    <section className="ml-[35%] px-3 grid grid-cols-1 gap-4 place-items-center md:grid-cols-4">
+    <section className="ml-[35%] px-3 grid grid-cols-1 gap-4 place-items-center md:grid-cols-4 overflow-hidden">
       {skeletonCards.map((v, i) => (
         <div className="" key={i}>
           <Skeleton

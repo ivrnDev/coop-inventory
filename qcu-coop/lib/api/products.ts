@@ -1,10 +1,39 @@
-export async function getAllProducts() {
+export async function getAllProducts(category_name?: string | null) {
+  if (category_name) {
+    try {
+      const res = await fetch(`http://localhost:3000/api/products?category=${category_name}`, {
+        next: {
+          revalidate: 0,
+        },
+      });
+      const data = await res.json();
+      return data.result;
+    } catch (error) {
+      return [];
+    }
+  } else {
+     try {
+       const res = await fetch(`http://localhost:3000/api/products`, {
+         next: {
+           revalidate: 0,
+         },
+       });
+       const data = await res.json();
+       return data.result;
+     } catch (error) {
+       return [];
+     }
+  }
+}
+
+export async function getProductById(productId: string) {
   try {
-    const res = await fetch("http://localhost:3000/api/products", {
+    const res = await fetch(`http://localhost:3000/api/products/${productId}`, {
       next: {
         revalidate: 0,
       },
     });
+
     const data = await res.json();
     return data.result;
   } catch (error) {
@@ -12,25 +41,6 @@ export async function getAllProducts() {
     return [];
   }
 }
-
-export async function getProductById(productId: string) {
-    try {
-      const res = await fetch(
-        `http://localhost:3000/api/products/${productId}`,
-        {
-          next: {
-            revalidate: 0,
-          },
-        }
-      );
-
-      const data = await res.json();
-      return data.result;
-    } catch (error) {
-      console.error("Error fetching data", error);
-      return [];
-    }
-  }
 
 export async function createProduct(form: FormData) {
   try {
@@ -88,26 +98,26 @@ export async function deleteProduct(productId: number) {
     } catch (error) {
       return {
         status: 500,
-        data: null
+        data: null,
       };
     }
   }
 }
 
 export async function getProductByFeatured() {
-    try {
-      const res = await fetch(
-        `http://localhost:3000/api/products/featured/list`,
-        {
-          next: {
-            revalidate: 0,
-          },
-        }
-      );
+  try {
+    const res = await fetch(
+      `http://localhost:3000/api/products/featured/list`,
+      {
+        next: {
+          revalidate: 0,
+        },
+      }
+    );
 
-      const data = await res.json();
-      return data.result;
-    } catch (error) {
-      return [];
-    }
+    const data = await res.json();
+    return data.result;
+  } catch (error) {
+    return [];
   }
+}

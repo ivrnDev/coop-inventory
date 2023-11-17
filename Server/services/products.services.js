@@ -209,9 +209,9 @@ module.exports = {
       })
     })
   },
-  getAllProductsDB: () => {
+  getAllProductsDB: (category_name) => {
     return new Promise((resolve, reject) => {
-      pool.execute(getAllProductsQuery, [], (error, result) => {
+      pool.execute(getAllProductsQuery, [category_name ?? null, category_name ?? null], (error, result) => {
         if (error) return reject(error)
         if (result.length === 0) {
           return resolve(null)
