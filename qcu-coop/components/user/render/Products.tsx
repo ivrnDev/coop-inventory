@@ -14,9 +14,9 @@ const RenderProducts = ({ products, search }: Props) => {
   );
   return (
     <>
-      {products &&
-        filteredProducts.length > 0 &&
-        filteredProducts.map((product, index) => (
+      {products?.length > 0 &&
+        filteredProducts?.length > 0 &&
+        filteredProducts?.map((product, index) => (
           <Link
             href={`
             /products/${product.product_name.toLowerCase()}?id=${

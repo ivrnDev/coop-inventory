@@ -7,6 +7,8 @@ import { Input } from "../ui/input";
 import { Search } from "lucide-react";
 import classNames from "classnames";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const navigationMobile = [
   {
@@ -25,6 +27,14 @@ const navigation = [
 
 const HomeHeader = () => {
   const pathname = usePathname();
+  const router = useRouter();
+  const [search, setSearch] = useState<string>("");
+
+  const handleSearch = () => {
+    const params = new URLSearchParams();
+    params.append("search", search);
+    router.push(`/products?${params}`);
+  };
   return (
     <>
       <header className="flex justify-between items-center px-3 z-50 bg-custom-blue-background fixed top-0 left-0 w-full h-user-header-mobile md:bg-gradient-to-r md:from-white md:to-white md:h-user-header">
@@ -122,6 +132,8 @@ const HomeHeader = () => {
               type="search"
               placeholder="Search products"
               className="w-full pl-8"
+              onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={(e) => e.code === "Enter" && handleSearch()}
             />
           </div>
           <div className="relative">
