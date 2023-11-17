@@ -23,7 +23,6 @@ module.exports = {
     })
   },
   verifyCustomerDB: (student_id, student_name, student_email) => {
-    console.log({ student_id, student_name, student_email })
     return new Promise((resolve, reject) => {
       pool.execute(verifyCustomerQuery, [student_name, student_name, student_id, student_email, student_id], (error, result) => {
         if (error) return reject(error);

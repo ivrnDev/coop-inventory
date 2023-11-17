@@ -42,11 +42,8 @@ const AdminRenderProducts = ({ products }: Props) => {
   return (
     <>
       <div className="w-full flex flex-row items-center p-3 gap-3">
-        <Link
-          href="products/new"
-          className="w-fit h-fit"
-        >
-          <Button variant='outline'>Add Product</Button>
+        <Link href="products/new" className="w-fit h-fit">
+          <Button variant="outline">Add Product</Button>
         </Link>
         <CreateCategoriesForm />
         <UpdateCategoriesForm />

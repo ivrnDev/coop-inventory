@@ -177,6 +177,7 @@ module.exports = {
             FROM customer as c
             JOIN transaction AS t ON c.transaction_id = t.transaction_id
             JOIN student AS s ON c.student_id = s.student_id
+            ORDER BY t.transaction_date DESC
         `,
         getTransactionByIdQuery: `
             SELECT t.transaction_id, s.student_name, c.student_phone, s.student_email, t.transaction_amount, t.payment_method, t.status as order_status, t.reference_number, t.pickup_date, t.transaction_date
@@ -222,8 +223,8 @@ module.exports = {
         createBannerQuery: `
             INSERT INTO banner (banner_image) VALUES(?)
         `,
-        updateBannerQuery: `
-            UPDATE banner SET banner_image = ? WHERE banner_Id = ?
+        deleteBannerQuery: `
+            DELETE FROM banner
         `,
         getAllBannersQuery: `
             SELECT * FROM banner

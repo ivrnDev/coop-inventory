@@ -82,7 +82,7 @@ const FilteredAdmins = ({ admins }: Props) => {
                     <UpdateAccount admin_id={admin.admin_id} />
                   </DialogContent>
                 </Dialog>
-                <Dialog>
+                {/* <Dialog>
                   <DialogTrigger className="bg-[#FB392D] rounded-md p-1">
                     <Image
                       src="/icons/trash-icon.svg"
@@ -92,7 +92,7 @@ const FilteredAdmins = ({ admins }: Props) => {
                     />
                   </DialogTrigger>
                   <DialogContent></DialogContent>
-                </Dialog>
+                </Dialog> */}
               </TableCell>
             </TableRow>
           ))}

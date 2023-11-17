@@ -1,19 +1,22 @@
 const pool = require('../db/database');
 const { bannerQueries } = require('../db/dbQueries');
-const { createBannerQuery, updateBannerQuery, getAllBannersQuery, getBannerByIdQuery } = bannerQueries
+const { createBannerQuery, deleteBannerQuery, getAllBannersQuery, getBannerByIdQuery } = bannerQueries
 
 module.exports = {
   createBannerDB: (image) => {
-    return new Promise((resolve, reject) => {
-      pool.execute(createBannerQuery, [image], (error, result) => {
-        if (error) reject(error);
-        return resolve(result);
+    return new Promise(async (resolve, reject) => {
+      await module.exports.deleteBannerDB();
+      image.map(photo => {
+        pool.execute(createBannerQuery, [photo.buffer], (error, result) => {
+          if (error) return reject(error)
+          return resolve(result)
+        })
       })
     })
   },
-  updateBannerDB: async (image, id) => {
+  deleteBannerDB: () => {
     return new Promise((resolve, reject) => {
-      pool.execute(updateBannerQuery, [image, id], (error, result) => {
+      pool.execute(deleteBannerQuery, [], (error, result) => {
         if (error) reject(error);
         return resolve(result);
       })
@@ -26,7 +29,6 @@ module.exports = {
         if (error) reject(error);
         if (result.length === 0) resolve(null);
         const banner = result.map((banner => ({
-          banner_id: banner.banner_id,
           banner_image: banner.banner_image.toString('base64')
         })))
         return resolve(banner);
