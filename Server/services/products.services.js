@@ -28,6 +28,7 @@ const {
   deleteCategoryByIdQuery,
   updateProductImageQuery,
   getProductByFeaturedQuery,
+  getDeletedProductsQuery,
 } = productQueries
 const { getProductAlbumByIdDB } = require('./albums.services.js')
 
@@ -79,9 +80,9 @@ module.exports = {
       })
     })
   },
-  deleteProductByIdDB: (product_id) => {
+  deleteProductByIdDB: (product_id, action) => {
     return new Promise(async (resolve, reject) => {
-      pool.execute(updateIsDeletedById, [1, product_id], (error, result) => {
+      pool.execute(updateIsDeletedById, [action, product_id], (error, result) => {
         if (error) return reject(error);
         return resolve(result)
       })
@@ -234,6 +235,15 @@ module.exports = {
           }))
           return resolve(products)
         }
+      })
+    })
+  },
+  getDeletedProductsDB: () => {
+    return new Promise((resolve, reject) => {
+      pool.execute(getDeletedProductsQuery, [], (error, result) => {
+        if (error) return reject(error);
+        if (result.length === 0) resolve(null)
+        return resolve(result);
       })
     })
   },

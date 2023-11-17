@@ -108,6 +108,9 @@ module.exports = {
         getProductByNameQuery: `
             SELECT product_name FROM product WHERE product_name = ?
         `,
+        getDeletedProductsQuery: `
+            SELECT product_id, product_name, product_stocks FROM product WHERE isDeleted = 1
+        `,
         updateProductQuery: `
             UPDATE product SET category_id = ?, display_name = ?, display_price = ?, product_description = ?, status = ?, isFeatured = ?, display_image = ? WHERE product_id = ?
         `,

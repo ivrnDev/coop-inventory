@@ -60,3 +60,9 @@ export type Featured = {
   product_name: string;
   product_id: number;
 };
+
+export type DeletedProducts  = {
+  product_id: number;
+  product_name: string;
+  product_stocks: number;
+}

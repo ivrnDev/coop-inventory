@@ -23,6 +23,7 @@ const {
   updateCategoryByIdDB,
   updateProductImageDB,
   getProductByFeaturedDB,
+  getDeletedProductsDB
 } = require('../services/products.services')
 
 module.exports = {
@@ -72,10 +73,19 @@ module.exports = {
   },
   getAllProducts: async (req, res) => {
     try {
-      const { category } = req.query
-      const result = await getAllProductsDB(category);
+      const { K } = req.query
+      const result = await getAllProductsDB(K);
       if (result === null) return res.status(404).json({ error: "There is no existing products" })
       return res.status(200).json({ message: "Successfully get all the products", result: result })
+    } catch (error) {
+      return res.status(500).json({ message: "Internal Server Error", error: error })
+    }
+  },
+  getDeletedProducts: async (req, res) => {
+    try {
+      const result = await getDeletedProductsDB();
+      if (result === null) return res.status(404).json({ error: "There is no existing products" })
+      return res.status(200).json({ message: "Successfully get all the deleted products", result: result })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }
@@ -146,8 +156,9 @@ module.exports = {
   },
   deleteProductById: async (req, res) => {
     const { id } = req.params
+    const {action} = req.query
     try {
-      const result = await deleteProductByIdDB(id);
+      const result = await deleteProductByIdDB(id, action);
       if (result.length === null) return res.status(404).json({ error: `Product with an Id of ${id} has not found` })
       return res.status(200).json({ message: `Successfully get the product with an ID of ${id}`, result: result });
     } catch (error) {
@@ -262,9 +273,9 @@ module.exports = {
   getAllCategory: async (req, res) => {
     try {
       const result = await getAllCategoryDB()
-      if (result === null) return res.status(404).json({ message: "There is no existing category" })
-      if (!result) return res.status(400).json({ message: "Failed to get all category" })
-      return res.status(200).json({ message: `Successfully get all category`, result: result })
+      if (result === null) return res.status(404).json({ message: "There is no existing K" })
+      if (!result) return res.status(400).json({ message: "Failed to get all K" })
+      return res.status(200).json({ message: `Successfully get all K`, result: result })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }
@@ -273,8 +284,8 @@ module.exports = {
     try {
       const { id } = req.params
       const result = await getCategoryByIdDB(id)
-      if (result === null) return res.status(400).json({ error: `There is no existing category with an ID of ${id}` })
-      return res.status(201).json({ message: `Successfully get category with an ID of ${id}`, result: result })
+      if (result === null) return res.status(400).json({ error: `There is no existing K with an ID of ${id}` })
+      return res.status(201).json({ message: `Successfully get K with an ID of ${id}`, result: result })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }
@@ -286,8 +297,8 @@ module.exports = {
       const category_image = req.file.buffer;
       const result = await createNewCategoryDB(category_name, category_image);
       if (result === 1) return res.status(400).json({ message: `${category_name} already exist!` })
-      if (!result) return res.status(400).json({ message: "Failed to create a new category" });
-      return res.status(201).json({ message: `Successfully added new category ${category_name}` })
+      if (!result) return res.status(400).json({ message: "Failed to create a new K" });
+      return res.status(201).json({ message: `Successfully added new K ${category_name}` })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }
@@ -300,8 +311,8 @@ module.exports = {
     try {
       const result = await updateCategoryByIdDB(category_name, category_image, id)
       if (result === 1) return res.status(400).json({ message: `${category_name} is already exist` })
-      if (!result) return res.status(400).json({ message: `Failed to update category with an ID of ${id}` });
-      return res.status(201).json({ message: `Successfully update category ID of ${id} to ${category_name}`, result: result })
+      if (!result) return res.status(400).json({ message: `Failed to update K with an ID of ${id}` });
+      return res.status(201).json({ message: `Successfully update K ID of ${id} to ${category_name}`, result: result })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }
@@ -311,8 +322,8 @@ module.exports = {
     const { remove } = req.query;
     try {
       const result = await deleteCategoryByIdDB(remove, id)
-      if (!result) return res.status(400).json({ message: `Failed to update isDeleted in category with an ID of ${id}` });
-      return res.status(201).json({ message: `Successfully updated isDeleted category ID of ${id}`, result: result })
+      if (!result) return res.status(400).json({ message: `Failed to update isDeleted in K with an ID of ${id}` });
+      return res.status(201).json({ message: `Successfully updated isDeleted K ID of ${id}`, result: result })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }

@@ -1,7 +1,22 @@
 export async function getAllProducts(category_name?: string | null) {
   if (category_name) {
     try {
-      const res = await fetch(`http://localhost:3000/api/products?category=${category_name}`, {
+      const res = await fetch(
+        `http://localhost:3000/api/products?category=${category_name}`,
+        {
+          next: {
+            revalidate: 0,
+          },
+        }
+      );
+      const data = await res.json();
+      return data.result;
+    } catch (error) {
+      return [];
+    }
+  } else {
+    try {
+      const res = await fetch(`http://localhost:3000/api/products`, {
         next: {
           revalidate: 0,
         },
@@ -11,24 +26,28 @@ export async function getAllProducts(category_name?: string | null) {
     } catch (error) {
       return [];
     }
-  } else {
-     try {
-       const res = await fetch(`http://localhost:3000/api/products`, {
-         next: {
-           revalidate: 0,
-         },
-       });
-       const data = await res.json();
-       return data.result;
-     } catch (error) {
-       return [];
-     }
   }
 }
 
 export async function getProductById(productId: string) {
   try {
     const res = await fetch(`http://localhost:3000/api/products/${productId}`, {
+      next: {
+        revalidate: 0,
+      },
+    });
+
+    const data = await res.json();
+    return data.result;
+  } catch (error) {
+    console.error("Error fetching data", error);
+    return [];
+  }
+}
+
+export async function getDeletedProducts() {
+  try {
+    const res = await fetch(`http://localhost:3000/api/products/deleted/list`, {
       next: {
         revalidate: 0,
       },
@@ -80,11 +99,11 @@ export async function updateProduct(form: FormData, id: string) {
   }
 }
 
-export async function deleteProduct(productId: number) {
+export async function deleteProduct(productId: number, isDeleted: string) {
   if (productId) {
     try {
       const res = await fetch(
-        `http://localhost:3000/api/products/${productId}/delete`,
+        `http://localhost:3000/api/products/${productId}/delete?action=${isDeleted}`,
         {
           method: "PATCH",
         }

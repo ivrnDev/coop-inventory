@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import CreateCategoriesForm from "../forms/CreateCategories";
 import UpdateCategoriesForm from "../forms/UpdateCategories";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import TrashArchive from "../archive/Archive";
 
 type Props = {
   products: Products[];
@@ -62,6 +63,7 @@ const AdminRenderProducts = ({ products }: Props) => {
             className="w-full h-full pl-8"
           />
         </div>
+        <TrashArchive />
       </div>
       <div className="border border-black rounded-md p-3 h-80 w-full overflow-hidden">
         <div className="h-80 overflow-y-auto">
@@ -144,6 +146,7 @@ const AdminRenderProducts = ({ products }: Props) => {
                             failed: `Failed to delete ${product.product_name} product`,
                           }}
                           deleteTarget="deleteProduct"
+                          isDeleted="1"
                         />
                       </div>
                     </TableCell>

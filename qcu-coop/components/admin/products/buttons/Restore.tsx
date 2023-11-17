@@ -5,7 +5,6 @@ import Permission from "../../Permission";
 import { toast } from "@/components/ui/use-toast";
 import { createActivity } from "@/lib/api/activity";
 import { handleAction } from "@/lib/delete";
-import Image from "next/image";
 type Props = {
   roles: string[];
   target: {
@@ -20,14 +19,14 @@ type Props = {
   deleteTarget: string;
   isDeleted: string;
 };
-const DeleteButton = ({
+const RestoreButton = ({
   roles,
   target,
   message,
   deleteTarget,
   isDeleted,
 }: Props) => {
-  const deleteBtnRef = useRef<HTMLButtonElement | null>(null);
+  const restoreBtnRef = useRef<HTMLButtonElement | null>(null);
   const [adminId, setadminId] = useState<number>(0);
   const [isAllowed, setisAllowed] = useState<boolean>(false);
 
@@ -36,7 +35,7 @@ const DeleteButton = ({
       setisAllowed(true);
       admin && setadminId(admin);
     }
-    !isAllowed && deleteBtnRef.current && deleteBtnRef.current.click();
+    !isAllowed && restoreBtnRef.current && restoreBtnRef.current.click();
   };
   const onSubmit = async () => {
     if (isAllowed) {
@@ -44,7 +43,7 @@ const DeleteButton = ({
         const action = await handleAction(target.id, deleteTarget, isDeleted);
         if (action) {
           await createActivity(
-            { action: "deleted", target: target.target, object: target.object },
+            { action: "restore", target: target.target, object: target.object },
             adminId
           );
           return toast({
@@ -75,16 +74,10 @@ const DeleteButton = ({
     <div>
       <Dialog>
         <DialogTrigger
-          ref={deleteBtnRef}
-          className="bg-[#FB392D] rounded-md p-2 flex gap-2 justify-center items-center text-white"
+          ref={restoreBtnRef}
+          className="bg-gray-400 rounded-md p-2 flex gap-2 justify-center items-center text-white"
         >
-          <Image
-            src="/icons/trash-icon.svg"
-            alt="edit"
-            width={20}
-            height={20}
-          />
-          Delete
+          Restore
         </DialogTrigger>
         <DialogContent>
           <Permission roles={roles} handlePermission={handlePermission} />
@@ -94,4 +87,4 @@ const DeleteButton = ({
   );
 };
 
-export default DeleteButton;
+export default RestoreButton;
