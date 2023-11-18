@@ -34,11 +34,20 @@ const FilteredActivities = ({ activities }: Props) => {
   return (
     <>
       <div className="w-1/2 h-8 relative">
-        <Search className="absolute top-[50%] left-2 translate-y-[-50%]" size="20"/>
-        <Input type="search" placeholder="Search" onChange={(e) => setFilter(e.target.value)} className="w-full h-full pl-8" />
+        <Search
+          className="absolute top-[50%] left-2 translate-y-[-50%]"
+          size="20"
+        />
+        <Input
+          type="search"
+          placeholder="Search"
+          onChange={(e) => setFilter(e.target.value)}
+          className="w-full h-full pl-8"
+        />
       </div>
-      <Table>
-        {filteredActivities.length > 0 && (
+
+      {filteredActivities?.length > 0 ? (
+        <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Activities</TableHead>
@@ -46,11 +55,8 @@ const FilteredActivities = ({ activities }: Props) => {
               <TableHead>Time</TableHead>
             </TableRow>
           </TableHeader>
-        )}
-
-        <TableBody>
-          {filteredActivities.length > 0 ? (
-            filteredActivities.map((activity, index) => (
+          <TableBody>
+            {filteredActivities.map((activity, index) => (
               <TableRow key={index} className="text-white">
                 <TableCell className="flex gap-3">
                   <CheckCircle2 color="blue" />
@@ -59,12 +65,14 @@ const FilteredActivities = ({ activities }: Props) => {
                 <TableCell>{format(new Date(activity.date), "PP")}</TableCell>
                 <TableCell>{format(new Date(activity.date), "pp")}</TableCell>
               </TableRow>
-            ))
-          ) : (
-            <p className="text-white font-bold text-xl text-center ">No Available Activities</p>
-          )}
-        </TableBody>
-      </Table>
+            ))}
+          </TableBody>
+        </Table>
+      ) : (
+        <p className="text-white font-bold text-xl text-center mt-32 ">
+          No Recent Activities
+        </p>
+      )}
     </>
   );
 };

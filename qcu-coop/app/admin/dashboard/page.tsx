@@ -47,7 +47,7 @@ const AdminDashboard = async () => {
               </CardHeader>
               <CardContent>
                 <div className="text-4xl font-bold float-right">
-                  {orderCount[0].new_orders ?? 0}
+                  {orderCount[0]?.new_orders ?? 0}
                 </div>
               </CardContent>
             </Card>
@@ -64,7 +64,7 @@ const AdminDashboard = async () => {
               </CardHeader>
               <CardContent>
                 <div className="text-4xl font-bold float-right">
-                  {orderCount[0].pending_orders ?? 0}
+                  {orderCount[0]?.pending_orders ?? 0}
                 </div>
               </CardContent>
             </Card>
@@ -81,7 +81,7 @@ const AdminDashboard = async () => {
               </CardHeader>
               <CardContent>
                 <div className="text-4xl font-bold float-right">
-                  {orderCount[0].completed_orders ?? 0}
+                  {orderCount[0]?.completed_orders ?? 0}
                 </div>
               </CardContent>
             </Card>
@@ -105,24 +105,29 @@ const AdminDashboard = async () => {
                 </Dialog>
               </div>
               <CardContent className="overflow-y-auto h-[inherit]">
-                <Table>
-                  <TableBody>
-                    {activities.length > 0 ? (
-                      activities.map((activity, index) => (
+                {activities.length > 0 ? (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Os</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {activities.map((activity, index) => (
                         <TableRow key={index}>
                           <TableCell className="flex gap-3">
                             <CheckCircle2 color="blue" />
                             <p className="text-white">{activity.message}</p>
                           </TableCell>
                         </TableRow>
-                      ))
-                    ) : (
-                      <p className="text-white text-lg text-center">
-                        No Available Activities
-                      </p>
-                    )}
-                  </TableBody>
-                </Table>
+                      ))}
+                    </TableBody>
+                  </Table>
+                ) : (
+                  <p className="text-white text-xl text-center mt-16 ">
+                    No Recent Activities
+                  </p>
+                )}
               </CardContent>
             </Card>
           </div>
