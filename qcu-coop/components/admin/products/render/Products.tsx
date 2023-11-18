@@ -29,15 +29,20 @@ const AdminRenderProducts = ({ products }: Props) => {
   const [filter, setFilter] = useState<string>("");
   const filteredProducts = products?.filter((product) => {
     const {
-      display_image,
-      product_description,
-      isDeleted,
-      isFeatured,
-      ...newProduct
+      product_name,
+      product_id,
+      product_stocks,
+      date_created,
+      category_name,
     } = product;
-    const productValues = Object.values(newProduct).join(" ").toLowerCase();
 
-    return productValues.includes(filter.toLowerCase());
+    return (
+      product_name.includes(filter.toLowerCase()) ||
+      String(product_id).includes(filter.toLowerCase()) ||
+      String(product_stocks).includes(filter.toLowerCase()) ||
+      date_created.includes(filter.toLowerCase()) ||
+      category_name.includes(filter.toLowerCase())
+    );
   });
   return (
     <>
@@ -61,26 +66,26 @@ const AdminRenderProducts = ({ products }: Props) => {
         </div>
         <TrashArchive />
       </div>
+
       <div className="border border-black rounded-md p-3 h-80 w-full overflow-hidden">
         <div className="h-80 overflow-y-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Product Image</TableHead>
-                <TableHead>Product ID</TableHead>
-                <TableHead className="text-center">Name</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Stocks</TableHead>
-                <TableHead className="text-center">Price</TableHead>
-                <TableHead className="text-center">Status</TableHead>
-                <TableHead>Featured</TableHead>
-                <TableHead className="text-center">Options</TableHead>
-              </TableRow>
-            </TableHeader>
-
-            <TableBody>
-              {products && filteredProducts?.length > 0 ? (
-                filteredProducts.map((product, index) => (
+          {filteredProducts?.length > 0 ? (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Product Image</TableHead>
+                  <TableHead>Product ID</TableHead>
+                  <TableHead className="text-center">Name</TableHead>
+                  <TableHead>Category</TableHead>
+                  <TableHead>Stocks</TableHead>
+                  <TableHead className="text-center">Price</TableHead>
+                  <TableHead className="text-center">Status</TableHead>
+                  <TableHead>Featured</TableHead>
+                  <TableHead className="text-center">Options</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredProducts.map((product, index) => (
                   <TableRow key={index} className="text-center">
                     <TableCell>
                       <div className="relative w-10 h-12 object-contain">
@@ -147,16 +152,12 @@ const AdminRenderProducts = ({ products }: Props) => {
                       </div>
                     </TableCell>
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={7} className="text-center">
-                    No products found.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <p className="text-center text-xl mt-24 ">No Available Products</p>
+          )}
         </div>
       </div>
     </>
