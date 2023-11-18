@@ -25,7 +25,7 @@ import { getOrderAnalytics } from "@/lib/api/analytics";
 const AdminDashboard = async () => {
   const activities: Activities[] = await getAllActivities();
   const orderCount: OrderAnalytics[] = await getOrderAnalytics();
-  const { new_orders, pending_orders, completed_orders } = orderCount[0];
+
   return (
     <>
       <section className="flex-col md:flex h-admin-main overflow-hidden">
@@ -47,7 +47,7 @@ const AdminDashboard = async () => {
               </CardHeader>
               <CardContent>
                 <div className="text-4xl font-bold float-right">
-                  {new_orders}
+                  {orderCount[0].new_orders ?? 0}
                 </div>
               </CardContent>
             </Card>
@@ -64,7 +64,7 @@ const AdminDashboard = async () => {
               </CardHeader>
               <CardContent>
                 <div className="text-4xl font-bold float-right">
-                  {pending_orders}
+                  {orderCount[0].pending_orders ?? 0}
                 </div>
               </CardContent>
             </Card>
@@ -81,7 +81,7 @@ const AdminDashboard = async () => {
               </CardHeader>
               <CardContent>
                 <div className="text-4xl font-bold float-right">
-                  {completed_orders}
+                  {orderCount[0].completed_orders ?? 0}
                 </div>
               </CardContent>
             </Card>
@@ -117,7 +117,9 @@ const AdminDashboard = async () => {
                         </TableRow>
                       ))
                     ) : (
-                        <p className="text-white text-lg text-center">No Available Activities</p>
+                      <p className="text-white text-lg text-center">
+                        No Available Activities
+                      </p>
                     )}
                   </TableBody>
                 </Table>

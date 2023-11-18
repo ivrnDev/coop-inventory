@@ -12,6 +12,7 @@ type Props = {
 const AdminRenderOrders = async ({ orders, transactionById }: Props) => {
   return (
     orders &&
+    transactionById &&
     orders?.length > 0 && (
       <div className="fixed top-[43%] right-4 translate-y-[-50%] mt-admin-header-y h-[80%] w-[25%] rounded-xl border border-black p-3 flex flex-col space-y-5 overflow-y-auto overflow-x-hidden ">
         <h1 className="font-semibold text-lg border-b-2 border-black">

@@ -9,9 +9,9 @@ type Params = {
 };
 
 const Orders = async ({ searchParams }: Params) => {
-  const transactionId = searchParams.id as string;
-  const orders = transactionId ? await getOrdersById(transactionId) : null;
+  const transactionId = searchParams?.id as string;
   const transactions: TransactionsType[] = await getAllTransactions();
+  const orders = transactionId ? await getOrdersById(transactionId) : null;
   const transactionById: TransactionsType[] = transactions?.filter(
     (transaction) => String(transaction.transaction_id) === transactionId
   );
@@ -22,10 +22,12 @@ const Orders = async ({ searchParams }: Params) => {
           <AdminRenderTransactions transactions={transactions} />
         </div>
         <div className="w-[30%]">
-          <AdminRenderOrders
-            orders={orders}
-            transactionById={transactionById[0]}
-          />
+          {orders && transactionById && (
+            <AdminRenderOrders
+              orders={orders}
+              transactionById={transactionById[0]}
+            />
+          )}
         </div>
       </section>
     </>

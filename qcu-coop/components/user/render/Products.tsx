@@ -9,8 +9,8 @@ type Props = {
 };
 
 const RenderProducts = ({ products, search }: Props) => {
-  const filteredProducts = products.filter((product) =>
-    product?.category_name.toLowerCase().includes(search ?? "".toLowerCase())
+  const filteredProducts = products?.filter((product) =>
+    product.category_name.toLowerCase().includes(search ?? "".toLowerCase())
   );
   return (
     <>
