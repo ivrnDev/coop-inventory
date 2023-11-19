@@ -16,9 +16,7 @@ const FeaturedCarousel = ({ featured }: Props) => {
           <Link
             key={index}
             href={`
-            /products/${product.product_name.toLowerCase()}?id=${
-              product.product_id
-            }`}
+            /products/${product.product_id}`}
             className="flex flex-col hover:opacity-80"
           >
             <div className="relative h-full w-24 md:w-64 overflow-hidden flex flex-col border border-black rounded-md">

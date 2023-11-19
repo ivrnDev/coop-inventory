@@ -19,9 +19,7 @@ const RenderProducts = ({ products, search }: Props) => {
         filteredProducts?.map((product, index) => (
           <Link
             href={`
-            /products/${product.product_name.toLowerCase()}?id=${
-              product.product_id
-            }`}
+            /products/${product.product_id}`}
             key={index}
             className="h-fit "
           >

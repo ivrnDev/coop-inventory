@@ -1,13 +1,20 @@
 import Item from "@/components/user/render/item/Item";
-import { getProductById } from "@/lib/api/products";
+import { getAllProducts, getProductById } from "@/lib/api/products";
+import { Products } from "@/types/products/products";
 import Image from "next/image";
 
 type Params = {
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: { id: number };
 };
 
-const ItemPage = async ({ searchParams }: Params) => {
-  const product_id = searchParams?.id as string;
+export async function generateStaticParams() {
+  const products: Products[] = await getAllProducts();
+
+  return products.map((p) => ({ id: String(p.product_id) }));
+}
+
+const ItemPage = async ({ params }: Params) => {
+  const product_id = String(params?.id);
   const product = await getProductById(product_id);
 
   return (
