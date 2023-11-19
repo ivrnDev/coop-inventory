@@ -38,29 +38,34 @@ const Item = ({ product }: Props) => {
     <>
       {product && (
         <>
-          <div className="flex flex-col min-h-user-main-mobile">
-            <div className="">
-              <h1 className="">{product.display_name}</h1>
-              <p className="">
-                {selectedVariant?.variant_price ?? product.display_price}
+          <div
+            id="info-container"
+            className="bg-white drop-shadow-md px-2 pt-2 flex flex-col gap-1 h-72"
+          >
+            <h1 className="text-lg font-semibold">{product.display_name}</h1>
+            <p className="text-custom-orange bg-[#F8EDED] font-bold text-lg w-full px-1">
+              {`₱ ${selectedVariant?.variant_price ?? product.display_price}`}
+            </p>
+            <div className="flex space-x-2">
+              <p className="font-bold">
+                {`${selectedVariant?.variant_stocks ?? product.product_stocks}`}
               </p>
-              <p className="">
-                Stocks:{" "}
-                {selectedVariant?.variant_stocks ?? product.product_stocks}
-              </p>
-              <p>Total Amount: {selectedVariant?.variant_price * count}</p>
-              <p>Variants</p>
+              <p>stocks</p>
             </div>
-            <div className="flex">
+
+            <p className="text-md font-bold float-right">
+              Total ₱ {selectedVariant?.variant_price * count}
+            </p>
+            <div className="flex gap-4 items-center flex-wrap">
+              <p className="text-lg font-semibold">Variants</p>
               {product.variants?.map((item, index) => (
                 <Button
                   key={index}
                   type="button"
-                  variant="system"
+                  variant="variants"
                   onClick={() => setSelectedVariant(item)}
                   className={classNames({
-                    "bg-blue-500": true,
-                    "bg-yellow-500":
+                    "text-custom-orange border border-custom-orange":
                       selectedVariant?.variant_id === item.variant_id,
                   })}
                 >
@@ -68,7 +73,8 @@ const Item = ({ product }: Props) => {
                 </Button>
               ))}
             </div>
-            <div id="quantity-container" className="flex">
+
+            <div id="quantity-container" className="flex items-center gap-2">
               <Button
                 variant="secondary"
                 onClick={() =>
@@ -86,20 +92,30 @@ const Item = ({ product }: Props) => {
                 <p>-</p>
               </Button>
             </div>
+          </div>
+          <div className="bg-white rounded-sm p-2 mt-4 mx-3 h-64">
+            <h1 className="text-xl font-bold">Product Description</h1>
+            <p className="mt-2">{product.product_description}</p>
+          </div>
 
-            <div id="button-container" className="flex">
-              <AddtoCartButton product={product} />
-              <Link
-                href={{
-                  pathname: `/checkout`,
-                  query: {
-                    order: JSON.stringify(order),
-                  },
-                }}
-              >
-                <Button variant="submit">BUY NOW</Button>
-              </Link>
-            </div>
+          <div
+            id="button-container"
+            className="flex items-center w-full bg-red-500 fixed bottom-10 left-0"
+          >
+            <AddtoCartButton product={product} />
+            <Link
+              href={{
+                pathname: `/checkout`,
+                query: {
+                  order: JSON.stringify(order),
+                },
+              }}
+              className="w-full"
+            >
+              <Button variant="submit" className="flex-1">
+                BUY NOW
+              </Button>
+            </Link>
           </div>
         </>
       )}
