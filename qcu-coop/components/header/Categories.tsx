@@ -14,6 +14,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
+import classNames from "classnames";
 
 const CategoriesSidebar = () => {
   const router = useRouter();
@@ -34,14 +35,14 @@ const CategoriesSidebar = () => {
 
   const onSubmit = (data: { category_name: string }) => {
     if (data.category_name === "all") {
-      return router.push(`/product`);
+      return router.push(`/products`);
     }
-    router.push(`/product?category=${data.category_name}`);
+    router.push(`/products?category=${data.category_name}`);
   };
 
   return (
     <>
-      <aside className="mt-user-header-mobile h-fit w-20 fixed top-2 left-6 z-50 md:mt-user-header md:top-5 md:w-fit md:left-6">
+      <aside className="mt-user-header-mobile h-fit w-20 fixed top-2 left-6 z-50 md:mt-user-header md:top-10 md:w-fit md:left-10 md:h-64 md:overflow-y-auto">
         <Controller
           name="category_name"
           control={control}
@@ -63,7 +64,7 @@ const CategoriesSidebar = () => {
                     {!categories && <SelectLabel>No Categories</SelectLabel>}
                     <SelectItem value="all">All Categories</SelectItem>
                     {categories?.map((category) => (
-                      <SelectItem value={category.category_name}>
+                      <SelectItem value={String(category.category_name)}>
                         <p className="capitalize">{category.category_name}</p>
                       </SelectItem>
                     ))}
@@ -73,15 +74,27 @@ const CategoriesSidebar = () => {
             </>
           )}
         />
-        <h1 className="font-bold text-2xl hidden md:block">Categories</h1>
+        <h1 className="font-bold text-4xl hidden mb-3 md:block">Categories</h1>
         {categories && categories.length > 0 ? (
           <ul className="w-full text-black font-semibold mt-3 space-y-3 hidden md:block">
+            <li>
+              <Link
+                href={`/products`}
+                className={classNames({
+                  "w-fit hover:text-blue-500 text-lg": true,
+                })}
+              >
+                All Products
+              </Link>
+            </li>
             {categories.map((category) => (
               <li className="capitalize">
                 <Link
                   key={category.category_id}
-                  href={`/product?category=${category.category_name}`}
-                  className="w-fit"
+                  href={`/products?category=${category.category_name}`}
+                  className={classNames({
+                    "w-fit hover:text-blue-500 text-lg": true,
+                  })}
                 >
                   {category.category_name}
                 </Link>

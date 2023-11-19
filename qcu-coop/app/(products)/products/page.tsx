@@ -9,7 +9,10 @@ type Params = {
 const Products = async ({ searchParams }: Params) => {
   const filterCategory = searchParams?.category as string;
   const search = (searchParams?.search as string) || "";
-  const products: Products[] = await getAllProducts(filterCategory ?? null, true);
+  const products: Products[] = await getAllProducts(
+    filterCategory ?? null,
+    true
+  );
   return (
     <section className="h-user-main-mobile md:h-user-main pt-16 md:w-[60%] md:mt-0">
       {products && products.length > 0 ? (
