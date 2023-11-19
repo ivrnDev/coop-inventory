@@ -113,14 +113,7 @@ const AdminRenderProducts = ({ products }: Props) => {
                       {product.isFeatured === 1 ? "Yes" : "No"}
                     </TableCell>
                     <TableCell className="flex gap-3">
-                      <Link
-                        href={`./products/update/${product.product_name.toLowerCase()}?${new URLSearchParams(
-                          {
-                            id: String(product.product_id),
-                          }
-                        )}
-                  `}
-                      >
+                      <Link href={`./products/${product.product_id} `}>
                         <Button
                           type="button"
                           className="bg-[#1E88E5] rounded-md p-2 flex gap-2 justify-center items-center text-white"

@@ -33,7 +33,7 @@ import UpdateVariant from "./updateVariant";
 
 type Props = {
   categories: Categories[];
-  id: string;
+  product: Product;
 };
 
 type SelectedImage = {
@@ -46,14 +46,13 @@ type ImageNumber = {
   albums: number;
 };
 
-const UpdateProductForm = ({ categories, id }: Props) => {
+const UpdateProductForm = ({ categories, product }: Props) => {
   const { moderate } = rolePermissions;
   const { toast } = useToast();
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [isAllowed, setIsAllowed] = useState<boolean>(false);
   const [adminId, setAdminId] = useState<number>(0);
-  const [productName, setProductName] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<SelectedImage>({
     image: null,
     albums: [],
@@ -75,26 +74,20 @@ const UpdateProductForm = ({ categories, id }: Props) => {
 
   useEffect(() => {
     const getProduct = async () => {
-      try {
-        const item = await getProductById(id);
-        setProductName(item[0].product_name);
-        handleImage(item);
-        if (item && item.length > 0) {
-          const defaultFormValues: ValidateProduct = {
-            product_name: item[0].product_name || "",
-            display_name: item[0].display_name || "",
-            display_price: item[0].display_price || "",
-            product_description: item[0].product_description || "",
-            status: item[0].status == "active" ? "active" : "inactive",
-            isFeatured: String(item[0].isFeatured) == "1" ? "1" : "0",
-            category_id: String(item[0].category_id) || "",
-            display_image: selectedImage.image,
-            product_album: selectedImage.albums,
-          };
-          reset(defaultFormValues);
-        }
-      } catch (error) {
-        console.log("failed to fetch data", error);
+      handleImage(product);
+      if (product) {
+        const defaultFormValues: ValidateProduct = {
+          product_name: product.product_name || "",
+          display_name: product.display_name || "",
+          display_price: product.display_price || "",
+          product_description: product.product_description || "",
+          status: product.status == "active" ? "active" : "inactive",
+          isFeatured: String(product.isFeatured) == "1" ? "1" : "0",
+          category_id: String(product.category_id) || "",
+          display_image: selectedImage.image,
+          product_album: selectedImage.albums,
+        };
+        reset(defaultFormValues);
       }
     };
     getProduct();
@@ -113,10 +106,9 @@ const UpdateProductForm = ({ categories, id }: Props) => {
     !isAllowed && buttonRef.current && buttonRef.current.click();
   };
 
-  const handleImage = (productItem: Product[]) => {
+  const handleImage = (productItem: Product) => {
     let newAlbums: any = [];
-    const productImages = productItem[0];
-    const image = productImages.display_image;
+    const image = productItem?.display_image;
     if (image) {
       const blob = base64ToBlob(image, "image/png");
       const file = new File([blob], `image.png`, { type: "image/png" });
@@ -129,8 +121,8 @@ const UpdateProductForm = ({ categories, id }: Props) => {
         image: 1,
       }));
     }
-    if (productImages.albums && productImages.albums.length > 0) {
-      productImages.albums.map((photo) => {
+    if (productItem.albums && productItem.albums.length > 0) {
+      productItem.albums.map((photo) => {
         const blob = base64ToBlob(photo.product_photo, "image/png");
         const file = new File([blob], `image${photo.photo_id}.png`, {
           type: "image/png",
@@ -143,7 +135,7 @@ const UpdateProductForm = ({ categories, id }: Props) => {
       }));
       setImageNumber((prevCount) => ({
         ...prevCount,
-        albums: productImages.albums.length,
+        albums: productItem.albums.length,
       }));
     }
   };
@@ -175,7 +167,7 @@ const UpdateProductForm = ({ categories, id }: Props) => {
         }
       }
       try {
-        const response = await updateProduct(form, id);
+        const response = await updateProduct(form, String(product.product_id));
         if (response.status === 200) {
           await createActivity(
             {
@@ -196,11 +188,11 @@ const UpdateProductForm = ({ categories, id }: Props) => {
           });
         }
       } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Internal Server Error.",
-        description: `Something went wrong.`,
-      });
+        toast({
+          variant: "destructive",
+          title: "Internal Server Error.",
+          description: `Something went wrong.`,
+        });
       }
     }
   };
@@ -682,7 +674,10 @@ const UpdateProductForm = ({ categories, id }: Props) => {
 
       {currentStep === 2 && (
         <>
-          <UpdateVariant productId={id} productName={productName} />
+          <UpdateVariant
+            productId={String(product.product_id)}
+            productName={product.product_name}
+          />
         </>
       )}
     </form>
