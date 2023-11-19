@@ -34,13 +34,13 @@ const AdminDashboard = async () => {
             id="orders-container"
             className="grid gap-4 md:grid-cols-2 lg:grid-cols-3"
           >
-            <Card className="bg-gradient-to-r from-[#CB0000] to-[#0000FE] relative overflow-hidden text-white h-36">
+            <Card className="bg-gradient-to-r from-[#CB0000] to-[#0000FE] relative overflow-hidden text-white h-36 select-none">
               <Image
                 src="/icons/dashboard/new-order.svg"
                 alt="new-order-icon"
                 width={100}
                 height={100}
-                className="absolute top-5 left-[22%]"
+                className="absolute top-14 left-[22%]"
               />
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-lg">New Orders</CardTitle>
@@ -51,13 +51,13 @@ const AdminDashboard = async () => {
                 </div>
               </CardContent>
             </Card>
-            <Card className="bg-gradient-to-r from-[#9B6601] to-[#F8F902] relative overflow-hidden text-white">
+            <Card className="bg-gradient-to-r from-[#9B6601] to-[#F8F902] relative overflow-hidden text-white select-none">
               <Image
                 src="/icons/dashboard/pending-order.svg"
                 alt="new-order-icon"
                 width={100}
                 height={100}
-                className="absolute top-5 left-[22%]"
+                className="absolute top-14 left-[22%]"
               />
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-lg">Pending Orders</CardTitle>
@@ -68,13 +68,13 @@ const AdminDashboard = async () => {
                 </div>
               </CardContent>
             </Card>
-            <Card className="bg-gradient-to-r from-[#0000FE] to-[#37B3E2] relative overflow-hidden text-white">
+            <Card className="bg-gradient-to-r from-[#0000FE] to-[#37B3E2] relative overflow-hidden text-white select-none">
               <Image
                 src="/icons/dashboard/completed-order.svg"
                 alt="new-order-icon"
                 width={170}
                 height={170}
-                className="absolute -top-5 left-[22%]"
+                className="absolute top-5 left-[22%]"
               />
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-lg">Completed Orders</CardTitle>
@@ -107,11 +107,6 @@ const AdminDashboard = async () => {
               <CardContent className="overflow-y-auto h-[inherit]">
                 {activities.length > 0 ? (
                   <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead></TableHead>
-                      </TableRow>
-                    </TableHeader>
                     <TableBody>
                       {activities.map((activity, index) => (
                         <TableRow key={index}>
