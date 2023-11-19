@@ -25,7 +25,6 @@ export type OrderProduct = {
   display_price: string;
   product_stocks: number;
   product_description: string;
-  product_sold: number;
   status: string;
   isFeatured: number;
   isDeleted: number;

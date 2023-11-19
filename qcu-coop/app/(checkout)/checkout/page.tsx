@@ -25,8 +25,8 @@ const Checkout = async ({ searchParams }: Params) => {
         const insertOrderDetails = {
           ...product[0],
           quantity: Number(parsedOrder.quantity),
-          amount: findVariant[0].variant_price * Number(parsedOrder.quantity),
-          variantPrice: findVariant[0].variant_price ?? 0,
+          amount: findVariant[0]?.variant_price * Number(parsedOrder.quantity),
+          variantPrice: findVariant[0]?.variant_price ?? 0,
         };
         orderArray.push(insertOrderDetails);
       }
