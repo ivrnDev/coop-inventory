@@ -109,7 +109,7 @@ const AdminDashboard = async () => {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Os</TableHead>
+                        <TableHead></TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>

@@ -46,7 +46,7 @@ const UpdateCategoriesForm = () => {
   const [isAllowed, setIsAllowed] = useState(false);
   const [adminId, setadminId] = useState(0);
   const [categories, setCategories] = useState<Categories[]>();
-    const {
+  const {
     register,
     handleSubmit,
     control,
@@ -66,13 +66,9 @@ const UpdateCategoriesForm = () => {
 
   useEffect(() => {
     const getCategories = async () => {
-      try {
-        const result = await getAllCategories();
-        if (result) {
-          setCategories(result);
-        }
-      } catch (error) {
-        console.error("Error fetching categories:", error);
+      const result = await getAllCategories();
+      if (result) {
+        setCategories(result);
       }
     };
     getCategories();
@@ -80,7 +76,7 @@ const UpdateCategoriesForm = () => {
 
   const onSubmit = async (data: ValidationCategorySchema) => {
     const { category_name, category_id } = data;
-        if (isAllowed) {
+    if (isAllowed) {
       const form = new FormData();
       for (const key of Object.keys(data) as (keyof typeof data)[]) {
         form.append(key, data[key]);
@@ -215,7 +211,7 @@ const UpdateCategoriesForm = () => {
             <DialogFooter>
               <Dialog>
                 <DialogTrigger ref={buttonRef}>
-                 {isSubmitting ? "Updating" : "Update"}
+                  {isSubmitting ? "Updating" : "Update"}
                 </DialogTrigger>
                 <DialogContent>
                   <Permission
