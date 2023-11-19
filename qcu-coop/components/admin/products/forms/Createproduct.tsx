@@ -139,7 +139,6 @@ const CreateProductForm = () => {
     return prev();
   };
   const onSubmit = async (data: ValidationProduct) => {
-    console.log(data)
     const { product_name } = data;
     if (isAllowed) {
       const form = new FormData();
