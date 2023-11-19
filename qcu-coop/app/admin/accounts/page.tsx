@@ -7,7 +7,7 @@ const Accounts = async () => {
   const admins: Admin[] = await getAllAdmin();
   return (
     <section className="h-admin-main p-6">
-      <div className="border border-black h-full p-4 overflow-clip">
+      <div className="relative border border-black h-full p-4 overflow-clip">
         <div>
           <div className="float-right">
             <CreateAccount />

@@ -41,48 +41,49 @@ const FilteredAdmins = ({ admins }: Props) => {
           className="w-full h-full pl-8"
         />
       </div>
-      <Table className="mt-3">
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>ID</TableHead>
-            <TableHead>Username</TableHead>
-            <TableHead>Authority</TableHead>
-            <TableHead>Options</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredAdmins?.map((admin, index) => (
-            <TableRow key={index}>
-              <TableCell className="flex gap-5 items-center">
-                <div className="relative w-10 h-10 rounded-full overflow-clip">
-                  <Image
-                    src={`data:image/png;base64,${admin.profile_picture}`}
-                    alt={admin.admin_name}
-                    sizes="min-w-1"
-                    fill
-                  />
-                </div>
-                {admin.admin_name}
-              </TableCell>
-              <TableCell>{admin.admin_id}</TableCell>
-              <TableCell>{admin.admin_username}</TableCell>
-              <TableCell className="capitalize">{admin.role}</TableCell>
-              <TableCell className="flex gap-3">
-                <Dialog>
-                  <DialogTrigger className="bg-[#1E88E5] rounded-md p-1">
+      {admins?.length > 0 ? (
+        <Table className="mt-3">
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>ID</TableHead>
+              <TableHead>Username</TableHead>
+              <TableHead>Authority</TableHead>
+              <TableHead>Options</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredAdmins?.map((admin, index) => (
+              <TableRow key={index}>
+                <TableCell className="flex gap-5 items-center">
+                  <div className="relative w-10 h-10 rounded-full overflow-clip">
                     <Image
-                      src="/icons/edit-icon.svg"
-                      alt="edit"
-                      width={20}
-                      height={20}
+                      src={`data:image/png;base64,${admin.profile_picture}`}
+                      alt={admin.admin_name}
+                      sizes="min-w-1"
+                      fill
                     />
-                  </DialogTrigger>
-                  <DialogContent>
-                    <UpdateAccount admin_id={admin.admin_id} />
-                  </DialogContent>
-                </Dialog>
-                {/* <Dialog>
+                  </div>
+                  {admin.admin_name}
+                </TableCell>
+                <TableCell>{admin.admin_id}</TableCell>
+                <TableCell>{admin.admin_username}</TableCell>
+                <TableCell className="capitalize">{admin.role}</TableCell>
+                <TableCell className="flex gap-3">
+                  <Dialog>
+                    <DialogTrigger className="bg-[#1E88E5] rounded-md p-1">
+                      <Image
+                        src="/icons/edit-icon.svg"
+                        alt="edit"
+                        width={20}
+                        height={20}
+                      />
+                    </DialogTrigger>
+                    <DialogContent>
+                      <UpdateAccount admin_id={admin.admin_id} />
+                    </DialogContent>
+                  </Dialog>
+                  {/* <Dialog>
                   <DialogTrigger className="bg-[#FB392D] rounded-md p-1">
                     <Image
                       src="/icons/trash-icon.svg"
@@ -93,11 +94,14 @@ const FilteredAdmins = ({ admins }: Props) => {
                   </DialogTrigger>
                   <DialogContent></DialogContent>
                 </Dialog> */}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      ) : (
+        <h1 className="absolute text-2xl font-semibold top-1/2 left-1/2 translate-x-[-50%]">There is no existing accounts</h1>
+      )}
     </>
   );
 };
