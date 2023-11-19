@@ -100,7 +100,9 @@ const FilteredAdmins = ({ admins }: Props) => {
           </TableBody>
         </Table>
       ) : (
-        <h1 className="absolute text-2xl font-semibold top-1/2 left-1/2 translate-x-[-50%]">There is no existing accounts</h1>
+        <h1 className="absolute text-2xl font-semibold top-1/2 left-1/2 translate-x-[-50%]">
+          There is no existing accounts
+        </h1>
       )}
     </>
   );

@@ -67,7 +67,7 @@ const AdminRenderProducts = ({ products }: Props) => {
         <TrashArchive />
       </div>
 
-      <div className="border border-black rounded-md p-3 h-80 w-full overflow-hidden">
+      <div className="relative border border-black rounded-md p-3 h-80 w-full overflow-hidden">
         <div className="h-80 overflow-y-auto">
           {filteredProducts?.length > 0 ? (
             <Table>
@@ -156,7 +156,9 @@ const AdminRenderProducts = ({ products }: Props) => {
               </TableBody>
             </Table>
           ) : (
-            <p className="text-center text-xl mt-24 ">No Available Products</p>
+            <h1 className="text-2xl font-semibold absolute top-1/2 left-1/2 translate-y-[-50%] translate-x-[-50%] ">
+              No Available Products
+            </h1>
           )}
         </div>
       </div>

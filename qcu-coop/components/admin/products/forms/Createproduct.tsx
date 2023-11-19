@@ -106,7 +106,7 @@ const CreateProductForm = () => {
         if (!getCategories) return setCategories(null);
         setCategories(getCategories);
       } catch (error) {
-        console.error(error, "Failed to fetch categories");
+        error, "Failed to fetch categories";
       }
     };
     getCategories();
@@ -177,11 +177,11 @@ const CreateProductForm = () => {
           });
         }
       } catch (error) {
-         toast({
-           variant: "destructive",
-           title: "Internal Server Error.",
-           description: `Something went wrong.`,
-         });
+        toast({
+          variant: "destructive",
+          title: "Internal Server Error.",
+          description: `Something went wrong.`,
+        });
       }
     }
   };
