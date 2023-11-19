@@ -62,7 +62,7 @@ const CategoriesSidebar = () => {
                 <SelectContent position="popper">
                   <SelectGroup>
                     {!categories && <SelectLabel>No Categories</SelectLabel>}
-                    <SelectItem value="all">All Categories</SelectItem>
+                    <SelectItem value="all">All</SelectItem>
                     {categories?.map((category) => (
                       <SelectItem value={String(category.category_name)}>
                         <p className="capitalize">{category.category_name}</p>
@@ -102,7 +102,7 @@ const CategoriesSidebar = () => {
             ))}
           </ul>
         ) : (
-          <p className="text-center text-lg mt-4">No available categories</p>
+          <p className="text-center text-lg mt-4 hidden md:block">No available categories</p>
         )}
       </aside>
     </>

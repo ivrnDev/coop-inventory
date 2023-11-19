@@ -31,6 +31,7 @@ const HomeHeader = () => {
   const [search, setSearch] = useState<string>("");
 
   const handleSearch = () => {
+    if (search === "") return router.push(`/products`);
     const params = new URLSearchParams();
     params.append("search", search);
     router.push(`/products?${params}`);

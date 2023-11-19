@@ -9,8 +9,11 @@ type Props = {
 };
 
 const RenderProducts = ({ products, search }: Props) => {
-  const filteredProducts = products?.filter((product) =>
-    product.category_name.toLowerCase().includes(search ?? "".toLowerCase())
+  const filteredProducts = products?.filter(
+    (product) =>
+      new RegExp(`${search}`, "i").test(product.product_name) ||
+      new RegExp(`${search}`, "i").test(product.product_description) ||
+      new RegExp(`${search}`, "i").test(product.display_name)
   );
   return (
     <>
