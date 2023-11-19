@@ -10,7 +10,6 @@ type Props = {
 };
 
 const Albums = ({ albums, image }: Props) => {
-  console.log(albums);
   return (
     <>
       {albums?.length === 0 ||

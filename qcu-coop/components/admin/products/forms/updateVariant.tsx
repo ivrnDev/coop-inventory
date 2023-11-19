@@ -12,10 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import {
-  getVariantByProductId,
-  updateVariant,
-} from "@/lib/api/variants";
+import { getVariantByProductId, updateVariant } from "@/lib/api/variants";
 import { createActivity } from "@/lib/api/activity";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -27,7 +24,7 @@ type Props = {
 const UpdateVariant = ({ productId, productName }: Props) => {
   const { toast } = useToast();
   const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const {  moderate } = rolePermissions;
+  const { moderate } = rolePermissions;
   const [isAllowed, setIsAllowed] = useState<boolean>(false);
   const [adminId, setAdminId] = useState<number>(0);
   const {
@@ -48,39 +45,34 @@ const UpdateVariant = ({ productId, productName }: Props) => {
 
   useEffect(() => {
     const getProduct = async () => {
-      try {
-        const item = await getVariantByProductId(productId);
-        if (item && item.length > 0) {
-          const defaultFormValues: ValidateVariant = {
-            variants:
-              item &&
-              item.map((variant: any) => ({
-                variant_id: variant.variant_id || 0,
-                variant_name: variant.variant_name || "",
-                variant_symbol: variant.variant_symbol || "",
-                variant_price: String(variant.variant_price) || "0",
-                variant_stocks: String(variant.variant_stocks) || "0",
-              })),
-          };
-          reset(defaultFormValues);
-        }
-      } catch (error) {
-        console.log("failed to fetch variants", error);
+      const item = await getVariantByProductId(productId);
+      if (item && item.length > 0) {
+        const defaultFormValues: ValidateVariant = {
+          variants:
+            item &&
+            item.map((variant: any) => ({
+              variant_id: variant.variant_id || 0,
+              variant_name: variant.variant_name || "",
+              variant_symbol: variant.variant_symbol || "",
+              variant_price: String(variant.variant_price) || "0",
+              variant_stocks: String(variant.variant_stocks) || "0",
+            })),
+        };
+        reset(defaultFormValues);
       }
-    };
+    }
     getProduct();
   }, []);
 
   const handleRemoveForm = async (index: number) => {
-      if (fields.length < 2) {
-        return toast({
-          variant: "destructive",
-          title: "Failed to remove variant.",
-          description: "There must be atleast 1 variant.",
-        });
-      }
-      remove(index);
-   
+    if (fields.length < 2) {
+      return toast({
+        variant: "destructive",
+        title: "Failed to remove variant.",
+        description: "There must be atleast 1 variant.",
+      });
+    }
+    remove(index);
   };
 
   const handlePermission = async (permission: boolean, id?: number) => {
