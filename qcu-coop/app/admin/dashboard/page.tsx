@@ -106,7 +106,7 @@ const AdminDashboard = async () => {
               </div>
               <CardContent className="overflow-y-auto h-[inherit]">
                 {activities.length > 0 ? (
-                  <Table>
+                  <Table className=" cursor-default select-none">
                     <TableBody>
                       {activities.map((activity, index) => (
                         <TableRow key={index}>

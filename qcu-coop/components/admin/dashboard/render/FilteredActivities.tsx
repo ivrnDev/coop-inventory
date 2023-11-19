@@ -47,7 +47,7 @@ const FilteredActivities = ({ activities }: Props) => {
       </div>
 
       {filteredActivities?.length > 0 ? (
-        <Table>
+        <Table className="cursor-default select-none">
           <TableHeader>
             <TableRow>
               <TableHead>Activities</TableHead>
