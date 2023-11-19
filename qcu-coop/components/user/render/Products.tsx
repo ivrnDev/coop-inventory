@@ -5,21 +5,22 @@ import Link from "next/link";
 
 type Props = {
   products: Products[];
-  search: string;
+  search?: string | null | undefined;
 };
 
 const RenderProducts = ({ products, search }: Props) => {
-  const filteredProducts = products?.filter(
-    (product) =>
-      new RegExp(`${search}`, "i").test(product.product_name) ||
-      new RegExp(`${search}`, "i").test(product.product_description) ||
-      new RegExp(`${search}`, "i").test(product.display_name)
-  );
+  const filteredProducts = search
+    ? products?.filter(
+        (product) =>
+          new RegExp(`${search}`, "i").test(product.product_name) ||
+          new RegExp(`${search}`, "i").test(product.product_description) ||
+          new RegExp(`${search}`, "i").test(product.display_name)
+      )
+    : products;
   return (
     <>
-      {products?.length > 0 &&
-        filteredProducts?.length > 0 &&
-        filteredProducts?.map((product, index) => (
+      {filteredProducts?.length > 0 &&
+        filteredProducts.map((product, index) => (
           <Link
             href={`
             /products/${product.product_id}`}
