@@ -34,6 +34,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { ValidateAccount, AccountSchema } from "@/middleware/zod/accounts";
 import { createAdmin } from "@/lib/api/admin";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 const roles = ["administrator", "moderator", "employee"];
 
@@ -330,20 +331,21 @@ const CreateAccount = () => {
           <DialogFooter>
             <Dialog>
               <DialogTrigger
-                ref={buttonRef}
-                className="absolute right-5 bottom-5 h-fit w-[14%] flex space-x-3 bg-green-700"
+                asChild
               >
-                <div className="relative w-5 h-5 float-left">
-                  <Image
-                    src="/icons/add-sign-icon.svg"
-                    alt="add-sign"
-                    sizes="min-w-1"
-                    fill
-                  />
-                </div>
-                <p className="text-lg whitespace-nowrap">
-                  {isSubmitting ? "Adding User" : "Add User"}
-                </p>
+                <Button variant="submit" ref={buttonRef} className="flex space-x-3">
+                  <div className="relative w-5 h-5 float-left">
+                    <Image
+                      src="/icons/add-sign-icon.svg"
+                      alt="add-sign"
+                      sizes="min-w-1"
+                      fill
+                    />
+                  </div>
+                  <p className="text-lg whitespace-nowrap">
+                    {isSubmitting ? "Adding User" : "Add User"}
+                  </p>
+                </Button>
               </DialogTrigger>
               <DialogContent>
                 <Permission
