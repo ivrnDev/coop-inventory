@@ -101,13 +101,10 @@ const CreateProductForm = () => {
 
   useEffect(() => {
     const getCategories = async () => {
-      try {
-        const getCategories = await getAllCategories();
-        if (!getCategories) return setCategories(null);
-        setCategories(getCategories);
-      } catch (error) {
-        error, "Failed to fetch categories";
-      }
+      const getCategories = await getAllCategories();
+      if (!getCategories || getCategories.length === 0)
+        return setCategories(null);
+      setCategories(getCategories);
     };
     getCategories();
   }, []);

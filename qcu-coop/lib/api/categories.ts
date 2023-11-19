@@ -72,7 +72,6 @@ export async function getAllCategories() {
     const data = await res.json();
     return data.result;
   } catch (error) {
-    console.error("Error fetching data", error);
     return [];
   }
 }
