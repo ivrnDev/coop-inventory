@@ -25,7 +25,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       pool.execute(salesQuery, [], (error, result) => {
         if (error) reject(error);
-        if (result.length === 0) resolve(null);
+        if(!result || result.length === 0) return resolve(null)
         const sales = getSales(result)
         return resolve(sales);
       })

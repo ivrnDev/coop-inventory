@@ -11,7 +11,7 @@ type Params = {
 export async function generateStaticParams() {
   const products: Products[] = await getAllProducts();
 
-  return products.map((p) => ({ productId: p.product_id }));
+  return products.map((p) => ({ productId: String(p.product_id) }));
 }
 
 const UpdateProductPage = async ({ params }: Params) => {

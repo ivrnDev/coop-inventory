@@ -1,6 +1,8 @@
 const { format } = require('date-fns')
 const getSales = (salesData) => {
+
   if (!salesData || salesData.length === 0) return null
+
 
   const currentDate = new Date();
   const previousYearDate = new Date(currentDate);
