@@ -134,7 +134,7 @@ const AdminRenderTransactions = ({ transactions }: Params) => {
           </div>
         </div>
         <div className=" h-[21rem] overflow-y-auto mt-5">
-          <Table>
+          <Table className="cursor-default select-none">
             <TableHeader>
               <TableRow className="whitespace-nowrap">
                 <TableHead>Transaction ID</TableHead>
@@ -171,7 +171,7 @@ const AdminRenderTransactions = ({ transactions }: Params) => {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center">
+                  <TableCell colSpan={7} className="text-center text-xl font-bold">
                     No transactions found.
                   </TableCell>
                 </TableRow>

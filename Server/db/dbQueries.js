@@ -55,7 +55,7 @@ module.exports = {
     },
     productQueries: {
         createProductQuery: `
-            INSERT INTO product (category_id, product_name, display_name, display_price, product_stocks, product_description, display_image) VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO product (category_id, product_name, display_name, display_price, product_stocks, product_description, status, isFeatured, display_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `,
         createVariantQuery: `
             INSERT INTO variant (variant_id, product_id, variant_name, variant_symbol, variant_price, variant_stocks) VALUES (?, ?, ?, ?, ?, ?)
@@ -97,6 +97,13 @@ module.exports = {
             SELECT * FROM product as p
             JOIN category as ct ON p.category_id = ct.category_id
             WHERE p.isDeleted = '0' AND ct.isDeleted = '0' 
+            AND (ct.category_name = ? OR ? IS NULL);
+
+        `,
+        getAllActiveProductsQuery: `
+            SELECT * FROM product as p
+            JOIN category as ct ON p.category_id = ct.category_id
+            WHERE p.isDeleted = '0' AND ct.isDeleted = '0'  AND p.status = 'active'
             AND (ct.category_name = ? OR ? IS NULL);
 
         `,

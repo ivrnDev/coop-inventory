@@ -29,17 +29,18 @@ const {
   updateProductImageQuery,
   getProductByFeaturedQuery,
   getDeletedProductsQuery,
+  getAllActiveProductsQuery
 } = productQueries
 const { getProductAlbumByIdDB } = require('./albums.services.js')
 
 module.exports = {
-  createProductDB: (category_id, product_name, display_name, display_price, product_stocks, product_description, imagePath) => {
+  createProductDB: (category_id, product_name, display_name, display_price, product_stocks, product_description, status, isFeatured, imagePath) => {
     return new Promise(async (resolve, reject) => {
       const isExist = await module.exports.getProductByNameDB(product_name);
       if (isExist) return resolve(1);
 
       pool.execute(createProductQuery,
-        [category_id, product_name, display_name, display_price, product_stocks, product_description, imagePath],
+        [category_id, product_name, display_name, display_price, product_stocks, product_description, status, isFeatured, imagePath],
         (error, result) => {
           if (error) return reject(error);
           const product_id = result.insertId;
@@ -48,10 +49,11 @@ module.exports = {
             product_name: product_name,
             display_name: display_name,
             display_price: display_price,
+            status: status,
+            isFeatured: isFeatured,
             product_stocks: product_stocks,
             product_description: product_description,
             display_image: imagePath.toString('base64'),
-
           }
           return resolve(product);
         }
@@ -210,32 +212,59 @@ module.exports = {
       })
     })
   },
-  getAllProductsDB: (category_name) => {
+  getAllProductsDB: (category_name, active) => {
     return new Promise((resolve, reject) => {
-      pool.execute(getAllProductsQuery, [category_name ?? null, category_name ?? null], (error, result) => {
-        if (error) return reject(error)
-        if (result.length === 0) {
-          return resolve(null)
-        } else {
-          const products = result.map((product) => ({
-            product_id: product.product_id,
-            product_name: product.product_name,
-            display_name: product.display_name,
-            display_price: product.display_price,
-            product_stocks: product.product_stocks,
-            product_description: product.product_description,
-            status: product.status,
-            isFeatured: product.isFeatured,
-            isDeleted: product.isDeleted,
-            date_created: product.date_created,
-            display_image: product.display_image.toString('base64'),
-            category_id: product.category_id,
-            category_name: product.category_name,
-            category_image: product.category_image.toString('base64'),
-          }))
-          return resolve(products)
-        }
-      })
+      if (active === 'true') {
+        pool.execute(getAllActiveProductsQuery, [category_name ?? null, category_name ?? null], (error, result) => {
+          if (error) return reject(error)
+          if (result.length === 0) {
+            return resolve(null)
+          } else {
+            const products = result.map((product) => ({
+              product_id: product.product_id,
+              product_name: product.product_name,
+              display_name: product.display_name,
+              display_price: product.display_price,
+              product_stocks: product.product_stocks,
+              product_description: product.product_description,
+              status: product.status,
+              isFeatured: product.isFeatured,
+              isDeleted: product.isDeleted,
+              date_created: product.date_created,
+              display_image: product.display_image.toString('base64'),
+              category_id: product.category_id,
+              category_name: product.category_name,
+              category_image: product.category_image.toString('base64'),
+            }))
+            return resolve(products)
+          }
+        })
+      } else {
+        pool.execute(getAllProductsQuery, [category_name ?? null, category_name ?? null], (error, result) => {
+          if (error) return reject(error)
+          if (result.length === 0) {
+            return resolve(null)
+          } else {
+            const products = result.map((product) => ({
+              product_id: product.product_id,
+              product_name: product.product_name,
+              display_name: product.display_name,
+              display_price: product.display_price,
+              product_stocks: product.product_stocks,
+              product_description: product.product_description,
+              status: product.status,
+              isFeatured: product.isFeatured,
+              isDeleted: product.isDeleted,
+              date_created: product.date_created,
+              display_image: product.display_image.toString('base64'),
+              category_id: product.category_id,
+              category_name: product.category_name,
+              category_image: product.category_image.toString('base64'),
+            }))
+            return resolve(products)
+          }
+        })
+      }
     })
   },
   getDeletedProductsDB: () => {
@@ -279,9 +308,9 @@ module.exports = {
       })
     })
   },
-  getProductByNameDB: (id) => {
+  getProductByNameDB: (product_name) => {
     return new Promise((resolve, reject) => {
-      pool.execute(getProductByNameQuery, [id], (error, result) => {
+      pool.execute(getProductByNameQuery, [product_name], (error, result) => {
         if (error) return reject(error);
         if (result.length === 0) resolve(null)
         return resolve(result);

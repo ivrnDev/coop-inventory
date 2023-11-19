@@ -3,7 +3,7 @@ import CategoriesCarousel from "@/components/user/carousel/Categories";
 import FeaturedCarousel from "@/components/user/carousel/Featured";
 import RenderProducts from "@/components/user/render/Products";
 import { getAllCategories } from "@/lib/api/categories";
-import { getAllProducts, getProductByFeatured } from "@/lib/api/products";
+import {  getAllProducts, getProductByFeatured } from "@/lib/api/products";
 import { Categories, Featured, Products } from "@/types/products/products";
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
 
 const Home = async ({ searchParams }: Props) => {
   const search = searchParams?.search as string;
-  const products: Products[] = await getAllProducts();
+  const products: Products[] = await getAllProducts(null, true);
   const featured: Featured[] = await getProductByFeatured();
   const categories: Categories[] = await getAllCategories();
   return (

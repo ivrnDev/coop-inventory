@@ -40,14 +40,14 @@ module.exports = {
           return res.status(500).json({ message: "Error reading default image" });
         }
       };
-      const { category_id, product_name, display_name, display_price, product_description, variants } = req.body;
+      const { category_id, product_name, display_name, display_price, product_description, status, isFeatured, variants } = req.body;
       const parseVariants = JSON.parse(variants)
 
       if (parseVariants.length === 0) return res.status(400).json({ message: "Variant is required!" });
 
       const product_stocks = parseVariants.reduce((accumulator, variant) => accumulator + Number(variant.variant_stocks), 0)
 
-      const createdProduct = await createProductDB(category_id, product_name, display_name, display_price, product_stocks, product_description, imagePath);
+      const createdProduct = await createProductDB(category_id, product_name, display_name, display_price, product_stocks, product_description, status, isFeatured, imagePath);
       if (createdProduct === 1) return res.status(400).json({ message: `${product_name} already exist` });
       if (!createdProduct) return res.status(400).json({ message: "Failed to insert product" });
 
@@ -68,15 +68,26 @@ module.exports = {
       }
       return res.status(201).json({ message: "Successfully created a new product", result: result });
     } catch (error) {
+      console.log(error)
       return res.status(500).json({ message: "Internal Server Error", error: error });
     }
   },
   getAllProducts: async (req, res) => {
     try {
-      const { K } = req.query
-      const result = await getAllProductsDB(K);
+      const { category, active } = req.query
+      const result = await getAllProductsDB(category, active);
       if (result === null) return res.status(404).json({ error: "There is no existing products" })
       return res.status(200).json({ message: "Successfully get all the products", result: result })
+    } catch (error) {
+      return res.status(500).json({ message: "Internal Server Error", error: error })
+    }
+  },
+  getAllActiveProducts: async (req, res) => {
+    try {
+      const { category } = req.query
+      const result = await getAllProductsDB(category);
+      if (result === null) return res.status(404).json({ error: "There is no existing products" })
+      return res.status(200).json({ message: "Successfully get all active products", result: result })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }
@@ -156,7 +167,7 @@ module.exports = {
   },
   deleteProductById: async (req, res) => {
     const { id } = req.params
-    const {action} = req.query
+    const { action } = req.query
     try {
       const result = await deleteProductByIdDB(id, action);
       if (result.length === null) return res.status(404).json({ error: `Product with an Id of ${id} has not found` })
