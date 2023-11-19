@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Products } from "@/types/products/products";
+import { DeletedProducts, Products } from "@/types/products/products";
 import Image from "next/image";
 import Link from "next/link";
 import DeleteButton from "../buttons/DeleteButton";
@@ -22,9 +22,10 @@ import TrashArchive from "../archive/Archive";
 
 type Props = {
   products: Products[];
+  deletedProducts: DeletedProducts[];
 };
 
-const AdminRenderProducts = ({ products }: Props) => {
+const AdminRenderProducts = ({ products, deletedProducts }: Props) => {
   const { moderate } = rolePermissions;
   const [filter, setFilter] = useState<string>("");
   const filteredProducts = products?.filter((product) => {
@@ -64,7 +65,7 @@ const AdminRenderProducts = ({ products }: Props) => {
             className="w-[50%] h-full pl-8"
           />
         </div>
-        <TrashArchive />
+        <TrashArchive deletedProducts={deletedProducts} />
       </div>
 
       <div className="relative border border-black rounded-md p-3 h-80 w-full overflow-hidden">
@@ -93,6 +94,7 @@ const AdminRenderProducts = ({ products }: Props) => {
                           src={`data:image/png;base64,${product.display_image}`}
                           alt={product.product_name}
                           sizes="min-w-1"
+                          className="object-contain"
                           fill
                         />
                       </div>

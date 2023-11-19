@@ -3,6 +3,7 @@ import { ProductSales, SalesAnalytics } from "@/types/analytics/analytics";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Activity, LineChart, ShoppingBag, TrendingUp } from "lucide-react";
 import ProductAnalytics from "@/components/admin/analytics/render/ProductAnalytics";
+
 const Analytics = async () => {
   const sales: SalesAnalytics = await getSalesAnalytics();
   const product: ProductSales[] = await getProductSales();
@@ -12,7 +13,7 @@ const Analytics = async () => {
     <>
       <section className="min-h-admin-main px-5 pt-2">
         <div className="grid grid-cols-2 gap-5 mb-4">
-          <Card className="relative h-44 shadow-sm p-4 rounded-lg bg-gradient-to-t from-blue-600 via-blue-700 to-blue-900">
+          <Card className="relative h-44 shadow-sm p-4 rounded-lg bg-gradient-to-t from-slate-900 via-slate-700 to-slate-950">
             <CardContent className="grid grid-cols-2">
               <div className="text-center mt-5">
                 <h2 className="text-4xl text-white font-bold mt-2">

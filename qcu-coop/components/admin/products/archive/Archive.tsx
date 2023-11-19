@@ -15,9 +15,12 @@ import { rolePermissions } from "@/lib/permission";
 import RestoreButton from "../buttons/Restore";
 import { Trash2 } from "lucide-react";
 
-const TrashArchive = async () => {
+type Props = {
+  deletedProducts: DeletedProducts[]
+}
+
+const TrashArchive = ({deletedProducts}: Props) => {
   const { restricted } = rolePermissions;
-  const deletedProducts: DeletedProducts[] = await getDeletedProducts();
   return (
     <>
       <Dialog>
