@@ -68,7 +68,6 @@ module.exports = {
       }
       return res.status(201).json({ message: "Successfully created a new product", result: result });
     } catch (error) {
-      console.log(error)
       return res.status(500).json({ message: "Internal Server Error", error: error });
     }
   },
