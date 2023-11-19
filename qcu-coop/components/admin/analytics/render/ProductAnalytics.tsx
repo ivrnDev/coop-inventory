@@ -45,18 +45,18 @@ const ProductAnalytics = ({ products }: Props) => {
         </CardHeader>
         <div className="h-72 overflow-y-auto ">
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Product ID</TableHead>
-                  <TableHead>Product Name</TableHead>
-                  <TableHead>Sold</TableHead>
-                  <TableHead>Revenue</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody className="w-fit">
-                {products ? (
-                  filteredTransactions?.map((product) => (
+            {products.length > 0 ? (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Product ID</TableHead>
+                    <TableHead>Product Name</TableHead>
+                    <TableHead>Sold</TableHead>
+                    <TableHead>Revenue</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody className="w-fit">
+                  {filteredTransactions?.map((product) => (
                     <TableRow key={product.product_id}>
                       <TableCell className="text-center">
                         {product.product_id}
@@ -71,12 +71,12 @@ const ProductAnalytics = ({ products }: Props) => {
                         ₱ {Number(product.revenue).toLocaleString()}
                       </TableCell>
                     </TableRow>
-                  ))
-                ) : (
-                  <h1>NO TOP PRODUCTS</h1>
-                )}
-              </TableBody>
-            </Table>
+                  ))}
+                </TableBody>
+              </Table>
+            ) : (
+              <h1 className="mt-20 ml-28 font-semibold text-xl">NO TOP PRODUCTS</h1>
+            )}
           </CardContent>
         </div>
       </Card>

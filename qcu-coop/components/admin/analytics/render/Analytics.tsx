@@ -11,6 +11,7 @@ type Props = {
 const RenderAnalytics = async ({ analytics }: Props) => {
   const product: ProductSales[] = await getProductSales();
   const { sold, revenue } = analytics;
+  console.log(product)
 
   return (
     <>
@@ -23,7 +24,7 @@ const RenderAnalytics = async ({ analytics }: Props) => {
               </h2>
               <h4 className="text-md text-slate-700 font-bold capitalize">
                 {data.name}
-              </h4>
+              </h4> 
             </CardContent>
             <Activity
               color="black"

@@ -44,7 +44,6 @@ const Item = ({ product }: Props) => {
               <p className="">
                 {selectedVariant?.variant_price ?? product.display_price}
               </p>
-              <p className="">{product.product_sold} sold</p>
               <p className="">
                 Stocks:{" "}
                 {selectedVariant?.variant_stocks ?? product.product_stocks}
