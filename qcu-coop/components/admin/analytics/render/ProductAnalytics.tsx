@@ -45,7 +45,7 @@ const ProductAnalytics = ({ products }: Props) => {
         </CardHeader>
         <div className="h-72 overflow-y-auto ">
           <CardContent>
-            {products.length > 0 ? (
+            {products?.length > 0 ? (
               <Table>
                 <TableHeader>
                   <TableRow>

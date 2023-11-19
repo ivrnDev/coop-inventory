@@ -1,4 +1,3 @@
-import RenderAnalytics from "@/components/admin/analytics/render/Analytics";
 import { getProductSales, getSalesAnalytics } from "@/lib/api/analytics";
 import { ProductSales, SalesAnalytics } from "@/types/analytics/analytics";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,107 +6,103 @@ import ProductAnalytics from "@/components/admin/analytics/render/ProductAnalyti
 const Analytics = async () => {
   const sales: SalesAnalytics = await getSalesAnalytics();
   const product: ProductSales[] = await getProductSales();
-  const sold = sales?.sold && sales.sold;
-  const revenue = sales?.revenue && sales.revenue;
-
+  const sold = sales?.sold;
+  const revenue = sales?.revenue;
   return (
     <>
       <section className="min-h-admin-main px-5 pt-2">
-        <div id="card-container" className="grid grid-cols-4 gap-5 mb-4">
-          {sold?.all &&
-            sold.all.length > 0 &&
-            sold.all.map((data, index) => (
-              <Card
-                key={index}
-                className="relative h-28 shadow-sm p-3 rounded-lg"
-              >
-                <CardContent className="flex space-y-1 flex-col">
-                  <h2 className="text-2xl text-black font-bold">
-                    {data.value ?? 0}
-                  </h2>
-                  <h4 className="text-md text-slate-700 font-bold capitalize">
-                    {data.name}
-                  </h4>
-                </CardContent>
-                <Activity
-                  color="black"
-                  size={35}
-                  className="absolute right-6 bottom-1/2 translate-y-[50%]"
-                />
-              </Card>
-            ))}
-          {revenue?.all &&
-            revenue.all.length > 0 &&
-            revenue.all.map((data, index) => (
-              <Card
-                key={index}
-                className="relative h-28 shadow-sm p-3 rounded-lg"
-              >
-                <CardContent className="flex space-y-1 flex-col">
-                  <h2 className="text-2xl text-black font-bold">
-                    ₱ {data.value.toLocaleString() ?? 0}
-                  </h2>
-                  <h4 className="text-md text-slate-700 font-bold capitalize">
-                    {data.name}
-                  </h4>
-                </CardContent>
-                <ShoppingBag
-                  color="black"
-                  size={35}
-                  className="absolute right-6 bottom-1/2 translate-y-[50%]"
-                />
-              </Card>
-            ))}
-          {sold?.day &&
-            sold.day.length > 0 &&
-            sold.day.map((data, index) => (
-              <Card
-                key={index}
-                className="relative h-28 shadow-sm p-3 rounded-lg"
-              >
-                <CardContent className="flex space-y-1 flex-col">
-                  <h2 className="text-2xl text-black font-bold">
-                    {data.value.toLocaleString() ?? 0}
-                  </h2>
-                  <h4 className="text-md text-slate-700 font-bold capitalize">
-                    {data.name}
-                  </h4>
-                </CardContent>
-              </Card>
-            ))}
+        <div className="grid grid-cols-2 gap-5 mb-4">
+          <Card className="relative h-44 shadow-sm p-4 rounded-lg bg-gradient-to-t from-blue-600 via-blue-700 to-blue-900">
+            <CardContent className="grid grid-cols-2">
+              <div className="text-center mt-5">
+                <h2 className="text-4xl text-white font-bold mt-2">
+                  {sold?.day?.today.value ?? 120}
+                </h2>
+                <h4 className="text-3xl text-gray-200 font-bold capitalize mt-6">
+                  Today
+                </h4>
+              </div>
+              <div className="text-center mt-5">
+                <h2 className="text-4xl text-white font-bold mt-2">
+                  {sold?.day?.yesterday.value ?? 490}
+                </h2>
+                <h4 className="text-3xl text-gray-200 font-bold capitalize mt-6">
+                  Yesterday
+                </h4>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="relative h-28 shadow-sm p-3 rounded-lg">
+            <CardContent className="flex space-y-1 flex-col"></CardContent>
+          </Card>
         </div>
-
+        <div id="card-container" className="grid grid-cols-4 gap-5 mb-4">
+          <Card className="relative h-28 shadow-sm p-3 rounded-lg">
+            <CardContent className="flex space-y-1 flex-col">
+              <h2 className="text-2xl text-black font-bold">
+                {sold?.all?.value ?? 0}
+              </h2>
+              <h4 className="text-md text-slate-700 font-bold capitalize">
+                sales
+              </h4>
+            </CardContent>
+            <Activity
+              color="black"
+              size={35}
+              className="absolute right-6 bottom-1/2 translate-y-[50%]"
+            />
+          </Card>
+          <Card className="relative h-28 shadow-sm p-3 rounded-lg">
+            <CardContent className="flex space-y-1 flex-col">
+              <h2 className="text-2xl text-black font-bold">
+                ₱ {revenue?.all?.value ?? 0}
+              </h2>
+              <h4 className="text-md text-slate-700 font-bold capitalize">
+                Revenue
+              </h4>
+            </CardContent>
+            <ShoppingBag
+              color="black"
+              size={35}
+              className="absolute right-6 bottom-1/2 translate-y-[50%]"
+            />
+          </Card>
+          <Card className="relative h-28 shadow-sm p-3 rounded-lg">
+            <CardContent className="flex space-y-1 flex-col">
+              <h2 className="text-2xl text-black font-bold">
+                {sold?.day?.yesterday.value ?? 0}
+              </h2>
+              <h4 className="text-md text-slate-700 font-bold capitalize">
+                Yesterday
+              </h4>
+            </CardContent>
+          </Card>
+          <Card className="relative h-28 shadow-sm p-3 rounded-lg">
+            <CardContent className="flex space-y-1 flex-col">
+              <h2 className="text-2xl text-black font-bold">
+                {sold?.year?.currentYear.value ?? 0}
+              </h2>
+              <h4 className="text-md text-slate-700 font-bold capitalize">
+                Current Year
+              </h4>
+            </CardContent>
+          </Card>
+          <Card className="relative h-28 shadow-sm p-3 rounded-lg">
+            <CardContent className="flex space-y-1 flex-col">
+              <h2 className="text-2xl text-black font-bold">
+                {sold?.year?.previousYear.value ?? 0}
+              </h2>
+              <h4 className="text-md text-slate-700 font-bold capitalize">
+                Previous Year
+              </h4>
+            </CardContent>
+          </Card>
+        </div>
         <div
           id="second-section-container"
           className="w-full grid grid-cols-2 overflow-hidden"
         >
           <div id="year-month-sales" className="w-[90%] h-full">
-            <div className="w-full mb-4">
-              <Card className="relative h-fit shadow-sm shadow-white p-3 rounded-2xl bg-gradient-to-br from-black via-slate-800 to-slate-900 flex flex-col justify-center">
-                <h1 className="font-bold text-2xl ml-3 text-white absolute top-4 left-3">
-                  REVENUES
-                </h1>
-                <TrendingUp
-                  color="white"
-                  size={35}
-                  className="absolute right-8 top-5"
-                />
-                <CardContent className="mx-auto flex items-center space-x-20 mt-14">
-                  {revenue?.month &&
-                    revenue.month.length > 0 &&
-                    revenue.month.map((data, index) => (
-                      <div key={index}>
-                        <p className="text-4xl text-white font-bold text-center">
-                          ₱ {data.value.toLocaleString() ?? 0}
-                        </p>
-                        <p className="text-md text-muted font-bold capitalize mt-2">
-                          {data.name}
-                        </p>
-                      </div>
-                    ))}
-                </CardContent>
-              </Card>
-            </div>
             <div className="w-full h-[50%] mb-4">
               <Card className="relative h-fit  shadow-sm shadow-white p-3 rounded-2xl bg-gradient-to-br from-black via-slate-800 to-slate-900 flex flex-col justify-center">
                 <h1 className="font-bold text-2xl ml-3 text-white absolute top-4 left-3">
@@ -119,18 +114,52 @@ const Analytics = async () => {
                   className="absolute right-8 top-5"
                 />
                 <CardContent className="mx-auto flex items-center space-x-20 mt-16">
-                  {sold?.month &&
-                    sold.month.length > 0 &&
-                    sold.month.map((data, index) => (
-                      <div key={index}>
-                        <p className="text-4xl text-white font-bold text-center">
-                          {data.value.toLocaleString() ?? 0}
-                        </p>
-                        <p className="text-md text-muted font-bold capitalize mt-2">
-                          {data.name}
-                        </p>
-                      </div>
-                    ))}
+                  <div>
+                    <p className="text-4xl text-white font-bold text-center">
+                      {sold?.month?.currentMonth.value ?? 0}
+                    </p>
+                    <p className="text-md text-muted font-bold capitalize mt-2">
+                      Current Month
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-4xl text-white font-bold text-center">
+                      {sold?.month?.previousMonth.value ?? 0}
+                    </p>
+                    <p className="text-md text-muted font-bold capitalize mt-2">
+                      Previous Month
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            <div className="w-full mb-4">
+              <Card className="relative h-fit shadow-sm shadow-white p-3 rounded-2xl bg-gradient-to-br from-black via-slate-800 to-slate-900 flex flex-col justify-center">
+                <h1 className="font-bold text-2xl ml-3 text-white absolute top-4 left-3">
+                  REVENUES
+                </h1>
+                <TrendingUp
+                  color="white"
+                  size={35}
+                  className="absolute right-8 top-5"
+                />
+                <CardContent className="mx-auto flex items-center space-x-20 mt-14">
+                  <div>
+                    <p className="text-4xl text-white font-bold text-center">
+                      ₱ {revenue?.month?.currentMonth.value ?? 0}
+                    </p>
+                    <p className="text-md text-muted font-bold capitalize mt-2">
+                      Current Month
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-4xl text-white font-bold text-center">
+                      ₱ {revenue?.month?.previousMonth.value ?? 0}
+                    </p>
+                    <p className="text-md text-muted font-bold capitalize mt-2">
+                      Previous Month
+                    </p>
+                  </div>
                 </CardContent>
               </Card>
             </div>

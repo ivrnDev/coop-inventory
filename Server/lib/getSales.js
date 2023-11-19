@@ -39,81 +39,82 @@ const getSales = (salesData) => {
 
   const sales = {
     sold: {
-      year: [
-        {
+      year: {
+        currentYear: {
           name: 'current year',
           value: currentYearSales.sold ?? 0
         },
+        previousYear:
         {
           name: 'previous year',
           value: previousYearSales.sold ?? 0,
-        },
-      ],
-      month: [
-        {
+        }
+      },
+      month: {
+        currentMonth: {
           name: 'current month',
           value: currentMonthSales.sold ?? 0
         },
-        {
+        previousMonth: {
           name: 'previous month',
           value: previousMonthSales.sold ?? 0
         },
-      ],
-      day: [
-        {
+      },
+      day: {
+        today: {
           name: 'today sales',
           value: currentDaySales.sold ?? 0
         },
-        {
+        previous: {
           name: 'yesterday sales',
           value: previousDaySales.sold ?? 0
         },
-      ],
-      all: [
-        {
-          name: 'sales',
-          value: allTimeSales.sold ?? 0
-        },
-      ]
+      },
+      all:
+      {
+        name: 'sales',
+        value: allTimeSales.sold ?? 0
+      },
+
     },
     revenue: {
-      year: [
-        {
+      year: {
+        currentYear: {
           name: 'current year',
           value: currentYearSales.revenue ?? 0
         },
+        previousYear:
         {
           name: 'previous year',
           value: previousYearSales.revenue ?? 0,
-        },
-      ],
-      month: [
-        {
+        }
+      },
+      month: {
+        currentMonth: {
           name: 'current month',
           value: currentMonthSales.revenue ?? 0
         },
-        {
+        previousMonth: {
           name: 'previous month',
           value: previousMonthSales.revenue ?? 0
         },
-      ],
-      day: [
-        {
+      },
+      day: {
+        today: {
           name: 'today',
           value: currentDaySales.revenue ?? 0
         },
-        {
+        previous: {
           name: 'yesterday',
           value: previousDaySales.revenue ?? 0
         },
-      ],
-      all: [
-        {
-          name: 'revenue',
-          value: allTimeSales.revenue ?? 0
-        },
-      ]
-    }
+      },
+      all:
+      {
+        name: 'revenue',
+        value: allTimeSales.revenue ?? 0
+      },
+    },
   }
 
   return sales
