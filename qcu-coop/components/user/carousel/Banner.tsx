@@ -13,6 +13,7 @@ const Banner = ({ banners }: Props) => {
       infiniteLoop={true}
       showArrows={false}
       interval={4000}
+      showThumbs={true}
     >
       {banners &&
         banners.map((banner, index) => (

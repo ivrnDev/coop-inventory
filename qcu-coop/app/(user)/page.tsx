@@ -44,11 +44,11 @@ const Home = async ({ searchParams }: Props) => {
               <FeaturedCarousel featured={featured} />
             </div>
           </div>
-          <div className="bg-categories-background flex flex-col p-4 h-64 md:h-80">
+          <div className="bg-categories-background flex flex-col p-4 h-52 md:h-80">
             <h2 className="text-white font-bold text-2xl mb-3 md:text-4xl select-none ">
               Categories
             </h2>
-            <div className="rounded-md flex gap-3 justify-center h-64 w-full overflow-x-auto md:gap-8">
+            <div className="rounded-md flex gap-3 justify-center h-full w-full overflow-x-auto md:gap-8">
               <CategoriesCarousel categories={categories} />
             </div>
           </div>
