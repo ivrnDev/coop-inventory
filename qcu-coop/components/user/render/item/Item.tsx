@@ -53,15 +53,14 @@ const Item = ({ product }: Props) => {
               <p>stocks</p>
             </div>
 
-            <p className="text-md font-bold float-right">
-              Total ₱ {selectedVariant?.variant_price * count}
-            </p>
-            <div className="flex gap-4 items-center flex-wrap">
+            <div
+              id="variants-container"
+              className="flex gap-4 items-center flex-wrap mt-2"
+            >
               <p className="text-lg font-semibold">Variants</p>
               {product.variants?.map((item, index) => (
                 <Button
                   key={index}
-                  type="button"
                   variant="variants"
                   onClick={() => setSelectedVariant(item)}
                   className={classNames({
@@ -73,24 +72,31 @@ const Item = ({ product }: Props) => {
                 </Button>
               ))}
             </div>
-
-            <div id="quantity-container" className="flex items-center gap-2">
-              <Button
-                variant="secondary"
-                onClick={() =>
-                  selectedVariant.variant_stocks >= count + 1 &&
-                  setCount((prev) => prev + 1)
-                }
-              >
-                <p>+</p>
-              </Button>
-              <p>{count}</p>
-              <Button
-                variant="secondary"
-                onClick={() => count > 1 && setCount((prev) => prev - 1)}
-              >
-                <p>-</p>
-              </Button>
+            <div className="w-full h-full flex justify-between items-end mb-5">
+              <div>
+                <p className="text-lg font-bold text-center">Total Amount</p>
+                <p className="text-lg font-bold text-left">
+                  ₱ {selectedVariant?.variant_price * count}
+                </p>
+              </div>
+              <div id="quantity-container" className="flex items-center gap-2">
+                <Button
+                  variant="secondary"
+                  onClick={() =>
+                    selectedVariant.variant_stocks >= count + 1 &&
+                    setCount((prev) => prev + 1)
+                  }
+                >
+                  <p>+</p>
+                </Button>
+                <p>{count}</p>
+                <Button
+                  variant="secondary"
+                  onClick={() => count > 1 && setCount((prev) => prev - 1)}
+                >
+                  <p>-</p>
+                </Button>
+              </div>
             </div>
           </div>
           <div className="bg-white rounded-sm p-2 mt-4 mx-3 h-64">

@@ -21,7 +21,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         system: "text-white bg-[#1E88E5]",
         variants:
-          "text-[#C3C1C1] uppercase bg-white border border-[#C3C1C1] hover:text-customer-orange p-2",
+          "text-[#C3C1C1] uppercase bg-white border border-[#C3C1C1] hover:text-customer-orange p-1",
         cart: "bg-[#F8EDED] text-lg text-[#D71313] rounded-none hover:opacity-80",
         buy: "bg-[#D71313] text-lg rounded-none hover:opacity-80 text-white",
       },
