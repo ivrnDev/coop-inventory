@@ -39,7 +39,7 @@ const Home = async ({ searchParams }: Props) => {
             </div>
             <div
               id="arrivals-container"
-              className="bg-white mt-5 flex justify-center gap-10 p-3 w-full h-full rounded-2xl overflow-x-auto"
+              className="bg-white mt-5 flex gap-10 p-3 w-full h-full rounded-2xl overflow-x-auto"
             >
               <FeaturedCarousel featured={featured} />
             </div>
@@ -48,7 +48,7 @@ const Home = async ({ searchParams }: Props) => {
             <h2 className="text-white font-bold text-2xl mb-3 md:text-4xl select-none ">
               Categories
             </h2>
-            <div className="rounded-md flex gap-3 justify-center h-full w-full overflow-x-auto md:gap-8">
+            <div className="rounded-md flex gap-3 h-full w-full overflow-x-auto md:gap-8">
               <CategoriesCarousel categories={categories} />
             </div>
           </div>
