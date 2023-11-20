@@ -80,9 +80,15 @@ const Item = ({ product }: Props) => {
             </div>
             <div className="w-full max-md:h-full flex justify-between max-md:items-end max-md:mb-5 md:mt-2">
               <div>
-                <p className="text-lg font-bold text-center md:text-2xl">Total Amount</p>
+                <p className="text-lg font-bold text-center md:text-2xl">
+                  Total Amount
+                </p>
                 <p className="text-lg font-semibold text-left md:text-2xl">
-                  ₱ {selectedVariant?.variant_price * count}
+                  ₱{" "}
+                  {(selectedVariant?.variant_price * count).toLocaleString(
+                    "en-US",
+                    { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+                  )}
                 </p>
               </div>
               <div id="quantity-container" className="flex items-center gap-2">
@@ -95,7 +101,7 @@ const Item = ({ product }: Props) => {
                 >
                   <Plus size={15} />
                 </Button>
-                <p className="text-lg font-semibold">{count}</p>
+                <p className="text-lg font-semibold select-none">{count}</p>
                 <Button
                   variant="secondary"
                   onClick={() => count > 1 && setCount((prev) => prev - 1)}

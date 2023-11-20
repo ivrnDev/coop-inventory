@@ -14,7 +14,7 @@ const Albums = ({ albums, image }: Props) => {
     <>
       {albums?.length === 0 ||
         (!albums && image && (
-          <div className="relative h-60 w-full border-black border-b-2 bg-white">
+          <div className="relative h-60 w-full max-md:border-black max-md:border-b-2 bg-white md:h-72 md:w-80 md:border">
             <Image
               src={`data:image/png;base64,${image}`}
               alt={`display-image`}

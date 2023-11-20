@@ -19,15 +19,17 @@ const ItemPage = async ({ params }: Params) => {
 
   return (
     <section className="max-md:relative h-user-main-mobile mt-user-header-mobile pb-10 overflow-y-auto overflow-x-hidden mb-15 md:h-user-main md:mt-user-header md:py-10 md:px-7">
-      <div className="md:rounded-md md:flex md:w-full md:bg-white md:overflow-hidden md:space-x-5 md:p-8">
+      <div className="h-fit md:rounded-md md:flex md:w-full md:bg-white md:overflow-hidden md:space-x-5 md:p-8">
         <Albums albums={product[0]?.albums} image={product[0]?.display_image} />
         <Item product={product[0]} />
       </div>
-      <div className="bg-white rounded-sm p-2 mt-4 max-md:mx-3 h-64 md:w-full md:p-4">
-        <h1 className="text-xl font-bold md:text-2xl md:bg-[#EEEDED] md:p-3">
+      <div className="bg-white rounded-sm p-2 mt-4 max-md:mx-3 h-64 md:w-full md:p-4x">
+        <h1 className="text-xl font-bold md:text-2xl md:bg-[#EEEDED] md:p-3 ">
           Product Description
         </h1>
-        <p className="mt-2 md:text-lg">{product[0]?.product_description}</p>
+        <p className="mt-3 md:text-lg indent-8">
+          {product[0]?.product_description}
+        </p>
       </div>
     </section>
   );
