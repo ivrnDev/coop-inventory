@@ -133,7 +133,7 @@ const Item = ({ product }: Props) => {
 
           <div
             id="button-container"
-            className="flex items-center w-full fixed bottom-9 left-0 md:hidden"
+            className="flex items-center w-full fixed bottom-[var(--h-user-navbar-mobile)] left-0 md:hidden"
           >
             <AddtoCartButton product={product} />
             <Link

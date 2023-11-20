@@ -116,6 +116,7 @@ module.exports = {
         "admin-header-y": "var(--h-admin-header)",
         "admin-main": "var(--w-admin-navbar)",
         "user-header-mobile": "var(--h-user-header-mobile)",
+        "user-navbar-mobile": "var(--h-user-navbar-mobile)",
         "user-header": "calc((var(--h-user-header) + var(--h-user-navbar)))",
         "products-section": "var(--m-product-section))",
       },
