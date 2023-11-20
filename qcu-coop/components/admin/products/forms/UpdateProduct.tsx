@@ -33,7 +33,7 @@ import UpdateVariant from "./updateVariant";
 
 type Props = {
   categories: Categories[];
-  product: Product;
+  id: string;
 };
 
 type SelectedImage = {
@@ -46,12 +46,13 @@ type ImageNumber = {
   albums: number;
 };
 
-const UpdateProductForm = ({ categories, product }: Props) => {
+const UpdateProductForm = ({ categories, id }: Props) => {
   const { moderate } = rolePermissions;
   const { toast } = useToast();
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [isAllowed, setIsAllowed] = useState<boolean>(false);
+  const [productName, setProductName] = useState<string>("");
   const [adminId, setAdminId] = useState<number>(0);
   const [selectedImage, setSelectedImage] = useState<SelectedImage>({
     image: null,
@@ -74,21 +75,24 @@ const UpdateProductForm = ({ categories, product }: Props) => {
 
   useEffect(() => {
     const getProduct = async () => {
-      handleImage(product);
-      if (product) {
-        const defaultFormValues: ValidateProduct = {
-          product_name: product.product_name || "",
-          display_name: product.display_name || "",
-          display_price: product.display_price || "",
-          product_description: product.product_description || "",
-          status: product.status == "active" ? "active" : "inactive",
-          isFeatured: String(product.isFeatured) == "1" ? "1" : "0",
-          category_id: String(product.category_id) || "",
-          display_image: selectedImage.image,
-          product_album: selectedImage.albums,
-        };
-        reset(defaultFormValues);
-      }
+        const item = await getProductById(id);
+        setProductName(item[0].product_name);
+        handleImage(item[0]);
+        if (item && item.length > 0) {
+          const defaultFormValues: ValidateProduct = {
+            product_name: item[0].product_name || "",
+            display_name: item[0].display_name || "",
+            display_price: item[0].display_price || "",
+            product_description: item[0].product_description || "",
+            status: item[0].status == "active" ? "active" : "inactive",
+            isFeatured: String(item[0].isFeatured) == "1" ? "1" : "0",
+            category_id: String(item[0].category_id) || "",
+            display_image: selectedImage.image,
+            product_album: selectedImage.albums,
+          };
+          reset(defaultFormValues);
+        }
+    
     };
     getProduct();
   }, []);
@@ -167,7 +171,7 @@ const UpdateProductForm = ({ categories, product }: Props) => {
         }
       }
       try {
-        const response = await updateProduct(form, String(product.product_id));
+        const response = await updateProduct(form, id);
         if (response.status === 200) {
           await createActivity(
             {
@@ -244,13 +248,14 @@ const UpdateProductForm = ({ categories, product }: Props) => {
                     {selectedImage.image && (
                       <div
                         id="preview-image-container"
-                        className="relative w-full h-full object-contain"
+                        className="relative w-full h-full"
                       >
                         <Image
                           src={URL.createObjectURL(selectedImage.image)}
                           alt="Selected Image"
                           sizes="min-w-1"
                           fill
+                          className="object-contain"
                         />
                       </div>
                     )}
@@ -263,7 +268,7 @@ const UpdateProductForm = ({ categories, product }: Props) => {
                           alt="Selected Image"
                           sizes="min-w-1"
                           fill
-                          className="rounded-lg object-cover"
+                          className="rounded-lg object-contain"
                         />
                       </AspectRatio>
                     </DialogContent>
@@ -282,13 +287,14 @@ const UpdateProductForm = ({ categories, product }: Props) => {
                     {selectedImage.albums[0] && (
                       <div
                         id="preview-image-container"
-                        className="relative w-full h-full object-contain"
+                        className="relative w-full h-full"
                       >
                         <Image
                           src={URL.createObjectURL(selectedImage.albums[0])}
                           alt="Selected Image"
                           sizes="min-w-1"
                           fill
+                          className="object-contain"
                         />
                       </div>
                     )}
@@ -309,7 +315,7 @@ const UpdateProductForm = ({ categories, product }: Props) => {
                               alt="Selected Image"
                               sizes="min-w-1"
                               fill
-                              className="rounded-lg object-cover"
+                              className="rounded-lg object-contain"
                             />
                           </AspectRatio>
                         ))}
@@ -674,10 +680,7 @@ const UpdateProductForm = ({ categories, product }: Props) => {
 
       {currentStep === 2 && (
         <>
-          <UpdateVariant
-            productId={String(product.product_id)}
-            productName={product.product_name}
-          />
+          <UpdateVariant productId={id} productName={productName} />
         </>
       )}
     </form>

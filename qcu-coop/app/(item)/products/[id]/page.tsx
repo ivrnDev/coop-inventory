@@ -1,8 +1,7 @@
 import Albums from "@/components/user/carousel/Albums";
 import Item from "@/components/user/render/item/Item";
 import { getAllProducts, getProductById } from "@/lib/api/products";
-import { Product, Products } from "@/types/products/products";
-import Image from "next/image";
+import { Products } from "@/types/products/products";
 
 type Params = {
   params: { id: number };

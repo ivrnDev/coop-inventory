@@ -16,7 +16,7 @@ export async function generateStaticParams() {
 
 const UpdateProductPage = async ({ params }: Params) => {
   const id = params?.productId as string;
-  const product: Product[] = await getProductById(id);
+  // const product: Product[] = await getProductById(id);
   const categories: Categories[] = await getAllCategories();
 
   return (
@@ -25,9 +25,7 @@ const UpdateProductPage = async ({ params }: Params) => {
         EDIT PRODUCT
       </div>
       <div className="bg-white w-full h-[calc(100%-2.5rem)] mt-10 oveflow-hidden py-8 px-9">
-        <Suspense fallback={<p>Loading...</p>}>
-          <UpdateProductForm categories={categories} product={product[0]} />
-        </Suspense>
+        <UpdateProductForm categories={categories} id={id} />
       </div>
     </section>
   );
