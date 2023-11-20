@@ -7,6 +7,7 @@ import AddtoCartButton from "@/components/cart/AddtoCartBtn";
 import classNames from "classnames";
 import Link from "next/link";
 import { Order } from "@/types/orders/orders";
+import { Minus, Plus } from "lucide-react";
 
 type Props = {
   product: Product;
@@ -87,14 +88,14 @@ const Item = ({ product }: Props) => {
                     setCount((prev) => prev + 1)
                   }
                 >
-                  <p>+</p>
+                  <Plus size={15}/>
                 </Button>
-                <p>{count}</p>
+                <p className="text-lg font-semibold">{count}</p>
                 <Button
                   variant="secondary"
                   onClick={() => count > 1 && setCount((prev) => prev - 1)}
                 >
-                  <p>-</p>
+               <Minus size={15} />
                 </Button>
               </div>
             </div>
