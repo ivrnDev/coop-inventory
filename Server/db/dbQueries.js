@@ -61,13 +61,13 @@ module.exports = {
             INSERT INTO variant (variant_id, product_id, variant_name, variant_symbol, variant_price, variant_stocks) VALUES (?, ?, ?, ?, ?, ?)
         `,
         getAllVariantsQuery: `
-            SELECT * FROM variant
+            SELECT * FROM variant ORDER BY variant_id
         `,
         getVariantByIdQuery: `
             SELECT * FROM variant WHERE id = ?
         `,
         getVariantByProductIdQuery: `
-            SELECT * FROM variant WHERE product_id = ?
+            SELECT * FROM variant WHERE product_id = ? ORDER BY variant_id
         `,
         deleteVariantsQuery: `
             DELETE FROM variant WHERE product_id = ?
