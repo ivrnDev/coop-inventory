@@ -66,6 +66,8 @@ const HomeHeader = () => {
               type="search"
               placeholder="Search products"
               className="w-full pl-8"
+              onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={(e) => e.code === "Enter" && handleSearch()}
             />
           </div>
           <div className="relative md:hidden">
