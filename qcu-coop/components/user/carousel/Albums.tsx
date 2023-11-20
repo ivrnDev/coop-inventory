@@ -31,6 +31,7 @@ const Albums = ({ albums, image }: Props) => {
           infiniteLoop={true}
           showArrows={false}
           interval={3000}
+          showThumbs={true}
           className="h-60"
         >
           {albums.map((album, index) => (

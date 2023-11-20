@@ -100,7 +100,7 @@ const Item = ({ product }: Props) => {
 
           <div
             id="button-container"
-            className="flex items-center w-full bg-red-500 fixed bottom-10 left-0"
+            className="flex items-center w-full bg-red-500 fixed bottom-9 left-0"
           >
             <AddtoCartButton product={product} />
             <Link
@@ -112,7 +112,7 @@ const Item = ({ product }: Props) => {
               }}
               className="w-full"
             >
-              <Button variant="submit" className="flex-1">
+              <Button variant="buy" className="w-full">
                 BUY NOW
               </Button>
             </Link>

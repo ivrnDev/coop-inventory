@@ -5,6 +5,7 @@ import { setItem } from "../redux/features/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { Button } from "../ui/button";
+import Image from "next/image";
 type Props = {
   product: Product;
 };
@@ -23,8 +24,13 @@ const AddtoCartButton = ({ product }: Props) => {
   };
   return (
     <>
-      <Button variant="default" size="sm" onClick={handleAddToCart}>
-        ADD TO CART
+      <Button
+      variant="cart"
+        className="w-full flex items-center justify-center gap-4 "
+        onClick={handleAddToCart}
+      >
+        <Image src="/icons/cart-orange.svg" alt="cart" width={22} height={22}/>
+       Add to Cart
       </Button>
 
       {itemAdded === 1 && (
