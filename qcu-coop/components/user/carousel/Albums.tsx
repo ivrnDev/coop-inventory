@@ -31,13 +31,13 @@ const Albums = ({ albums, image }: Props) => {
           infiniteLoop={true}
           showArrows={false}
           interval={3000}
-          showThumbs={true}
-          className="h-60"
+          showThumbs={false}
+          className="h-fit overflow-hidden md:border md:w-80 md:h-fit "
         >
           {albums.map((album, index) => (
             <div
               key={index}
-              className="relative h-60 w-full border-black border-b-2 bg-white"
+              className="relative h-60 w-full max-md:border-black max-md:border-b-2 md:h-72 bg-white"
             >
               <Image
                 src={`data:image/png;base64,${album.product_photo}`}

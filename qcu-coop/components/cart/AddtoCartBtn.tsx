@@ -26,7 +26,7 @@ const AddtoCartButton = ({ product }: Props) => {
     <>
       <Button
       variant="cart"
-        className="w-full flex items-center justify-center gap-4 "
+        className="w-full h-full flex items-center justify-center gap-4 md:gap-6 "
         onClick={handleAddToCart}
       >
         <Image src="/icons/cart-orange.svg" alt="cart" width={22} height={22}/>
