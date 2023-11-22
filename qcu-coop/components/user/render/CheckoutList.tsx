@@ -18,7 +18,7 @@ const CheckoutList = ({ orders }: Props) => {
     <>
       <Table className="overflow-hidden">
         <TableHeader className="">
-          <TableRow className="whitespace-nowrap text-sm">
+          <TableRow className="whitespace-nowrap text-center text-sm md:text-lg">
             <TableHead></TableHead>
             <TableHead></TableHead>
             <TableHead>Unit Price</TableHead>

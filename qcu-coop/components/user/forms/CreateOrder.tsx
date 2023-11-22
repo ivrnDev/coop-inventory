@@ -41,7 +41,7 @@ type Props = {
 
 const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
   const { toast } = useToast();
-  const router = useRouter()
+  const router = useRouter();
   const currentDate = new Date();
   const closeRef = useRef<HTMLButtonElement | null>(null);
   const exitRef = useRef<HTMLButtonElement | null>(null);
@@ -77,7 +77,7 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
       const order = await createOrder(orderData);
       if (order.status === 201) return router.push("./receipt");
       setErrorMessage(order.data.message);
-      setIsFailed(true)
+      setIsFailed(true);
       return;
     } catch (error) {
       toast({
@@ -278,7 +278,7 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
           <h1 className="font-semibold text-lg absolute top-1 left-2 z-20">
             PRODUCTS ORDERED
           </h1>
-          <div className="h-60 overflow-y-auto px-1 mt-7 md:h-90">
+          <div className="h-60 overflow-y-auto px-1 mt-7 md:h-fit">
             {children}
           </div>
           <div
@@ -367,7 +367,7 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
         <section
           id="payment-method-container"
           className={classNames({
-            "bg-white mb-user-navbar-mobile overflow-hidden w-full h-60 fixed -bottom-[12.6rem] right-0 transition-transform":
+            "bg-white max-md:mb-user-navbar-mobile overflow-hidden w-full h-60 max-md:fixed max-md:-bottom-[12.6rem] max-md:right-0 max-md:transition-transform md:mt-5":
               true,
             "-translate-y-44": isOpen,
           })}
@@ -436,7 +436,12 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
                         <Dialog>
                           <DialogTrigger
                             ref={exitRef}
-                            className="bg-blue-500 text-white h-fit px-1 text-sm"
+                            className={classNames({
+                              "text-red-600 font-bold border-red-600 bg-transparent":
+                                errors.reference_number?.message !== undefined,
+                                "text-white border-none": errors.reference_number?.message === undefined,
+                              "bg-blue-500 h-fit px-1 text-sm": true,
+                            })}
                           >
                             Input Transaction Details
                           </DialogTrigger>
@@ -469,7 +474,7 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
                   </RadioGroup>
                 </TabsContent>
 
-                <div className="flex flex-col gap-1 mb-user-navbar-mobile absolute bottom-1 right-3">
+                <div className="flex flex-col gap-1 mb-user-navbar-mobile max-md:absolute max-md:bottom-1 max-md:right-3">
                   <div className="flex gap-2">
                     <p className="">Total Payment:</p>
                     <p className="text-custom-orange font-bold text-lg">
@@ -493,7 +498,7 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
           />
         </section>
       </form>
-     
+
       {isFailed && (
         <Alert
           variant="destructive"
