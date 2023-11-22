@@ -30,7 +30,7 @@ const CheckoutList = ({ orders }: Props) => {
           {orders && orders.length > 0 ? (
             orders.map((product, index) => (
               <TableRow key={index} className="text-center">
-                <TableCell className="relative w-16 h-16">
+                <TableCell className="relative w-20 h-20">
                   <Image
                     src={`data:image/png;base64,${product.display_image}`}
                     alt={product.product_name}
@@ -39,7 +39,7 @@ const CheckoutList = ({ orders }: Props) => {
                     className="object-contain"
                   />
                 </TableCell>
-                <TableCell className="text-left">
+                <TableCell className="text-left line-clamp-2">
                   {product.display_name}
                 </TableCell>
                 <TableCell>{`₱ ${product.variantPrice.toLocaleString("en-US", {

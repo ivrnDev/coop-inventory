@@ -38,7 +38,7 @@ const Checkout = async ({ searchParams }: Params) => {
 
   return (
     <>
-      <div className="h-user-main-mobile mt-user-header-mobile pb-14 bg-green-500 overflow-y-auto md:h-user-main md:mt-user-header md:py-10 md:px-7">
+      <div className="h-user-main-mobile mt-user-header-mobile pb-12 bg-green-500 overflow-y-auto md:h-user-main md:mt-user-header md:py-10 md:px-7">
         <CreateOrderForm orders={parsedOrders} orderInfo={orderArray}>
           <CheckoutList orders={orderArray} />
         </CreateOrderForm>

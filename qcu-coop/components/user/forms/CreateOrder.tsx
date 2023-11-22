@@ -97,7 +97,7 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <section
           id="personal-info-container"
-          className="shadow-sm bg-white flex flex-col space-y-2 rounded-md p-4 h-32"
+          className="shadow-sm bg-white flex flex-col space-y-2 rounded-md p-4 h-28"
         >
           <div className="flex justify-between">
             <p className="text-custom-orange">Personal Information</p>
@@ -226,15 +226,17 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
 
         <section
           id="orders-container"
-          className="bg-white rounded-sm shadow-md flex flex-col justify-between mt-5 px-1"
+          className="relative bg-white rounded-sm shadow-md flex flex-col justify-between mt-5"
         >
-          <div className="h-64 overflow-y-auto">
-          {children}
-          </div>
-          <div id="pickup-container" className="flex justify-between items-center border-y-2">
+          <h1 className="font-semibold text-lg absolute top-1 left-2 z-20">PRODUCTS ORDERED</h1>
+          <div className="h-60 overflow-y-auto px-1 mt-7">{children}</div>
+          <div
+            id="pickup-container"
+            className="flex justify-between items-center border-black border-y-2 px-1"
+          >
             <div className="flex space-x-3">
-              <p className="text-blue-400">Order Options</p>
-              <p className="">
+              <p className="text-blue-400 text-sm">Order Options</p>
+              <p className="text-sm">
                 {format(currentDate, "PP") === String(watch("pickup_date"))
                   ? "Immediate Pickup"
                   : "Scheduled Pickup"}
@@ -250,14 +252,17 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
                       <Button
                         variant={"outline"}
                         className={classNames({
-                          "w-1/3 pl-3 text-left font-normal": true,
+                          "w-fit pl-3 text-left font-xs whitespace-nowrap flex gap-2":
+                            true,
                           "text-muted-foreground": !value,
                         })}
                       >
                         {value ? (
-                          format(new Date(value), "PPPP")
+                          <p className="text-sm">
+                            {format(new Date(value), "PPPP")}
+                          </p>
                         ) : (
-                          <span>
+                          <div>
                             {errors.pickup_date ? (
                               <p className="text-red-600 text-sm mt-2">
                                 {errors.pickup_date?.message}
@@ -265,9 +270,9 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
                             ) : (
                               "Choose pickup date"
                             )}
-                          </span>
+                          </div>
                         )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        <CalendarIcon className="h-5 w-5 opacity-50" />
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
@@ -295,6 +300,16 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
                 )}
               />
             </Popover>
+          </div>
+          <div className="flex justify-between px-1">
+            <p className="text-sm">{`Order Total: (${orders.length} items)`}</p>
+            <p className="text-custom-orange font-bold text-md">
+              ₱{" "}
+              {total.toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </p>
           </div>
         </section>
 
@@ -403,9 +418,9 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
                   </RadioGroup>
                 </TabsContent>
 
-                <div className="flex flex-col gap-1 mb-user-navbar-mobile absolute bottom-3 right-3">
+                <div className="flex flex-col gap-1 mb-user-navbar-mobile absolute bottom-1 right-3">
                   <div className="flex gap-2">
-                    <p className=">Total Payment:</p>
+                    <p className="">Total Payment:</p>
                     <p className="text-custom-orange font-bold text-lg">
                       ₱{" "}
                       {total.toLocaleString("en-US", {
