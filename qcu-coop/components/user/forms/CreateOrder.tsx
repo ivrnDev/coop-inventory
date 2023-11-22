@@ -97,12 +97,12 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <section
           id="personal-info-container"
-          className="bg-white flex flex-col space-y-2 rounded-md p-4"
+          className="shadow-sm bg-white flex flex-col space-y-2 rounded-md p-4 h-32"
         >
-          <div className="flex space-x-28">
-            <p className="text-custom-orange">Personal Information</p>
+          <div className="flex justify-between">
+            <p className="text-custom-orange text-md">Personal Information</p>
             <Dialog>
-              <DialogTrigger className="text-blue-500">Change</DialogTrigger>
+              <DialogTrigger className="text-blue-500 text-md">Change</DialogTrigger>
               <DialogContent>
                 <DialogHeader>EDIT PERSONAL INFORMATION</DialogHeader>
 
@@ -214,16 +214,19 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
               </DialogContent>
             </Dialog>
           </div>
-          <div>
-            <p>{watch("customer_name")}</p>
-            <p>{watch("student_id")}</p>
-            <p>{watch("customer_phone")}</p>
-            <p>{watch("customer_email")}</p>
+          <div className="flex flex-col space-y-2 text-sm">
+            <div className="flex space-x-4">
+              <p className="">{watch("customer_name")}</p>
+              <p className="text-gray-400">{watch("student_id")}</p>
+              <p className="text-gray-400">{watch("customer_phone")}</p>
+            </div>
+            <p className="">{watch("customer_email")}</p>
           </div>
         </section>
+
         <section
           id="orders-container"
-          className="bg-white rounded-sm shadow-md flex flex-col justify-between"
+          className="bg-white rounded-sm shadow-md flex flex-col justify-between mt-5"
         >
           {children}
           <div id="pickup-container" className="flex justify-between">
