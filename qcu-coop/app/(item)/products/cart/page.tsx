@@ -5,10 +5,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { removeItem } from "@/components/redux/features/cartSlice";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Product, Products, Variant } from "@/types/products/products";
-import classNames from "classnames";
+import { Product, Variant } from "@/types/products/products";
 import { Button } from "@/components/ui/button";
-import { getAllProducts, getProductById } from "@/lib/api/products";
 import { Minus, Plus, X } from "lucide-react";
 import {
   Select,
@@ -34,13 +32,7 @@ const CartItem = () => {
   const [total, setTotal] = useState<number>(
     cart.reduce((acc, v) => acc + Number(v.variants[0].variant_price), 0)
   );
-  // const [product, setProduct] = useState<Product[]>([]);
-
-  // useEffect(() => {
-  //   getProductById("1001")
-  //     .then((res) => setProduct(res))
-  //     .catch((e) => console.error(e));
-  // }, []);
+ 
 
   useEffect(() => {
     const priceTotal = prices.reduce(
@@ -122,18 +114,15 @@ const CartItem = () => {
       return newSelectedVariants;
     });
     setQuantities((prev) => {
-      const newSelectedVariants = [...prev];
-      newSelectedVariants.splice(productIndex, 1);
-      return newSelectedVariants;
+      const newQuantities = [...prev];
+      newQuantities.splice(productIndex, 1);
+      return newQuantities;
     });
-
-    if (selectedVariants[productIndex]) {
-      const currentPrice = Number(selectedVariants[productIndex].variant_price);
-      const newPrices = [...prices];
-      newPrices[productIndex] =
-        newPrices[productIndex] - currentPrice * quantities[productIndex];
-      setPrices(newPrices);
-    }
+    setPrices((prev) => {
+      const newPrices = [...prev];
+      newPrices.splice(productIndex, 1);
+      return newPrices;
+    });
   };
 
   const orders = selectedVariants.map((variant, orderIndex) => ({
