@@ -24,17 +24,23 @@ const CartItem = () => {
   const cart: Product[] = useSelector((state: RootState) => state.cart.item);
   const dispatch = useDispatch();
 
-  const [selectedVariants, setSelectedVariants] = useState<Variant[]>([]);
+  const [selectedVariants, setSelectedVariants] = useState<Variant[]>(
+    cart.map((v) => v.variants[0])
+  );
   const [quantities, setQuantities] = useState<number[]>(cart.map(() => 1));
-  const [prices, setPrices] = useState<number[]>(cart.map(() => 0));
-  const [total, setTotal] = useState<number>(0);
-  const [product, setProduct] = useState<Product[]>([]);
+  const [prices, setPrices] = useState<number[]>(
+    cart.map((v) => Number(v.variants[0].variant_price))
+  );
+  const [total, setTotal] = useState<number>(
+    cart.reduce((acc, v) => acc + Number(v.variants[0].variant_price), 0)
+  );
+  // const [product, setProduct] = useState<Product[]>([]);
 
-  useEffect(() => {
-    getProductById("1001")
-      .then((res) => setProduct(res))
-      .catch((e) => console.error(e));
-  }, []);
+  // useEffect(() => {
+  //   getProductById("1001")
+  //     .then((res) => setProduct(res))
+  //     .catch((e) => console.error(e));
+  // }, []);
 
   useEffect(() => {
     const priceTotal = prices.reduce(
@@ -92,7 +98,6 @@ const CartItem = () => {
   };
 
   const decreaseQuantity = (productIndex: number) => {
-    console.log({ selectedVariants, quantities, prices });
     if (quantities[productIndex] <= 1) return;
 
     const newQuantities = [...quantities];
@@ -141,8 +146,8 @@ const CartItem = () => {
     <>
       <section className="h-user-main-mobile mt-user-header-mobile pb-[calc(var(--h-user-navbar-mobile)*2)] px-5 pt-4 overflow-y-scroll md:h-user-main md:mt-user-header">
         <div className="flex flex-col gap-5">
-          {product && product.length > 0 ? (
-            product.map((product, productIndex) => (
+          {cart && cart.length > 0 ? (
+            cart.map((product, productIndex) => (
               <div
                 key={productIndex}
                 className="relative bg-white flex shadow-lg rounded-md gap-3 h-fit p-3"
@@ -172,19 +177,23 @@ const CartItem = () => {
 
                   <Select
                     onValueChange={(newValue) => {
-                      const parseValue = JSON.parse(newValue)
+                      const parseValue = JSON.parse(newValue);
                       handleVariantClick(parseValue.variant, parseValue.index);
                     }}
                   >
                     <SelectTrigger id="variant" className="md:hidden">
-                      <SelectValue placeholder="Filter" />
+                      <SelectValue
+                        placeholder={
+                          selectedVariants[productIndex].variant_name
+                        }
+                      />
                     </SelectTrigger>
                     <SelectContent position="popper">
                       <SelectGroup>
                         {product.variants.map((variant, index) => (
                           <SelectItem
                             key={index}
-                            value={JSON.stringify({variant, index})}
+                            value={JSON.stringify({ variant, index })}
                           >
                             <p className="capitalize">
                               {variant.variant_symbol}
@@ -194,29 +203,6 @@ const CartItem = () => {
                       </SelectGroup>
                     </SelectContent>
                   </Select>
-
-                  {/* <div className="flex gap-4">
-                    {product.variants &&
-                      product.variants.map((variant, variantIndex) => (
-                        <Button
-                          type="button"
-                          size="sm"
-                          key={variantIndex}
-                          className={classNames({
-                            "bg-blue-300 p-3": true,
-                            "bg-yellow-300": selectedVariants.some(
-                              (v) => variant === v
-                            ),
-                          })}
-                          onClick={() =>
-                            handleVariantClick(variant, productIndex)
-                          }
-                        >
-                          {variant.variant_symbol}
-                        </Button>
-                      ))}
-                  </div> */}
-
                   <div
                     id="quantity-container"
                     className="flex items-center gap-3"

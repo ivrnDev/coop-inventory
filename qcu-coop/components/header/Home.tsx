@@ -43,11 +43,14 @@ const HomeHeader = () => {
           id="logo-heading-container"
           className="flex space-x-3 items-center"
         >
-          <div className="relative w-10 h-10 md:w-18 md:h-18 object-fill">
-            <Link href="/">
-              <Image src="/images/qcu-logo.png" alt="QCU-Logo" fill />
-            </Link>
-          </div>
+          <Link href="/" className="relative w-10 h-10 md:w-18 md:h-18">
+            <Image
+              src="/images/qcu-logo.png"
+              alt="QCU-Logo"
+              sizes="min-w-1"
+              fill
+            />
+          </Link>
           <h1 className="font-bold text-lg md:text-xl text-white md:text-black">
             QCU COOP STORE
           </h1>
@@ -73,16 +76,14 @@ const HomeHeader = () => {
           <div className="relative md:hidden">
             <Cart />
           </div>
-          <div className="hidden md:block relative w-10 h-10 object-contain">
-            <Link href="/login">
-              <Image
-                src="/icons/user-icon.svg"
-                alt="user-icon"
-                sizes="(min-width: 2rem)"
-                fill
-              />
-            </Link>
-          </div>
+          <Link href="/login" className="hidden md:block relative w-10 h-10">
+            <Image
+              src="/icons/user-icon.svg"
+              alt="user-icon"
+              sizes="min-w-1"
+              fill
+            />
+          </Link>
         </div>
       </header>
 

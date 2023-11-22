@@ -9,7 +9,7 @@ const Cart = () => {
   return (
     <>
       <Link href="/products/cart">
-        <div className="relative w-10 h-10 object-cover md:w-11 md:h-11">
+        <div className="relative w-10 h-10 md:w-11 md:h-11">
           <Image
             src="/icons/cart.svg"
             alt="cart"
