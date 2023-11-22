@@ -132,15 +132,15 @@ const CartItem = () => {
 
   return (
     <>
-      <section className="h-user-main-mobile mt-user-header-mobile pb-[calc(var(--h-user-navbar-mobile)*2)] px-5 pt-4 overflow-y-scroll md:h-user-main md:mt-user-header">
-        <div id="info-container" className="flex flex-col gap-5">
+      <section className="h-user-main-mobile mt-user-header-mobile max-md:pb-[calc(var(--h-user-navbar-mobile)*2)] px-5 pt-4 overflow-y-auto md:h-user-main md:mt-user-header">
+        <div id="info-container" className="flex flex-col gap-5 md:gap-14 md:p-8">
           {cart && cart.length > 0 ? (
             cart.map((product, productIndex) => (
               <div
                 key={productIndex}
-                className="relative bg-white flex shadow-lg rounded-md gap-3 h-fit p-3"
+                className="relative bg-white flex items-center shadow-lg rounded-md gap-3 h-fit p-3 md:h-64"
               >
-                <div className="relative w-24 h-32">
+                <div className="relative max-md:w-32 max-md:h-32 md:border md:w-56 md:h-full">
                   <Image
                     src={`data:image/png;base64,${product.display_image}`}
                     alt={product.product_name}
@@ -148,8 +148,10 @@ const CartItem = () => {
                     className="object-contain"
                   />
                 </div>
-                <div className="flex flex-col gap-2 w-full">
-                  <h2 className="max-w-[310px] whitespace-nowrap overflow-hidden text-ellipsis">{product.display_name}</h2>
+                <div className="flex flex-col gap-2 w-full h-full md:self-start">
+                  <h2 className="md:text-2xl">
+                    {product.display_name}
+                  </h2>
                   <div className="flex space-x-2 md:text-lg">
                     <p className="font-bold">
                       {selectedVariants[productIndex]?.variant_stocks ??
@@ -157,9 +159,12 @@ const CartItem = () => {
                     </p>
                     <p>stocks</p>
                   </div>
-                  <p className="text-custom-orange font-bold">
+                  <p className="text-custom-orange font-bold md:text-2xl">
                     ₱ {""}
-                    {selectedVariants[productIndex]?.variant_price ??
+                    {prices[productIndex].toLocaleString(
+                    "en-US",
+                    { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+                  ) ??
                       product.display_price}
                   </p>
 
@@ -169,7 +174,7 @@ const CartItem = () => {
                       handleVariantClick(parseValue.variant, parseValue.index);
                     }}
                   >
-                    <SelectTrigger id="variant" className="w-full">
+                    <SelectTrigger id="variant" className="w-full md:w-[35%]">
                       <SelectValue
                         placeholder={
                           selectedVariants[productIndex].variant_name
@@ -183,9 +188,7 @@ const CartItem = () => {
                             key={index}
                             value={JSON.stringify({ variant, index })}
                           >
-                            <p className="capitalize">
-                              {variant.variant_name}
-                            </p>
+                            <p className="capitalize">{variant.variant_name}</p>
                           </SelectItem>
                         ))}
                       </SelectGroup>
@@ -200,20 +203,20 @@ const CartItem = () => {
                       variant="ghost"
                       size="xsm"
                       onClick={() => increaseQuantity(productIndex)}
-                      className="rounded-none border"
+                      className="rounded-none border md:h-fit"
                     >
-                      <Plus width={12} height={12} />
+                      <Plus width={12} height={12} className="md:h-7 md:w-7" />
                     </Button>
-                    <p className="text-md font-semibold select-none">
+                    <p className="text-md font-semibold select-none md:text-xl">
                       {quantities[productIndex] ?? 0}
                     </p>
                     <Button
                       size="xsm"
                       variant="ghost"
                       onClick={() => decreaseQuantity(productIndex)}
-                      className="rounded-none border"
+                      className="rounded-none border md:h-fit"
                     >
-                      <Minus width={12} height={12} />
+                      <Minus width={12} height={12} className="md:h-7 md:w-7" />
                     </Button>
                   </div>
 
@@ -221,20 +224,22 @@ const CartItem = () => {
                     onClick={() => handleRemoveItem(product, productIndex)}
                     className="bg-red-600 p-1 absolute top-0 right-0 rounded-tr-sm"
                   >
-                    <X color="white" height={15} width={15} />
+                    <X color="white" height={15} width={15} className="md:w-6 md:h-6" />
                   </button>
                 </div>
               </div>
             ))
           ) : (
-            <div>NO ITEMS IN THE CART</div>
+            <div className="font-bold text-xl absolute top-[45%] left-1/2 translate-x-[-50%] translate-y-[-50%] md:text-3xl">
+              No Items in the Cart
+            </div>
           )}
         </div>
 
-        <div className="bg-white w-full h-14 flex justify-between items-center fixed bottom-[var(--h-user-navbar-mobile)] left-0 p-4 shadow-md">
-          <div className="flex items-center gap-3">
-            <p className="font-bold text-lg ">Total:</p>
-            <p className="text-custom-orange font-semibold text-lg">
+        <div className="bg-white shadow-md flex justify-between items-center right-0 p-4 fixed max-md:bottom-[var(--h-user-navbar-mobile)] max-md:w-full h-14 md:bottom-0 md:w-2/4 md:h-20">
+          <div className="flex items-center gap-3 md:gap-7">
+            <p className="font-bold text-lg md:text-3xl ">Total:</p>
+            <p className="text-custom-orange font-semibold text-lg md:text-3xl md:font-bold">
               ₱{" "}
               {total.toLocaleString("en-US", {
                 minimumFractionDigits: 2,

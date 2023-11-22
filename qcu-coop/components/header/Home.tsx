@@ -41,7 +41,7 @@ const HomeHeader = () => {
       <header className="flex justify-between items-center px-3 z-50 bg-custom-blue-background fixed top-0 left-0 w-full h-user-header-mobile md:bg-gradient-to-r md:from-white md:to-white md:h-user-header">
         <div
           id="logo-heading-container"
-          className="flex space-x-3 items-center"
+          className="flex space-x-2 items-center md:space-x-3"
         >
           <Link href="/" className="relative w-10 h-10 md:w-18 md:h-18">
             <Image
@@ -51,7 +51,7 @@ const HomeHeader = () => {
               fill
             />
           </Link>
-          <h1 className="font-bold text-lg md:text-xl text-white md:text-black">
+          <h1 className="font-bold text-base md:text-xl text-white md:text-black text-center">
             QCU COOP STORE
           </h1>
         </div>
