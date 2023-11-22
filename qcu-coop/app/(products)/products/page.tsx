@@ -17,8 +17,7 @@ const Products = async ({ searchParams }: Params) => {
     <section className="h-user-main-mobile md:h-user-main pt-16 md:pt-9 md:w-[70%] md:mt-0">
       {products && products.length > 0 ? (
         <div
-          className="grid grid-cols-2 gap-6 h-[28rem] md:h-[29rem] w-full px-8 overflow-y-auto 
-        md:grid-cols-4
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 h-[28rem] md:h-[29rem] w-full px-8 overflow-y-auto 
         "
         >
           <RenderProducts search={search} products={products} />
