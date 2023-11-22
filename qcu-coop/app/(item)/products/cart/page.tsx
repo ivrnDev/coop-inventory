@@ -5,11 +5,20 @@ import { useSelector, useDispatch } from "react-redux";
 import { removeItem } from "@/components/redux/features/cartSlice";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Product, Variant } from "@/types/products/products";
+import { Product, Products, Variant } from "@/types/products/products";
 import classNames from "classnames";
 import { Button } from "@/components/ui/button";
-import { getAllProducts } from "@/lib/api/products";
+import { getAllProducts, getProductById } from "@/lib/api/products";
 import { Minus, Plus, X } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const CartItem = () => {
   const cart: Product[] = useSelector((state: RootState) => state.cart.item);
@@ -22,7 +31,7 @@ const CartItem = () => {
   const [product, setProduct] = useState<Product[]>([]);
 
   useEffect(() => {
-    getAllProducts()
+    getProductById("1001")
       .then((res) => setProduct(res))
       .catch((e) => console.error(e));
   }, []);
@@ -160,7 +169,33 @@ const CartItem = () => {
                     {selectedVariants[productIndex]?.variant_price ??
                       product.display_price}
                   </p>
-                  <div className="flex gap-4">
+
+                  <Select
+                    onValueChange={(newValue) => {
+                      const parseValue = JSON.parse(newValue)
+                      handleVariantClick(parseValue.variant, parseValue.index);
+                    }}
+                  >
+                    <SelectTrigger id="variant" className="md:hidden">
+                      <SelectValue placeholder="Filter" />
+                    </SelectTrigger>
+                    <SelectContent position="popper">
+                      <SelectGroup>
+                        {product.variants.map((variant, index) => (
+                          <SelectItem
+                            key={index}
+                            value={JSON.stringify({variant, index})}
+                          >
+                            <p className="capitalize">
+                              {variant.variant_symbol}
+                            </p>
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+
+                  {/* <div className="flex gap-4">
                     {product.variants &&
                       product.variants.map((variant, variantIndex) => (
                         <Button
@@ -180,8 +215,12 @@ const CartItem = () => {
                           {variant.variant_symbol}
                         </Button>
                       ))}
-                  </div>
-                  <div className="flex items-center gap-3">
+                  </div> */}
+
+                  <div
+                    id="quantity-container"
+                    className="flex items-center gap-3"
+                  >
                     <Button
                       variant="ghost"
                       size="xsm"
