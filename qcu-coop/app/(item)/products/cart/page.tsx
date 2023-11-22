@@ -32,7 +32,6 @@ const CartItem = () => {
   const [total, setTotal] = useState<number>(
     cart.reduce((acc, v) => acc + Number(v.variants[0].variant_price), 0)
   );
- 
 
   useEffect(() => {
     const priceTotal = prices.reduce(
@@ -134,7 +133,7 @@ const CartItem = () => {
   return (
     <>
       <section className="h-user-main-mobile mt-user-header-mobile pb-[calc(var(--h-user-navbar-mobile)*2)] px-5 pt-4 overflow-y-scroll md:h-user-main md:mt-user-header">
-        <div className="flex flex-col gap-5">
+        <div id="info-container" className="flex flex-col gap-5">
           {cart && cart.length > 0 ? (
             cart.map((product, productIndex) => (
               <div
@@ -149,8 +148,8 @@ const CartItem = () => {
                     className="object-contain"
                   />
                 </div>
-                <div className="flex flex-col gap-2">
-                  <h2>{product.display_name}</h2>
+                <div className="flex flex-col gap-2 w-full">
+                  <h2 className="max-w-[310px] whitespace-nowrap overflow-hidden text-ellipsis">{product.display_name}</h2>
                   <div className="flex space-x-2 md:text-lg">
                     <p className="font-bold">
                       {selectedVariants[productIndex]?.variant_stocks ??
@@ -170,7 +169,7 @@ const CartItem = () => {
                       handleVariantClick(parseValue.variant, parseValue.index);
                     }}
                   >
-                    <SelectTrigger id="variant" className="md:hidden">
+                    <SelectTrigger id="variant" className="w-full">
                       <SelectValue
                         placeholder={
                           selectedVariants[productIndex].variant_name
@@ -185,13 +184,14 @@ const CartItem = () => {
                             value={JSON.stringify({ variant, index })}
                           >
                             <p className="capitalize">
-                              {variant.variant_symbol}
+                              {variant.variant_name}
                             </p>
                           </SelectItem>
                         ))}
                       </SelectGroup>
                     </SelectContent>
                   </Select>
+
                   <div
                     id="quantity-container"
                     className="flex items-center gap-3"
