@@ -63,8 +63,8 @@ const CategoriesSidebar = () => {
                   <SelectGroup>
                     {!categories && <SelectLabel>No Categories</SelectLabel>}
                     <SelectItem value="all">All</SelectItem>
-                    {categories?.map((category) => (
-                      <SelectItem value={String(category.category_name)}>
+                    {categories?.map((category, index) => (
+                      <SelectItem key={index} value={String(category.category_name)}>
                         <p className="capitalize">{category.category_name}</p>
                       </SelectItem>
                     ))}
