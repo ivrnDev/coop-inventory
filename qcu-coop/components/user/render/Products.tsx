@@ -27,7 +27,7 @@ const RenderProducts = ({ products, search }: Props) => {
             key={index}
             className="h-fit "
           >
-            <div className="bg-white h-64 w-full shadow-xl rounded-lg flex flex-col p-2 hover:opacity-80 flex-1 md:h-72">
+            <div className="bg-white overflow-hidden h-64 w-full shadow-xl rounded-lg flex flex-col p-2 hover:opacity-80 flex-1 md:h-72">
               <div className="relative w-full h-32 overflow-hidden rounded-md border border-black">
                 <Image
                   src={`data:image/png;base64,${product.display_image}`}
@@ -37,7 +37,7 @@ const RenderProducts = ({ products, search }: Props) => {
                 />
               </div>
               <div className="mt-3 px-1">
-                <h1 className="text-sm">{product.display_name}</h1>
+                <h1 className="text-sm max-lg:line-clamp-2">{product.display_name}</h1>
                 <p className="text-custom-orange mt-2 text-sm">
                   ₱ {product.display_price}
                 </p>
