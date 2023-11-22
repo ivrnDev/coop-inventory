@@ -125,7 +125,7 @@ const CreateAccount = () => {
               fill
             />
           </div>
-          <p className="text-md text-white whitespace-nowrap">Add User</p>
+          <p className="text-white whitespace-nowrap">Add User</p>
         </DialogTrigger>
         <DialogContent>
           <form onSubmit={handleSubmit(onSubmit)} className="w-full h-full">

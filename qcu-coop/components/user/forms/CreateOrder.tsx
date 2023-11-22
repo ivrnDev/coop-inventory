@@ -100,9 +100,9 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
           className="shadow-sm bg-white flex flex-col space-y-2 rounded-md p-4 h-32"
         >
           <div className="flex justify-between">
-            <p className="text-custom-orange text-md">Personal Information</p>
+            <p className="text-custom-orange">Personal Information</p>
             <Dialog>
-              <DialogTrigger className="text-blue-500 text-md">Change</DialogTrigger>
+              <DialogTrigger className="text-blue-500">Change</DialogTrigger>
               <DialogContent>
                 <DialogHeader>EDIT PERSONAL INFORMATION</DialogHeader>
 
@@ -226,13 +226,15 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
 
         <section
           id="orders-container"
-          className="bg-white rounded-sm shadow-md flex flex-col justify-between mt-5"
+          className="bg-white rounded-sm shadow-md flex flex-col justify-between mt-5 px-1"
         >
+          <div className="h-64 overflow-y-auto">
           {children}
-          <div id="pickup-container" className="flex justify-between">
+          </div>
+          <div id="pickup-container" className="flex justify-between items-center border-y-2">
             <div className="flex space-x-3">
               <p className="text-blue-400">Order Options</p>
-              <p className="text-blue-400">
+              <p className="">
                 {format(currentDate, "PP") === String(watch("pickup_date"))
                   ? "Immediate Pickup"
                   : "Scheduled Pickup"}
@@ -248,7 +250,7 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
                       <Button
                         variant={"outline"}
                         className={classNames({
-                          "w-[240px] pl-3 text-left font-normal": true,
+                          "w-1/3 pl-3 text-left font-normal": true,
                           "text-muted-foreground": !value,
                         })}
                       >
@@ -325,7 +327,7 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
                 value={value}
               >
                 <div className="flex justify-between items-center px-1">
-                  <h2 className="text-md font-semibold">Payment Method</h2>
+                  <h2 className="font-semibold">Payment Method</h2>
                   <TabsList className="flex space-x-5 bg-transparent">
                     <TabsTrigger
                       value="cash"
@@ -403,7 +405,7 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
 
                 <div className="flex flex-col gap-1 mb-user-navbar-mobile absolute bottom-3 right-3">
                   <div className="flex gap-2">
-                    <p className="text-md">Total Payment:</p>
+                    <p className=">Total Payment:</p>
                     <p className="text-custom-orange font-bold text-lg">
                       ₱{" "}
                       {total.toLocaleString("en-US", {

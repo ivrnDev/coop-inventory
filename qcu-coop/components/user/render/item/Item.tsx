@@ -67,7 +67,7 @@ const Item = ({ product }: Props) => {
               id="variants-container"
               className="flex gap-4 items-center flex-wrap mt-5 md:mt-3"
             >
-              <p className="text-md font-semibold md:text-lg">Variants</p>
+              <p className=" font-semibold md:text-lg">Variants</p>
               {product.variants?.map((item, index) => (
                 <Button
                   key={index}
@@ -156,7 +156,7 @@ const Item = ({ product }: Props) => {
           </div>
           {/* {params.get("status") === "added" && (
           <Alert className="fixed top-[40%] left-1/2 -translate-x-1/2 w-3/4 h-fit md:w-1/2 bg-white border-green-600">
-            <AlertTitle className="flex items-center text-md font-semibold md:text-xl gap-3">
+            <AlertTitle className="flex items-center  font-semibold md:text-xl gap-3">
               <CheckCircle
                 width={22}
                 height={22}
@@ -183,7 +183,7 @@ const Item = ({ product }: Props) => {
               variant="destructive"
               className="fixed top-[40%] left-1/2 -translate-x-1/2 w-3/4 h-fit md:w-1/2 bg-white"
             >
-              <AlertTitle className="flex items-center text-md font-semibold md:text-xl gap-3">
+              <AlertTitle className="flex items-center  font-semibold md:text-xl gap-3">
                 <AlertCircle
                   width={22}
                   height={22}

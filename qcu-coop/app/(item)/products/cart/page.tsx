@@ -207,7 +207,7 @@ const CartItem = () => {
                     >
                       <Plus width={12} height={12} className="md:h-7 md:w-7" />
                     </Button>
-                    <p className="text-md font-semibold select-none md:text-xl">
+                    <p className=" font-semibold select-none md:text-xl">
                       {quantities[productIndex] ?? 0}
                     </p>
                     <Button

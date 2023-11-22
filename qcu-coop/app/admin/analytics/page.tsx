@@ -43,7 +43,7 @@ const Analytics = async () => {
               <h2 className="text-2xl text-black font-bold">
                 {sold?.all?.value ?? 0}
               </h2>
-              <h4 className="text-md text-slate-700 font-bold capitalize">
+              <h4 className=" text-slate-700 font-bold capitalize">
                 sales
               </h4>
             </CardContent>
@@ -58,7 +58,7 @@ const Analytics = async () => {
               <h2 className="text-2xl text-black font-bold">
                 ₱ {revenue?.all?.value ?? 0}
               </h2>
-              <h4 className="text-md text-slate-700 font-bold capitalize">
+              <h4 className=" text-slate-700 font-bold capitalize">
                 Revenue
               </h4>
             </CardContent>
@@ -73,7 +73,7 @@ const Analytics = async () => {
               <h2 className="text-2xl text-black font-bold">
                 {sold?.day?.yesterday.value ?? 0}
               </h2>
-              <h4 className="text-md text-slate-700 font-bold capitalize">
+              <h4 className=" text-slate-700 font-bold capitalize">
                 Yesterday
               </h4>
             </CardContent>
@@ -83,7 +83,7 @@ const Analytics = async () => {
               <h2 className="text-2xl text-black font-bold">
                 {sold?.year?.currentYear.value ?? 0}
               </h2>
-              <h4 className="text-md text-slate-700 font-bold capitalize">
+              <h4 className=" text-slate-700 font-bold capitalize">
                 Current Year
               </h4>
             </CardContent>
@@ -93,7 +93,7 @@ const Analytics = async () => {
               <h2 className="text-2xl text-black font-bold">
                 {sold?.year?.previousYear.value ?? 0}
               </h2>
-              <h4 className="text-md text-slate-700 font-bold capitalize">
+              <h4 className=" text-slate-700 font-bold capitalize">
                 Previous Year
               </h4>
             </CardContent>
@@ -119,7 +119,7 @@ const Analytics = async () => {
                     <p className="text-4xl text-white font-bold text-center">
                       {sold?.month?.currentMonth.value ?? 0}
                     </p>
-                    <p className="text-md text-muted font-bold capitalize mt-2">
+                    <p className=" text-muted font-bold capitalize mt-2">
                       Current Month
                     </p>
                   </div>
@@ -127,7 +127,7 @@ const Analytics = async () => {
                     <p className="text-4xl text-white font-bold text-center">
                       {sold?.month?.previousMonth.value ?? 0}
                     </p>
-                    <p className="text-md text-muted font-bold capitalize mt-2">
+                    <p className=" text-muted font-bold capitalize mt-2">
                       Previous Month
                     </p>
                   </div>
@@ -149,7 +149,7 @@ const Analytics = async () => {
                     <p className="text-4xl text-white font-bold text-center">
                       ₱ {revenue?.month?.currentMonth.value ?? 0}
                     </p>
-                    <p className="text-md text-muted font-bold capitalize mt-2">
+                    <p className=" text-muted font-bold capitalize mt-2">
                       Current Month
                     </p>
                   </div>
@@ -157,7 +157,7 @@ const Analytics = async () => {
                     <p className="text-4xl text-white font-bold text-center">
                       ₱ {revenue?.month?.previousMonth.value ?? 0}
                     </p>
-                    <p className="text-md text-muted font-bold capitalize mt-2">
+                    <p className=" text-muted font-bold capitalize mt-2">
                       Previous Month
                     </p>
                   </div>

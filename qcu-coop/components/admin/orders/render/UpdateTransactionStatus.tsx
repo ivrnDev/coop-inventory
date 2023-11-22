@@ -118,7 +118,7 @@ const UpdateTransactionStatus = ({ transactionById }: Props) => {
       {(transactionById.order_status === "rejected" ||
         transactionById.order_status === "cancelled") && (
         <AlertDialog>
-          <AlertDialogTrigger className="w-full rounded-2xl p-1 h-fit bg-transparent text-black text-md border-black border shadow-none">
+          <AlertDialogTrigger className="w-full rounded-2xl p-1 h-fit bg-transparent text-black  border-black border shadow-none">
             RESTORE
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -146,7 +146,7 @@ const UpdateTransactionStatus = ({ transactionById }: Props) => {
       <div className="grid grid-cols-2 gap-5 mt-3">
         {transactionById.order_status === "pending" && (
           <AlertDialog>
-            <AlertDialogTrigger className="w-full rounded-2xl p-1 h-fit bg-green-700 text-white text-md ">
+            <AlertDialogTrigger className="w-full rounded-2xl p-1 h-fit bg-green-700 text-white  ">
               Confirm Order
             </AlertDialogTrigger>
             <AlertDialogContent>
@@ -174,7 +174,7 @@ const UpdateTransactionStatus = ({ transactionById }: Props) => {
         )}
         {transactionById.order_status === "pending" && (
           <AlertDialog>
-            <AlertDialogTrigger className="w-full rounded-2xl p-1 h-fit bg-red-700 text-white text-md">
+            <AlertDialogTrigger className="w-full rounded-2xl p-1 h-fit bg-red-700 text-white ">
               Reject
             </AlertDialogTrigger>
             <AlertDialogContent>
@@ -203,7 +203,7 @@ const UpdateTransactionStatus = ({ transactionById }: Props) => {
       </div>
       {transactionById.order_status === "completed" && (
         <AlertDialog>
-          <AlertDialogTrigger className="w-full rounded-2xl p-1 h-fit bg-red-700 text-white text-md mt-3">
+          <AlertDialogTrigger className="w-full rounded-2xl p-1 h-fit bg-red-700 text-white  mt-3">
             Cancel
           </AlertDialogTrigger>
           <AlertDialogContent>

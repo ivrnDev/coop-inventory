@@ -97,7 +97,7 @@ const AdminDashboard = async () => {
                 </h1>
                 <Dialog>
                   <DialogTrigger>
-                    <h2 className="text-md text-[#3751FF]">View all</h2>
+                    <h2 className=" text-[#3751FF]">View all</h2>
                   </DialogTrigger>
                   <DialogContent className="bg-[#101536] h-4/5 flex flex-col">
                     <FilteredActivities activities={activities} />

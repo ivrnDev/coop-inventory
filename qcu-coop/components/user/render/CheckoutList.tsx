@@ -17,7 +17,7 @@ const CheckoutList = ({ orders }: Props) => {
   return (
     <>
       <Table className="overflow-hidden">
-        <TableHeader>
+        <TableHeader className="">
           <TableRow className="whitespace-nowrap text-sm">
             <TableHead></TableHead>
             <TableHead></TableHead>
@@ -26,10 +26,10 @@ const CheckoutList = ({ orders }: Props) => {
             <TableHead>Item Subtotal</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody className="">
           {orders && orders.length > 0 ? (
             orders.map((product, index) => (
-              <TableRow key={index}>
+              <TableRow key={index} className="text-center">
                 <TableCell className="relative w-16 h-16">
                   <Image
                     src={`data:image/png;base64,${product.display_image}`}
@@ -37,13 +37,20 @@ const CheckoutList = ({ orders }: Props) => {
                     sizes="min-w-1"
                     fill
                     className="object-contain"
-
                   />
                 </TableCell>
-                <TableCell>{product.display_name}</TableCell>
-                <TableCell>{product.variantPrice}</TableCell>
-                <TableCell>{product.quantity}</TableCell>
-                <TableCell>{product.amount}</TableCell>
+                <TableCell className="text-left">
+                  {product.display_name}
+                </TableCell>
+                <TableCell>{`₱ ${product.variantPrice.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}`}</TableCell>
+                <TableCell>{`${product.quantity}x`}</TableCell>
+                <TableCell>{`₱ ${product.amount.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}`}</TableCell>
               </TableRow>
             ))
           ) : (

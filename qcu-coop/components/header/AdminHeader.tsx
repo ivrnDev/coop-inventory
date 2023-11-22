@@ -11,7 +11,7 @@ const AdminHeader = () => {
     <header className="bg-header-admin p-4 flex justify-between items-center h-admin-header w-admin-header ml-admin-header-x px-3">
       <div className="w-fit">
         <p className="font-bold text-2xl">Welcome, Admin</p>
-        <p className=" font-light text-md text-center">
+        <p className=" font-light text-center">
           {format(new Date(), "MMMM dd, yyyy")}
         </p>
       </div>
