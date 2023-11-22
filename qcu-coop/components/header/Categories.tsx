@@ -87,10 +87,10 @@ const CategoriesSidebar = () => {
                 All Products
               </Link>
             </li>
-            {categories.map((category) => (
-              <li className="capitalize">
+            {categories.map((category, index) => (
+              <li key={index} className="capitalize">
                 <Link
-                  key={category.category_id}
+                  key={index}
                   href={`/products?category=${category.category_name}`}
                   className={classNames({
                     "w-fit hover:text-blue-500 text-lg": true,
