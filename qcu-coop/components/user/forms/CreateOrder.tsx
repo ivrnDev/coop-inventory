@@ -296,9 +296,9 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
         <section
           id="payment-method-container"
           className={classNames({
-            "bg-white mb-user-navbar-mobile overflow-hidden w-full h-64 fixed -bottom-[12.4rem] right-0 transition-transform":
+            "bg-white mb-user-navbar-mobile overflow-hidden w-full h-60 fixed -bottom-[12.6rem] right-0 transition-transform":
               true,
-            "-translate-y-40": isOpen,
+            "-translate-y-44": isOpen,
           })}
         >
           <ChevronUp
