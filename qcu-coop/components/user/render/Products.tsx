@@ -37,11 +37,11 @@ const RenderProducts = ({ products, search }: Props) => {
                 />
               </div>
               <div className="mt-3 px-1">
-                <h1 className="text-sm max-lg:line-clamp-2">{product.display_name}</h1>
+                <h1 className="text-sm max-md:line-clamp-2 md:line-clamp-3">{product.display_name}</h1>
                 <p className="text-custom-orange mt-2 text-sm">
                   ₱ {product.display_price}
                 </p>
-                <p className="mt-2 text-sm opacity-75 max-w-xs text-ellipsis overflow-hidden whitespace-nowrap">
+                <p className="mt-2 text-sm opacity-75">
                   {product.product_stocks} stocks
                 </p>
               </div>
