@@ -24,6 +24,7 @@ const buttonVariants = cva(
           "text-[#C3C1C1] uppercase bg-white border border-[#C3C1C1] hover:text-customer-orange p-1",
         cart: "bg-[#F8EDED] text-lg text-[#D71313] rounded-none hover:opacity-80",
         buy: "bg-[#D71313] text-lg rounded-none hover:opacity-80 text-white",
+        okay: "bg-green-600 w-full text-white hover:bg-green-400"
       },
       size: {
         default: "h-10 px-4 py-2",

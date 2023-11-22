@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-
 import { Product, Variant } from "@/types/products/products";
 import { Button } from "@/components/ui/button";
 import AddtoCartButton from "@/components/cart/AddtoCartBtn";
@@ -150,6 +149,56 @@ const Item = ({ product }: Props) => {
               </Button>
             </Link>
           </div>
+          {/* {params.get("status") === "added" && (
+          <Alert className="fixed top-[40%] left-1/2 -translate-x-1/2 w-3/4 h-fit md:w-1/2 bg-white border-green-600">
+            <AlertTitle className="flex items-center text-md font-semibold md:text-xl gap-3">
+              <CheckCircle
+                width={22}
+                height={22}
+                color="green"
+                className="md:w-7 md:h-7"
+              />
+              Added to Cart
+            </AlertTitle>
+            <AlertDescription className="text-sm md:text-lg indent-8 mt-2">
+              Successfully added to Cart.
+            </AlertDescription>
+            <Button
+              variant="outline"
+              onClick={() => router.push(`${pathname}`)}
+              className="float-right h-5 text-black"
+            >
+              Okay
+            </Button>
+          </Alert>
+          )}
+
+          {params.get("status") === "exist" && (
+            <Alert
+              variant="destructive"
+              className="fixed top-[40%] left-1/2 -translate-x-1/2 w-3/4 h-fit md:w-1/2 bg-white"
+            >
+              <AlertTitle className="flex items-center text-md font-semibold md:text-xl gap-3">
+                <AlertCircle
+                  width={22}
+                  height={22}
+                  color="red"
+                  className="md:w-7 md:h-7"
+                />
+                Item Exist
+              </AlertTitle>
+              <AlertDescription className="text-sm md:text-lg indent-8 mt-2">
+                Item is already added in cart.
+              </AlertDescription>
+              <Button
+                variant="outline"
+                onClick={() => router.push(`${pathname}`)}
+                className="float-right h-7 text-black"
+              >
+                Okay
+              </Button>
+            </Alert>
+          )} */}
         </>
       )}
     </>
