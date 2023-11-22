@@ -103,10 +103,9 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
             <p className="text-custom-orange">Personal Information</p>
             <Dialog>
               <DialogTrigger className="text-blue-500">Change</DialogTrigger>
-              <DialogContent>
-                <DialogHeader>EDIT PERSONAL INFORMATION</DialogHeader>
-
-                <div className="first-line:p-10 flex flex-col gap-5 w-fit h-fit">
+              <DialogContent className="w-3/4">
+                <DialogHeader className="text-lg font-bold">EDIT PERSONAL INFORMATION</DialogHeader>
+                <div className="p-2 flex flex-col gap-5 w-fit h-fit">
                   <div className="flex flex-col space-y-1.5">
                     <Label htmlFor="customer_name">Name</Label>
                     <Input
@@ -127,45 +126,48 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
                     )}
                   </div>
 
-                  <div className="flex flex-col space-y-1.5">
-                    <Label htmlFor="student_id">Student ID</Label>
-                    <Input
-                      {...register("student_id")}
-                      id="student_id"
-                      autoComplete="off"
-                      className={classNames({
-                        "border-red-600": errors.student_id,
-                      })}
-                      onKeyDown={(e) =>
-                        e.code === "Enter" && closeRef.current?.click()
-                      }
-                    />
-                    {errors.student_id && (
-                      <p className="text-red-600 text-sm mt-2">
-                        {errors.student_id?.message}
-                      </p>
-                    )}
+                  <div className="flex gap-3">
+                    <div className="flex flex-col space-y-1.5">
+                      <Label htmlFor="student_id">Student ID</Label>
+                      <Input
+                        {...register("student_id")}
+                        id="student_id"
+                        autoComplete="off"
+                        className={classNames({
+                          "border-red-600": errors.student_id,
+                        })}
+                        onKeyDown={(e) =>
+                          e.code === "Enter" && closeRef.current?.click()
+                        }
+                      />
+                      {errors.student_id && (
+                        <p className="text-red-600 text-sm mt-2">
+                          {errors.student_id?.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col space-y-1.5">
+                      <Label htmlFor="customer_phone">Phone</Label>
+                      <Input
+                        {...register("customer_phone")}
+                        id="customer_phone"
+                        autoComplete="off"
+                        className={classNames({
+                          "border-red-600": errors.customer_phone,
+                        })}
+                        onKeyDown={(e) =>
+                          e.code === "Enter" && closeRef.current?.click()
+                        }
+                      />
+                      {errors.customer_phone && (
+                        <p className="text-red-600 text-sm mt-2">
+                          {errors.customer_phone?.message}
+                        </p>
+                      )}
+                    </div>
                   </div>
 
-                  <div className="flex flex-col space-y-1.5">
-                    <Label htmlFor="customer_phone">Phone</Label>
-                    <Input
-                      {...register("customer_phone")}
-                      id="customer_phone"
-                      autoComplete="off"
-                      className={classNames({
-                        "border-red-600": errors.customer_phone,
-                      })}
-                      onKeyDown={(e) =>
-                        e.code === "Enter" && closeRef.current?.click()
-                      }
-                    />
-                    {errors.customer_phone && (
-                      <p className="text-red-600 text-sm mt-2">
-                        {errors.customer_phone?.message}
-                      </p>
-                    )}
-                  </div>
                   <div className="flex flex-col space-y-1.5">
                     <Label htmlFor="customer_email">Email Address</Label>
                     <Input
@@ -185,30 +187,32 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
                       </p>
                     )}
                   </div>
-
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    onClick={() => {
-                      resetField("customer_name");
-                      resetField("student_id");
-                      resetField("customer_phone");
-                      resetField("customer_email");
-
-                      closeRef.current?.click();
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="submit"
-                    onClick={(e) => {
-                      closeRef.current?.click();
-                    }}
-                  >
-                    Save Changes
-                  </Button>
+                  <div className="flex w-full justify-between gap-5 mt-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        resetField("customer_name");
+                        resetField("student_id");
+                        resetField("customer_phone");
+                        resetField("customer_email");
+                        closeRef.current?.click();
+                      }}
+                      className="w-full"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="submit"
+                      onClick={(e) => {
+                        closeRef.current?.click();
+                      }}
+                      className="bg-blue-500 w-full"
+                    >
+                      Save Changes
+                    </Button>
+                  </div>
                 </div>
                 <DialogClose ref={closeRef} />
               </DialogContent>
@@ -228,8 +232,12 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
           id="orders-container"
           className="relative bg-white rounded-sm shadow-md flex flex-col justify-between mt-5"
         >
-          <h1 className="font-semibold text-lg absolute top-1 left-2 z-20">PRODUCTS ORDERED</h1>
-          <div className="h-60 overflow-y-auto px-1 mt-7">{children}</div>
+          <h1 className="font-semibold text-lg absolute top-1 left-2 z-20">
+            PRODUCTS ORDERED
+          </h1>
+          <div className="h-60 overflow-y-auto px-1 mt-7 md:h-90">
+            {children}
+          </div>
           <div
             id="pickup-container"
             className="flex justify-between items-center border-black border-y-2 px-1"
