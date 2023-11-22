@@ -99,17 +99,19 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <section
           id="personal-info-container"
-          className="shadow-sm bg-white flex flex-col space-y-2 rounded-md p-4 h-28"
+          className="shadow-sm bg-white flex flex-col space-y-2 rounded-md p-4 h-28 md:h-48"
         >
           <div className="flex justify-between">
-            <p className="text-custom-orange">Personal Information</p>
+            <p className="text-custom-orange md:text-xl">
+              Personal Information
+            </p>
             <Dialog>
               <DialogTrigger
                 className={classNames({
                   "text-red-600 font-bold": Object.values(errors).some(
                     (error) => error !== undefined
                   ),
-                  "text-blue-500": true,
+                  "text-blue-500 md:text-xl": true,
                 })}
               >
                 Change
@@ -275,19 +277,19 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
           id="orders-container"
           className="relative bg-white rounded-sm shadow-md flex flex-col justify-between mt-5"
         >
-          <h1 className="font-semibold text-lg absolute top-1 left-2 z-20">
+          <h1 className="font-semibold text-lg absolute max-md:top-1 max-md:left-2 z-20 md:text-xl md:font-bold md:top-5 md:left-5">
             PRODUCTS ORDERED
           </h1>
-          <div className="h-60 overflow-y-auto px-1 mt-7 md:h-fit">
+          <div className="h-60 overflow-y-auto px-1 mt-7 md:h-fit md:p-3">
             {children}
           </div>
           <div
             id="pickup-container"
-            className="flex justify-between items-center border-black border-y-2 px-1"
+            className="flex max-md:justify-between items-center border-black border-y-2 px-1 md:p-3 md:space-x-3"
           >
-            <div className="flex space-x-3">
-              <p className="text-blue-400 text-sm">Order Options</p>
-              <p className="text-sm">
+            <div className="flex space-x-3 items-center">
+              <p className="text-blue-400 text-sm md:text-lg">Order Options</p>
+              <p className="text-sm md:text-lg">
                 {format(currentDate, "PP") === String(watch("pickup_date"))
                   ? "Immediate Pickup"
                   : "Scheduled Pickup"}
@@ -352,9 +354,9 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
               />
             </Popover>
           </div>
-          <div className="flex justify-between px-1">
+          <div className="flex max-md:justify-between px-1 float-right justify-self-end md:space-x-3 md:items-center md:text-lg md:p-3">
             <p className="text-sm">{`Order Total: (${orders.length} items)`}</p>
-            <p className="text-custom-orange font-bold text-md">
+            <p className="text-custom-orange font-bold">
               ₱{" "}
               {total.toLocaleString("en-US", {
                 minimumFractionDigits: 2,
@@ -420,10 +422,10 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
                     defaultValue="g-cash"
                     className="border-b-2 border-t-2 border-black py-3 w-full px-4"
                   >
-                    <div className="flex items-center space-x-3">
+                    <div className="flex items-center space-x-3 md:space-x-1">
                       <RadioGroupItem value="g-cash" id="g-cash" />
-                      <div className="flex w-full justify-between items-center">
-                        <div className="relative w-10 h-10 ">
+                      <div className="flex w-full justify-between items-center md:text-lg">
+                        <div className="relative w-10 h-10 md:w-14 md:h-14 ">
                           <Image
                             src="/icons/gcash-logo.svg"
                             alt="gcash"
@@ -439,7 +441,8 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
                             className={classNames({
                               "text-red-600 font-bold border-red-600 bg-transparent":
                                 errors.reference_number?.message !== undefined,
-                                "text-white border-none": errors.reference_number?.message === undefined,
+                              "text-white border-none":
+                                errors.reference_number?.message === undefined,
                               "bg-blue-500 h-fit px-1 text-sm": true,
                             })}
                           >
