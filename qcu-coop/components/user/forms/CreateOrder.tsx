@@ -26,12 +26,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarIcon, ChevronUp } from "lucide-react";
+import { AlertCircle, CalendarIcon, ChevronUp } from "lucide-react";
 import { format } from "date-fns";
 import { z } from "zod";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/components/ui/use-toast";
 import { OrderProduct } from "@/types/orders/orders";
+import { useRouter } from "next/navigation";
 type Props = {
   orders: ValidateOrder[];
   orderInfo: OrderProduct[];
@@ -40,11 +41,12 @@ type Props = {
 
 const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
   const { toast } = useToast();
+  const router = useRouter()
   const currentDate = new Date();
   const closeRef = useRef<HTMLButtonElement | null>(null);
   const exitRef = useRef<HTMLButtonElement | null>(null);
   const [isCash, setIsCash] = useState<boolean>(true);
-  const [orderStatus, setOrderStatus] = useState<number>(0);
+  const [isFailed, setIsFailed] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [isOpen, setisOpen] = useState<boolean>(false);
   const CustomerSchema = CustomerSchemaFunction(isCash);
@@ -73,9 +75,9 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
 
     try {
       const order = await createOrder(orderData);
-      if (order.status === 201) return setOrderStatus(1);
+      if (order.status === 201) return router.push("./receipt");
       setErrorMessage(order.data.message);
-      setOrderStatus(2);
+      setIsFailed(true)
       return;
     } catch (error) {
       toast({
@@ -102,9 +104,20 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
           <div className="flex justify-between">
             <p className="text-custom-orange">Personal Information</p>
             <Dialog>
-              <DialogTrigger className="text-blue-500">Change</DialogTrigger>
+              <DialogTrigger
+                className={classNames({
+                  "text-red-600 font-bold": Object.values(errors).some(
+                    (error) => error !== undefined
+                  ),
+                  "text-blue-500": true,
+                })}
+              >
+                Change
+              </DialogTrigger>
               <DialogContent className="w-3/4">
-                <DialogHeader className="text-lg font-bold">EDIT PERSONAL INFORMATION</DialogHeader>
+                <DialogHeader className="text-lg font-bold">
+                  EDIT PERSONAL INFORMATION
+                </DialogHeader>
                 <div className="p-2 flex flex-col gap-5 w-fit h-fit">
                   <div className="flex flex-col space-y-1.5">
                     <Label htmlFor="customer_name">Name</Label>
@@ -220,11 +233,41 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
           </div>
           <div className="flex flex-col space-y-2 text-sm">
             <div className="flex space-x-4">
-              <p className="">{watch("customer_name")}</p>
-              <p className="text-gray-400">{watch("student_id")}</p>
-              <p className="text-gray-400">{watch("customer_phone")}</p>
+              <p
+                className={classNames({
+                  "text-red-600 font-semibold":
+                    errors.customer_name?.message !== undefined,
+                })}
+              >
+                {watch("customer_name")}
+              </p>
+              <p
+                className={classNames({
+                  "text-gray-400": true,
+                  "text-red-600 font-semibold":
+                    errors.student_id?.message !== undefined,
+                })}
+              >
+                {watch("student_id")}
+              </p>
+              <p
+                className={classNames({
+                  "text-gray-400": true,
+                  "text-red-600 font-semibold":
+                    errors.customer_phone?.message !== undefined,
+                })}
+              >
+                {watch("customer_phone")}
+              </p>
             </div>
-            <p className="">{watch("customer_email")}</p>
+            <p
+              className={classNames({
+                "text-red-600 font-semibold":
+                  errors.customer_email?.message !== undefined,
+              })}
+            >
+              {watch("customer_email")}
+            </p>
           </div>
         </section>
 
@@ -450,17 +493,26 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
           />
         </section>
       </form>
-
-      {orderStatus === 1 && (
-        <Alert>
-          <AlertTitle>Success</AlertTitle>
-          <AlertDescription>Order has placed successfully.</AlertDescription>
-        </Alert>
-      )}
-      {orderStatus === 2 && (
-        <Alert variant="destructive">
-          <AlertTitle>Failed to place order.</AlertTitle>
-          <AlertDescription>{errorMessage}.</AlertDescription>
+     
+      {isFailed && (
+        <Alert
+          variant="destructive"
+          className="bg-white fixed top-[40%] left-1/2 -translate-x-1/2 w-3/4 h-fit md:w-1/2 "
+        >
+          <AlertTitle className="flex items-center  font-semibold md:text-xl gap-3">
+            <AlertCircle width={17} height={17} color="red" />
+            Failed to place order.
+          </AlertTitle>
+          <AlertDescription className="text-sm md:text-lg indent-8 mt-2">
+            {errorMessage}.
+          </AlertDescription>
+          <Button
+            variant="outline"
+            onClick={() => setIsFailed(false)}
+            className="float-right h-7 text-black"
+          >
+            Okay
+          </Button>
         </Alert>
       )}
     </>
