@@ -3,7 +3,6 @@ import { RootState } from "../redux/store";
 import { Product } from "@/types/products/products";
 import { removeItem, setItem } from "../redux/features/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -12,8 +11,6 @@ type Props = {
 };
 
 const AddtoCartButton = ({ product }: Props) => {
-  const router = useRouter();
-  const pathname = usePathname();
   const cart = useSelector((state: RootState) => state.cart.item);
   const dispatch = useDispatch();
   const handleAddToCart = () => {

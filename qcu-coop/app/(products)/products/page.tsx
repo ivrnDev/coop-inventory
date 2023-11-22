@@ -14,10 +14,10 @@ const Products = async ({ searchParams }: Params) => {
     true
   );
   return (
-    <section className="h-user-main-mobile md:h-user-main pt-16 md:w-[60%] md:mt-0">
+    <section className="h-user-main-mobile md:h-user-main pt-16 md:pt-9 md:w-[70%] md:mt-0">
       {products && products.length > 0 ? (
         <div
-          className="grid grid-cols-2 gap-8 h-[28rem] w-full px-8 overflow-y-auto 
+          className="grid grid-cols-2 gap-6 h-[28rem] md:h-[29rem] w-full px-8 overflow-y-auto 
         md:grid-cols-4
         "
         >
