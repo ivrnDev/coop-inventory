@@ -46,7 +46,12 @@ const Item = ({ product }: Props) => {
               {product.display_name}
             </h1>
             <p className="text-custom-orange bg-[#F8EDED] font-bold text-lg w-full px-1 md:hidden">
-              {`₱ ${selectedVariant?.variant_price ?? product.display_price}`}
+              {`₱ ${
+                selectedVariant?.variant_price.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }) ?? product.display_price
+              }`}
             </p>
             <div className="flex space-x-2 md:text-lg">
               <p className="font-bold">

@@ -16,9 +16,9 @@ type Props = {
 const CheckoutList = ({ orders }: Props) => {
   return (
     <>
-      <Table>
+      <Table className="overflow-hidden">
         <TableHeader>
-          <TableRow>
+          <TableRow className="whitespace-nowrap text-sm">
             <TableHead></TableHead>
             <TableHead></TableHead>
             <TableHead>Unit Price</TableHead>
@@ -30,12 +30,14 @@ const CheckoutList = ({ orders }: Props) => {
           {orders && orders.length > 0 ? (
             orders.map((product, index) => (
               <TableRow key={index}>
-                <TableCell>
+                <TableCell className="relative w-16 h-16">
                   <Image
                     src={`data:image/png;base64,${product.display_image}`}
                     alt={product.product_name}
-                    width="70"
-                    height="70"
+                    sizes="min-w-1"
+                    fill
+                    className="object-contain"
+
                   />
                 </TableCell>
                 <TableCell>{product.display_name}</TableCell>

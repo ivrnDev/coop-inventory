@@ -26,17 +26,19 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, ChevronUp } from "lucide-react";
 import { format } from "date-fns";
 import { z } from "zod";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/components/ui/use-toast";
+import { OrderProduct } from "@/types/orders/orders";
 type Props = {
   orders: ValidateOrder[];
+  orderInfo: OrderProduct[];
   children: React.ReactNode;
 };
 
-const CreateOrderForm = ({ orders, children }: Props) => {
+const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
   const { toast } = useToast();
   const currentDate = new Date();
   const closeRef = useRef<HTMLButtonElement | null>(null);
@@ -44,7 +46,9 @@ const CreateOrderForm = ({ orders, children }: Props) => {
   const [isCash, setIsCash] = useState<boolean>(true);
   const [orderStatus, setOrderStatus] = useState<number>(0);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [isOpen, setisOpen] = useState<boolean>(false);
   const CustomerSchema = CustomerSchemaFunction(isCash);
+  const [total, setTotal] = useState<number>(0);
   type ValidateCustomer = z.infer<typeof CustomerSchema>;
   const {
     register,
@@ -57,6 +61,10 @@ const CreateOrderForm = ({ orders, children }: Props) => {
     resolver: zodResolver(CustomerSchema),
   });
 
+  useEffect(() => {
+    const total = orderInfo.reduce((acc, v) => acc + v.amount, 0);
+    setTotal(total);
+  }, []);
   const onSubmit = async (data: ValidateCustomer) => {
     const orderData = {
       customer: data,
@@ -211,7 +219,6 @@ const CreateOrderForm = ({ orders, children }: Props) => {
             <p>{watch("student_id")}</p>
             <p>{watch("customer_phone")}</p>
             <p>{watch("customer_email")}</p>
-            <p>{watch("reference_number")}</p>
           </div>
         </section>
         <section
@@ -286,7 +293,24 @@ const CreateOrderForm = ({ orders, children }: Props) => {
           </div>
         </section>
 
-        <section id="payment-method-container">
+        <section
+          id="payment-method-container"
+          className={classNames({
+            "bg-white mb-user-navbar-mobile overflow-hidden w-full h-64 fixed -bottom-[12.4rem] right-0 transition-transform":
+              true,
+            "-translate-y-40": isOpen,
+          })}
+        >
+          <ChevronUp
+            width={25}
+            height={25}
+            color="black"
+            onClick={() => setisOpen((open) => !open)}
+            className={classNames({
+              "absolute top-0 right-0 cursor-pointer": true,
+              "rotate-180 ": isOpen,
+            })}
+          />
           <Controller
             name="payment_method"
             control={control}
@@ -297,73 +321,102 @@ const CreateOrderForm = ({ orders, children }: Props) => {
                 onValueChange={onChange}
                 value={value}
               >
-                <div className="flex justify-between items-center">
-                  <h2>Payment Method</h2>
-                  <TabsList>
-                    <TabsTrigger value="cash">Cash</TabsTrigger>
-                    <TabsTrigger value="g-cash">E-Wallet</TabsTrigger>
+                <div className="flex justify-between items-center px-1">
+                  <h2 className="text-md font-semibold">Payment Method</h2>
+                  <TabsList className="flex space-x-5 bg-transparent">
+                    <TabsTrigger
+                      value="cash"
+                      className="border p-1 border-black data-[state=active]:text-custom-orange data-[state=active]:border-custom-orange"
+                    >
+                      Cash
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="g-cash"
+                      className="border p-1 border-black data-[state=active]:text-custom-orange data-[state=active]:border-custom-orange"
+                    >
+                      E-Wallet
+                    </TabsTrigger>
                   </TabsList>
                 </div>
-                <TabsContent
-                  value="cash"
-                  className="flex border-b-2 border-t-2 border-black"
-                >
-                  <p>Cash on pick-up</p>
-                  <p>Cash on pick-up</p>
+                <TabsContent value="cash" className="w-screen mt-5">
+                  <div className="border-b-2 border-t-2 border-black py-3 w-screen flex justify-around">
+                    <p>Cash on pick-up</p>
+                    <p>Cash on pick-up</p>
+                  </div>
                 </TabsContent>
-                <TabsContent
-                  value="g-cash"
-                  className="border-b-2 border-t-2 border-black"
-                >
-                  <RadioGroup defaultValue="g-cash">
-                    <div className="flex items-center space-x-2">
+                <TabsContent value="g-cash" className="w-screen mt-5">
+                  <RadioGroup
+                    defaultValue="g-cash"
+                    className="border-b-2 border-t-2 border-black py-3 w-full px-4"
+                  >
+                    <div className="flex items-center space-x-3">
                       <RadioGroupItem value="g-cash" id="g-cash" />
-                      <Label htmlFor="g-cash">
-                        <div className="relative w-10 h-10 object-contain">
+                      <div className="flex w-full justify-between items-center">
+                        <div className="relative w-10 h-10 ">
                           <Image
                             src="/icons/gcash-logo.svg"
                             alt="gcash"
                             fill
+                            className="object-contain"
                           ></Image>
                         </div>
-                        <p>0912 668 5279</p>
-                        <p>Maria C.</p>
-                      </Label>
+                        <p className="text-blue-500">0912 668 5279</p>
+                        <p className="text-blue-500">Maria C.</p>
+                        <Dialog>
+                          <DialogTrigger
+                            ref={exitRef}
+                            className="bg-blue-500 text-white h-fit px-1 text-sm"
+                          >
+                            Input Transaction Details
+                          </DialogTrigger>
+                          <DialogContent className="w-2/3">
+                            <div className="flex flex-col space-y-1.5">
+                              <Label htmlFor="reference_number">
+                                Reference Number
+                              </Label>
+                              <Input
+                                {...register("reference_number")}
+                                id="reference_number"
+                                autoComplete="off"
+                                className={classNames({
+                                  "border-red-600": errors.reference_number,
+                                })}
+                                onKeyDown={(e) =>
+                                  e.code === "Enter" && exitRef.current?.click()
+                                }
+                              />
+                              {errors.reference_number && (
+                                <p className="text-red-600 text-sm mt-2">
+                                  {errors.reference_number?.message}
+                                </p>
+                              )}
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                      </div>
                     </div>
                   </RadioGroup>
-                  <Dialog>
-                    <DialogTrigger ref={exitRef}>
-                      Input Transaction Details
-                    </DialogTrigger>
-                    <DialogContent>
-                      <div className="flex flex-col space-y-1.5">
-                        <Label htmlFor="reference_number">
-                          Reference Number
-                        </Label>
-                        <Input
-                          {...register("reference_number")}
-                          id="reference_number"
-                          autoComplete="off"
-                          className={classNames({
-                            "border-red-600": errors.reference_number,
-                          })}
-                          onKeyDown={(e) =>
-                            e.code === "Enter" && exitRef.current?.click()
-                          }
-                        />
-                        {errors.reference_number && (
-                          <p className="text-red-600 text-sm mt-2">
-                            {errors.reference_number?.message}
-                          </p>
-                        )}
-                      </div>
-                    </DialogContent>
-                  </Dialog>
                 </TabsContent>
 
-                <Button type="submit" variant="submit">
-                  {isSubmitting ? "Submitting" : "Check Out"}
-                </Button>
+                <div className="flex flex-col gap-1 mb-user-navbar-mobile absolute bottom-3 right-3">
+                  <div className="flex gap-2">
+                    <p className="text-md">Total Payment:</p>
+                    <p className="text-custom-orange font-bold text-lg">
+                      ₱{" "}
+                      {total.toLocaleString("en-US", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </p>
+                  </div>
+                  <Button
+                    type="submit"
+                    variant="cart"
+                    className="bg-custom-orange text-white "
+                  >
+                    {isSubmitting ? "Placing Order" : "Place Order"}
+                  </Button>
+                </div>
               </Tabs>
             )}
           />

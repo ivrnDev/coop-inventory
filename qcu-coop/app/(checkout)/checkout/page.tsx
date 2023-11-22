@@ -22,22 +22,27 @@ const Checkout = async ({ searchParams }: Params) => {
         const findVariant = product[0]?.variants.filter(
           (v) => v.variant_id === Number(parsedOrder.variant_id)
         );
-        const insertOrderDetails = {
-          ...product[0],
-          quantity: Number(parsedOrder.quantity),
-          amount: findVariant[0]?.variant_price * Number(parsedOrder.quantity),
-          variantPrice: findVariant[0]?.variant_price ?? 0,
-        };
-        orderArray.push(insertOrderDetails);
+        if (findVariant) {
+          const insertOrderDetails = {
+            ...product[0],
+            quantity: Number(parsedOrder.quantity),
+            amount:
+              findVariant[0]?.variant_price * Number(parsedOrder.quantity),
+            variantPrice: findVariant[0]?.variant_price ?? 0,
+          };
+          orderArray.push(insertOrderDetails);
+        }
       }
     }
   }
 
   return (
     <>
-      <CreateOrderForm orders={parsedOrders}>
-        <CheckoutList orders={orderArray} />
-      </CreateOrderForm>
+      <section className="h-user-main-mobile mt-user-header-mobile pb-36 p-6 bg-yellow-500  overflow-hidden md:h-user-main md:mt-user-header md:py-10 md:px-7">
+        <CreateOrderForm orders={parsedOrders} orderInfo={orderArray}>
+          <CheckoutList orders={orderArray} />
+        </CreateOrderForm>
+      </section>
     </>
   );
 };
