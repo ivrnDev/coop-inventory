@@ -30,6 +30,7 @@ body {
   display: flex;
   padding-top: 124px;
   min-height: inherit;
+  
 }
 
 @layer base {

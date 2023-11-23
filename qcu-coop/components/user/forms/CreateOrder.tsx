@@ -102,7 +102,7 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
           className="shadow-sm bg-white flex flex-col space-y-2 rounded-md p-4 h-28 md:h-48"
         >
           <div className="flex justify-between">
-            <p className="text-custom-orange md:text-xl">
+            <p className="text-custom-orange md:text-2xl">
               Personal Information
             </p>
             <Dialog>
@@ -111,16 +111,16 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
                   "text-red-600 font-bold": Object.values(errors).some(
                     (error) => error !== undefined
                   ),
-                  "text-blue-500 md:text-xl": true,
+                  "text-blue-500 md:text-2xl": true,
                 })}
               >
                 Change
               </DialogTrigger>
-              <DialogContent className="w-3/4">
-                <DialogHeader className="text-lg font-bold">
+              <DialogContent className="w-3/4 md:w-3/4">
+                <DialogHeader className="text-lg font-bold md:text-xl">
                   EDIT PERSONAL INFORMATION
                 </DialogHeader>
-                <div className="p-2 flex flex-col gap-5 w-fit h-fit">
+                <div className="p-2 flex flex-col gap-5 h-fit w-full">
                   <div className="flex flex-col space-y-1.5">
                     <Label htmlFor="customer_name">Name</Label>
                     <Input
@@ -233,7 +233,7 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
               </DialogContent>
             </Dialog>
           </div>
-          <div className="flex flex-col space-y-2 text-sm">
+          <div className="flex flex-col space-y-2 text-sm md:text-lg md:space-y-4">
             <div className="flex space-x-4">
               <p
                 className={classNames({
@@ -290,9 +290,11 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
             <div className="flex space-x-3 items-center">
               <p className="text-blue-400 text-sm md:text-lg">Order Options</p>
               <p className="text-sm md:text-lg">
-                {format(currentDate, "PP") === String(watch("pickup_date"))
-                  ? "Immediate Pickup"
-                  : "Scheduled Pickup"}
+                {watch("pickup_date") !== undefined
+                  ? format(currentDate, "PP") === String(watch("pickup_date"))
+                    ? "Immediate Pickup"
+                    : "Scheduled Pickup"
+                  : "Select pickup Date"}
               </p>
             </div>
             <Popover>
@@ -369,9 +371,9 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
         <section
           id="payment-method-container"
           className={classNames({
-            "bg-white max-md:mb-user-navbar-mobile overflow-hidden w-full h-60 max-md:fixed max-md:-bottom-[12.6rem] max-md:right-0 max-md:transition-transform md:mt-5":
+            "bg-white flex flex-col max-md:mb-user-navbar-mobile w-full h-60 max-md:fixed max-md:-bottom-[12.6rem] max-md:right-0 max-md:transition-transform md:h-80 md:mt-5":
               true,
-            "-translate-y-44": isOpen,
+            "max-md:-translate-y-44": isOpen,
           })}
         >
           <ChevronUp
@@ -380,7 +382,7 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
             color="black"
             onClick={() => setisOpen((open) => !open)}
             className={classNames({
-              "absolute top-0 right-0 cursor-pointer": true,
+              "absolute top-0 right-0 cursor-pointer md:hidden": true,
               "rotate-180 ": isOpen,
             })}
           />
@@ -388,117 +390,113 @@ const CreateOrderForm = ({ orders, orderInfo, children }: Props) => {
             name="payment_method"
             control={control}
             render={({ field: { onChange, value } }) => (
-              <Tabs
-                defaultValue="cash"
-                className="w-[400px]"
-                onValueChange={onChange}
-                value={value}
-              >
-                <div className="flex justify-between items-center px-1">
-                  <h2 className="font-semibold">Payment Method</h2>
-                  <TabsList className="flex space-x-5 bg-transparent">
+              <Tabs defaultValue="cash" onValueChange={onChange} value={value}>
+                <div className="flex justify-between items-center px-1 mr-7 md:p-3">
+                  <h2 className="font-semibold md:text-xl">Payment Method</h2>
+                  <TabsList className="flex space-x-5 bg-transparent md:space-x-7">
                     <TabsTrigger
                       value="cash"
-                      className="border p-1 border-black data-[state=active]:text-custom-orange data-[state=active]:border-custom-orange"
+                      className="border p-1 border-black data-[state=active]:text-custom-orange data-[state=active]:border-custom-orange md:p-3"
                     >
                       Cash
                     </TabsTrigger>
                     <TabsTrigger
                       value="g-cash"
-                      className="border p-1 border-black data-[state=active]:text-custom-orange data-[state=active]:border-custom-orange"
+                      className="border p-1 border-black data-[state=active]:text-custom-orange data-[state=active]:border-custom-orange md:p-3"
                     >
                       E-Wallet
                     </TabsTrigger>
                   </TabsList>
                 </div>
-                <TabsContent value="cash" className="w-screen mt-5">
-                  <div className="border-b-2 border-t-2 border-black py-3 w-screen flex justify-around">
+                <TabsContent value="cash" className="w-full mt-5 md:mt-8">
+                  <div className="border-b-2 border-t-2 border-black py-3 w-full flex justify-around md:py-7 md:text-lg ">
                     <p>Cash on pick-up</p>
                     <p>Cash on pick-up</p>
                   </div>
                 </TabsContent>
-                <TabsContent value="g-cash" className="w-screen mt-5">
-                  <RadioGroup
-                    defaultValue="g-cash"
-                    className="border-b-2 border-t-2 border-black py-3 w-full px-4"
-                  >
-                    <div className="flex items-center space-x-3 md:space-x-1">
-                      <RadioGroupItem value="g-cash" id="g-cash" />
-                      <div className="flex w-full justify-between items-center md:text-lg">
+
+                <TabsContent value="g-cash" className="w-full mt-5">
+                  <div className="border-b-2 border-t-2 border-black py-3 px-4 md:py-6 md:px-6">
+                    <div className="flex w-full justify-between items-center md:text-lg">
+                      <div className="flex gap-4 items-center md:space-x-5">
+                        <Input
+                          type="radio"
+                          checked
+                          className="w-5 text-blue-900"
+                        />
                         <div className="relative w-10 h-10 md:w-14 md:h-14 ">
                           <Image
                             src="/icons/gcash-logo.svg"
                             alt="gcash"
                             fill
                             className="object-contain"
-                          ></Image>
+                          />
                         </div>
-                        <p className="text-blue-500">0912 668 5279</p>
-                        <p className="text-blue-500">Maria C.</p>
-                        <Dialog>
-                          <DialogTrigger
-                            ref={exitRef}
-                            className={classNames({
-                              "text-red-600 font-bold border-red-600 bg-transparent":
-                                errors.reference_number?.message !== undefined,
-                              "text-white border-none":
-                                errors.reference_number?.message === undefined,
-                              "bg-blue-500 h-fit px-1 text-sm": true,
-                            })}
-                          >
-                            Input Transaction Details
-                          </DialogTrigger>
-                          <DialogContent className="w-2/3">
-                            <div className="flex flex-col space-y-1.5">
-                              <Label htmlFor="reference_number">
-                                Reference Number
-                              </Label>
-                              <Input
-                                {...register("reference_number")}
-                                id="reference_number"
-                                autoComplete="off"
-                                className={classNames({
-                                  "border-red-600": errors.reference_number,
-                                })}
-                                onKeyDown={(e) =>
-                                  e.code === "Enter" && exitRef.current?.click()
-                                }
-                              />
-                              {errors.reference_number && (
-                                <p className="text-red-600 text-sm mt-2">
-                                  {errors.reference_number?.message}
-                                </p>
-                              )}
-                            </div>
-                          </DialogContent>
-                        </Dialog>
                       </div>
+                      <p className="text-blue-500">0912 668 5279</p>
+                      <p className="text-blue-500">Maria C.</p>
+                      <Dialog>
+                        <DialogTrigger
+                          ref={exitRef}
+                          className={classNames({
+                            "text-red-600 font-bold border-red-600 bg-transparent":
+                              errors.reference_number?.message !== undefined,
+                            "text-white border-none":
+                              errors.reference_number?.message === undefined,
+                            "bg-blue-500 h-fit px-1 text-sm md:text-lg": true,
+                          })}
+                        >
+                          Input Transaction Details
+                        </DialogTrigger>
+                        <DialogContent className="w-2/3">
+                          <div className="flex flex-col space-y-1.5">
+                            <Label htmlFor="reference_number">
+                              Reference Number
+                            </Label>
+                            <Input
+                              {...register("reference_number")}
+                              id="reference_number"
+                              autoComplete="off"
+                              className={classNames({
+                                "border-red-600": errors.reference_number,
+                              })}
+                              onKeyDown={(e) =>
+                                e.code === "Enter" && exitRef.current?.click()
+                              }
+                            />
+                            {errors.reference_number && (
+                              <p className="text-red-600 text-sm mt-2">
+                                {errors.reference_number?.message}
+                              </p>
+                            )}
+                          </div>
+                        </DialogContent>
+                      </Dialog>
                     </div>
-                  </RadioGroup>
-                </TabsContent>
-
-                <div className="flex flex-col gap-1 mb-user-navbar-mobile max-md:absolute max-md:bottom-1 max-md:right-3">
-                  <div className="flex gap-2">
-                    <p className="">Total Payment:</p>
-                    <p className="text-custom-orange font-bold text-lg">
-                      ₱{" "}
-                      {total.toLocaleString("en-US", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}
-                    </p>
                   </div>
-                  <Button
-                    type="submit"
-                    variant="cart"
-                    className="bg-custom-orange text-white "
-                  >
-                    {isSubmitting ? "Placing Order" : "Place Order"}
-                  </Button>
-                </div>
+                </TabsContent>
               </Tabs>
             )}
           />
+          <div className="flex flex-col gap-1 max-md:mb-user-navbar-mobile max-md:absolute max-md:bottom-1 max-md:right-3 md:text-lg md:w-1/2 md:self-end md:mt-5">
+            <div className="flex gap-2 items-center">
+              <p className="">Total Payment:</p>
+              <p className="text-custom-orange font-bold text-lg md:text-2xl">
+                ₱{" "}
+                {total.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </p>
+            </div>
+            <Button
+              type="submit"
+              variant="cart"
+              className="bg-custom-orange text-white"
+            >
+              {isSubmitting ? "Placing Order" : "Place Order"}
+            </Button>
+          </div>
         </section>
       </form>
 
