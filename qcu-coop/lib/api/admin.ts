@@ -55,6 +55,32 @@ export async function loginAdmin(
   }
 }
 
+export async function updateLogin(
+  admin_username: string,
+  admin_password: string
+) {
+  try {
+    const res = await fetch(`http://localhost:3000/api/admin/login/update`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ admin_username, admin_password }),
+    });
+
+    const data = await res.json();
+    return {
+      status: res.status,
+      data: data.result,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      data: null,
+    };
+  }
+}
+
 export async function createAdmin(form: FormData) {
   try {
     const res = await fetch("http://localhost:3000/api/admin", {

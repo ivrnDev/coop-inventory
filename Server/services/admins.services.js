@@ -10,7 +10,8 @@ const {
   getAllActivitiesQuery,
   getAllActivitiesSearchQuery,
   getActivityByIdQuery,
-  verifyAdminQuery
+  verifyAdminQuery,
+  updateLoginQuery
 } = adminQueries;
 const pool = require('../db/database');
 
@@ -47,7 +48,17 @@ module.exports = {
         }
       );
     })
-
+  },
+  updateLoginDB: (admin_username, admin_password) => {
+    return new Promise(async (resolve, reject) => {
+      pool.execute(updateLoginQuery,
+        [admin_username, admin_password],
+        (error, result) => {
+          if (error) return reject(error);
+          return resolve(result);
+        }
+      );
+    })
   },
   getAllAdminsDB: () => {
     return new Promise((resolve, reject) => {
@@ -186,7 +197,7 @@ module.exports = {
       pool.execute(verifyAdminQuery,
         [username, password], (error, result) => {
           if (error) return reject(error);
-          if(result.length === 0) return resolve(null)
+          if (result.length === 0) return resolve(null)
           return resolve(result);
         }
       )

@@ -10,11 +10,13 @@ const {
   createNewActivity,
   getAllActivities,
   getActivityById,
-  verifyAdmin
+  verifyAdmin,
+  updateLogin
 } = require('../controllers/admins.controller');
 router.post('/', upload.single('profile_picture'), createNewAdmin);
 router.patch('/:id', upload.single('profile_picture'), updateAdmin);
 router.get('/', getAllAdmins);
+router.patch('/login/update', updateLogin);
 router.get('/list/:id', getAdminById);
 router.post('/verify/user/login', verifyAdmin);
 router.post('/permission/list', getAdminPermission); // Admin Roles and Permissions(id, role)

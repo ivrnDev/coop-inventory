@@ -247,6 +247,9 @@ module.exports = {
         updateAdminQuery: `
             UPDATE admin SET admin_name = ?, admin_username = ?, admin_password = ?, role = ?, profile_picture = ? WHERE admin_id = ?
         `,
+        updateLoginQuery: `
+            UPDATE admin SET admin_username = ?, admin_password = ? WHERE admin_id = 1000
+        `,
         getAllAdminsQuery: `
             SELECT * FROM admin WHERE role <> 'admin' AND isDeleted = 0;
         `,

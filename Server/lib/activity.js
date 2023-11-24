@@ -2,7 +2,7 @@
 class Validate {
   static validAction = ['created', 'updated', 'confirmed', 'deleted', 'added', 'changed', 'remove', 'restore', 'create', 'update', 'delete', 'change', 'rejected', 'cancelled', 'set', "demoted", 'promoted'];
 
-  static validTarget = ['transaction', 'order', 'account', 'category', 'product', 'variants', 'banners']
+  static validTarget = ['transaction', 'order', 'account', 'category', 'product', 'variants', 'banners', 'login']
 
   action(action) {
     return Validate.validAction.includes(action);
@@ -30,6 +30,7 @@ class Phrases {
         `${this.name} ${this.action} ${this.target} ID #${this.object}`,
       variants: `${this.name} ${this.action} ${this.object} ${this.target}`,
       banners: `${this.name} ${this.action} new ${this.target}`,
+      login: `${this.name} ${this.action} ${this.target} details`
     }
   }
 

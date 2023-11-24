@@ -10,7 +10,8 @@ const {
   getAllActivitiesDB,
   getAllActivitiesSearchDB,
   getActivityByIdDB,
-  verifyAdminDB
+  verifyAdminDB,
+  updateLoginDB
 
 } = require("../services/admins.services");
 
@@ -61,7 +62,17 @@ module.exports = {
     } catch (error) {
       res.status(500).json({ message: 'Internal Server Error', error: error })
     }
-
+  },
+  updateLogin: async (req, res) => {
+    const { admin_username, admin_password } = req.body;
+    try {
+      const result = await updateLoginDB(admin_username, admin_password)
+      if (result === null) return res.status(400).json({ message: `There is no available admin with an ID of ${id}` })
+      if (!result) return res.status(400).json({ message: `Failed to update admin with an ID of ${id}` })
+      return res.status(201).json({ message: 'Successfully updated the admin', result: result })
+    } catch (error) {
+      res.status(500).json({ message: 'Internal Server Error', error: error })
+    }
   },
   getAllAdmins: async (req, res) => {
     try {
