@@ -1,25 +1,54 @@
+require('dotenv').config();
+const { format } = require('date-fns')
 const nodemailer = require("nodemailer");
+module.exports = async function mailer(toAddress, receipt, student_id) {
+  const { transaction, orders } = receipt
 
-module.exports = async function mailer(toAddress) {
-  console.log('called')
+  const orderDetails = orders.map((value) => {
+    return `
+      - ${value.product_name.toUpperCase()}    x${value.order_quantity}     ${value.variant_name}    ₱ ${value.order_total}\n`
+  })
+
   const transporter = nodemailer.createTransport({
-  service: 'gmail',
+    service: 'gmail',
     auth: {
-      user: "qcucooperatives@gmail.com",
-      pass: "pnze yjqh fdps mugr"
+      user: process.env.MAIL_EMAIL,
+      pass: process.env.MAIL_PASSWORD
     }
   })
   const mailOptions = {
-    from: 'qcucooperatives@gmail.com',
+    from: 'QCU COOPERATIVES',
     to: toAddress,
-    subject: "You've successfully placed order.",
-    text: "This is my first email. I am so excited!"
+    subject: "You've successfully placed an order.",
+    text: `
+
+    Receipt No. ${transaction[0].transaction_id}
+    Transaction Date: ${format(transaction[0].transaction_date, "PPpp")}
+    Pickup Date: ${format(transaction[0].pickup_date, "PP")}
+   
+
+    Student Name: ${transaction[0].student_name}
+    Student ID: ${student_id}
+
+
+    ORDER DETAILS: 
+    ${orderDetails.join('')}
+
+
+
+
+    TOTAL AMOUNT: ₱ ${orders[0].overall_total}
+
+    -----------------------------------------------------------
+    THANK YOU FOR PURCHASING !!!
+    -----------------------------------------------------------
+    `
   };
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.log(error)
     } else {
-      console.log('email sent')
+      console.log('Email Sent')
     }
 
   })

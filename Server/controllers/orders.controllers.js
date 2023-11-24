@@ -2,7 +2,7 @@ const { getAllOrdersDB, createOrderDB, getOrderbyIdDB, getOrderbyTransactionIdDB
 const { createCustomerDB, verifyCustomerDB } = require('../services/customers.services')
 const { createTransactionDB, getTransactionByIdDB } = require('../services/transactions.services')
 const { parse, format } = require('date-fns')
-
+const mailer = require('../lib/mailer');
 module.exports = {
   createOrder: async (req, res) => {
     const { customer, orders } = req.body
@@ -27,6 +27,7 @@ module.exports = {
         transaction: transaction_receipt,
         orders: orderReceipt
       }
+      mailer(customer_email, receipt, student_id);
       return res.status(201).json(receipt)
     } catch (error) {
       return res.status(500).json(error);

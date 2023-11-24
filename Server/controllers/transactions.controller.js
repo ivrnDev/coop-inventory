@@ -15,7 +15,6 @@ module.exports = {
   getTransactionById: async (req, res) => {
     try {
       const result = await getTransactionByIdDB(req.params.id);
-      mailer("villamora.ivanren.manguiat@gmail.com")
       if (result === null) return res.status(404).json({ message: `There is no record of transaction with an ID of ${req.params.id}` })
 
       return res.status(201).json({ message: `Successfully get transaction with an ID of ${req.params.id}`, result: result });
