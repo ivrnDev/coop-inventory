@@ -26,7 +26,7 @@ const CheckoutList = ({ orders }: Props) => {
             <TableHead>Item Subtotal</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody className="">
+        <TableBody>
           {orders && orders.length > 0 ? (
             orders.map((product, index) => (
               <TableRow key={index} className="max-md:text-center md:text-lg md:font-semibold">
