@@ -124,7 +124,6 @@ const UpdatePassword = () => {
             <Input
               {...register("admin_password")}
               id="admin_password"
-              type="password"
               autoComplete="off"
               className={classNames({
                 "border-red-600": errors.admin_password,
