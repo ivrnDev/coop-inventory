@@ -22,8 +22,8 @@ const buttonVariants = cva(
         system: "text-white bg-[#1E88E5]",
         variants:
           "text-[#C3C1C1] uppercase bg-white border border-[#C3C1C1] hover:text-customer-orange p-1",
-        cart: "bg-[#F8EDED] text-lg text-[#D71313] rounded-none hover:opacity-80",
-        buy: "bg-[#D71313] text-lg rounded-none hover:opacity-80 text-white",
+        cart: "bg-[#F8EDED] text-lg text-[#D71313] rounded-none hover:opacity-90 transition-all",
+        buy: "bg-[#D71313] text-lg rounded-none hover:opacity-90 transition-all text-white",
         okay: "bg-green-600 w-full text-white hover:bg-green-400"
       },
       size: {
