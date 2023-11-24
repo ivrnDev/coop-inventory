@@ -11,41 +11,74 @@ const Analytics = async () => {
   const revenue = sales?.revenue;
   return (
     <>
-      <section className="min-h-admin-main px-5 pt-2">
-        <div className="grid grid-cols-2 gap-5 mb-4">
-          <Card className="relative h-44 shadow-sm p-4 rounded-lg bg-gradient-to-t from-slate-900 via-slate-700 to-slate-950">
-            <CardContent className="grid grid-cols-2">
-              <div className="text-center mt-5">
-                <h2 className="text-4xl text-white font-bold mt-2">
-                  {sold?.day?.today.value ?? 120}
-                </h2>
-                <h4 className="text-3xl text-gray-200 font-bold capitalize mt-6">
-                  Today
-                </h4>
-              </div>
-              <div className="text-center mt-5">
-                <h2 className="text-4xl text-white font-bold mt-2">
-                  {sold?.day?.yesterday.value ?? 490}
-                </h2>
-                <h4 className="text-3xl text-gray-200 font-bold capitalize mt-6">
-                  Yesterday
-                </h4>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="relative h-28 shadow-sm p-3 rounded-lg">
-            <CardContent className="flex space-y-1 flex-col"></CardContent>
-          </Card>
+      <section className="min-h-admin-main p-7">
+        <div id="today-yesterday-sales" className="w-full flex gap-5">
+          <div className="w-full mb-4">
+            <Card className="relative h-48 shadow-sm shadow-white p-3 rounded-2xl bg-gradient-to-br from-black via-slate-800 to-slate-900 flex flex-col justify-center">
+              <h1 className="font-bold text-2xl ml-3 text-white absolute top-4 left-3">
+                ALL TIME SALES
+              </h1>
+              <LineChart
+                color="white"
+                size={35}
+                className="absolute right-8 top-5"
+              />
+              <CardContent className="mx-auto flex items-center space-x-20 mt-16">
+                <div>
+                  <p className="text-4xl text-white font-bold text-center">
+                    {sold?.day?.today.value.toLocaleString() ?? 0}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          <div className="w-full mb-4">
+            <Card className="relative h-48 shadow-sm shadow-white p-3 rounded-2xl bg-gradient-to-br from-black via-slate-800 to-slate-900 flex flex-col justify-center">
+              <h1 className="font-bold text-2xl ml-3 text-white absolute top-4 left-3">
+                ALL TIME REVENUE
+              </h1>
+              <TrendingUp
+                color="white"
+                size={35}
+                className="absolute right-8 top-5"
+              />
+              <CardContent className="mx-auto flex items-center space-x-20 mt-14">
+                <div>
+                  <p className="text-4xl text-white font-bold text-center">
+                    ₱{" "}
+                    {revenue?.day?.today.value.toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    }) ?? 0.0}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
-        <div id="card-container" className="grid grid-cols-4 gap-5 mb-4">
-          <Card className="relative h-28 shadow-sm p-3 rounded-lg">
-            <CardContent className="flex space-y-1 flex-col">
-              <h2 className="text-2xl text-black font-bold">
-                {sold?.all?.value ?? 0}
-              </h2>
-              <h4 className=" text-slate-700 font-bold capitalize">
-                sales
-              </h4>
+
+        <div className="grid grid-cols-2 gap-5 mb-4 w-full">
+          <Card className="relative h-fit shadow-sm p-3 rounded-lg">
+            <h1 className="font-bold text-2xl ml-3 absolute top-4 left-3">
+              SALES
+            </h1>
+            <CardContent className="w-full h-full flex items-center justify-around pt-4 mt-10">
+              <div className="text-center h-fit">
+                <h2 className="text-3xl text-black font-bold">
+                  {sold?.day?.today.value ?? 0}
+                </h2>
+                <p className=" text-slate-700 font-bold capitalize text-2xl mt-2">
+                  Today
+                </p>
+              </div>
+              <div className="text-center h-fit">
+                <h2 className="text-3xl text-black font-bold">
+                  {sold?.day?.yesterday.value ?? 999}
+                </h2>
+                <p className=" text-slate-700 font-bold capitalize text-2xl mt-2">
+                  Yesterday
+                </p>
+              </div>
             </CardContent>
             <Activity
               color="black"
@@ -53,14 +86,35 @@ const Analytics = async () => {
               className="absolute right-6 bottom-1/2 translate-y-[50%]"
             />
           </Card>
-          <Card className="relative h-28 shadow-sm p-3 rounded-lg">
-            <CardContent className="flex space-y-1 flex-col">
-              <h2 className="text-2xl text-black font-bold">
-                ₱ {revenue?.all?.value ?? 0}
-              </h2>
-              <h4 className=" text-slate-700 font-bold capitalize">
-                Revenue
-              </h4>
+          <Card className="relative h-fit shadow-sm p-3 rounded-lg">
+            <h1 className="font-bold text-2xl ml-3 absolute top-4 left-3">
+              REVENUES
+            </h1>
+            <CardContent className="w-full h-full flex items-center justify-around pt-4 mt-10">
+              <div className="text-center h-fit">
+                <h2 className="text-3xl text-black font-bold">
+                  ₱{" "}
+                  {revenue?.day?.today.value.toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }) ?? 0}
+                </h2>
+                <p className="text-slate-700 font-bold capitalize text-2xl mt-2">
+                  Today
+                </p>
+              </div>
+              <div className="text-center h-fit">
+                <h2 className="text-3xl text-black font-bold">
+                  ₱{" "}
+                  {revenue?.day?.yesterday.value.toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }) ?? 999}
+                </h2>
+                <p className=" text-slate-700 font-bold capitalize text-2xl mt-2">
+                  Yesterday
+                </p>
+              </div>
             </CardContent>
             <ShoppingBag
               color="black"
@@ -68,13 +122,25 @@ const Analytics = async () => {
               className="absolute right-6 bottom-1/2 translate-y-[50%]"
             />
           </Card>
+        </div>
+        <div id="card-container" className="grid grid-cols-4 gap-5 mb-4">
           <Card className="relative h-28 shadow-sm p-3 rounded-lg">
             <CardContent className="flex space-y-1 flex-col">
               <h2 className="text-2xl text-black font-bold">
-                {sold?.day?.yesterday.value ?? 0}
+                {sold?.month?.currentMonth.value ?? 0}
               </h2>
               <h4 className=" text-slate-700 font-bold capitalize">
-                Yesterday
+                Current Month
+              </h4>
+            </CardContent>
+          </Card>
+          <Card className="relative h-28 shadow-sm p-3 rounded-lg">
+            <CardContent className="flex space-y-1 flex-col">
+              <h2 className="text-2xl text-black font-bold">
+                {sold?.month?.previousMonth.value ?? 0}
+              </h2>
+              <h4 className=" text-slate-700 font-bold capitalize">
+                Previous Month
               </h4>
             </CardContent>
           </Card>
@@ -99,72 +165,11 @@ const Analytics = async () => {
             </CardContent>
           </Card>
         </div>
+
         <div
           id="second-section-container"
           className="w-full grid grid-cols-2 overflow-hidden"
         >
-          <div id="year-month-sales" className="w-[90%] h-full">
-            <div className="w-full h-[50%] mb-4">
-              <Card className="relative h-fit  shadow-sm shadow-white p-3 rounded-2xl bg-gradient-to-br from-black via-slate-800 to-slate-900 flex flex-col justify-center">
-                <h1 className="font-bold text-2xl ml-3 text-white absolute top-4 left-3">
-                  SALES
-                </h1>
-                <LineChart
-                  color="white"
-                  size={35}
-                  className="absolute right-8 top-5"
-                />
-                <CardContent className="mx-auto flex items-center space-x-20 mt-16">
-                  <div>
-                    <p className="text-4xl text-white font-bold text-center">
-                      {sold?.month?.currentMonth.value ?? 0}
-                    </p>
-                    <p className=" text-muted font-bold capitalize mt-2">
-                      Current Month
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-4xl text-white font-bold text-center">
-                      {sold?.month?.previousMonth.value ?? 0}
-                    </p>
-                    <p className=" text-muted font-bold capitalize mt-2">
-                      Previous Month
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-            <div className="w-full mb-4">
-              <Card className="relative h-fit shadow-sm shadow-white p-3 rounded-2xl bg-gradient-to-br from-black via-slate-800 to-slate-900 flex flex-col justify-center">
-                <h1 className="font-bold text-2xl ml-3 text-white absolute top-4 left-3">
-                  REVENUES
-                </h1>
-                <TrendingUp
-                  color="white"
-                  size={35}
-                  className="absolute right-8 top-5"
-                />
-                <CardContent className="mx-auto flex items-center space-x-20 mt-14">
-                  <div>
-                    <p className="text-4xl text-white font-bold text-center">
-                      ₱ {revenue?.month?.currentMonth.value ?? 0}
-                    </p>
-                    <p className=" text-muted font-bold capitalize mt-2">
-                      Current Month
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-4xl text-white font-bold text-center">
-                      ₱ {revenue?.month?.previousMonth.value ?? 0}
-                    </p>
-                    <p className=" text-muted font-bold capitalize mt-2">
-                      Previous Month
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
           <div id="product-analytics-container" className="w-[80%] ml-12">
             <ProductAnalytics products={product} />
           </div>
