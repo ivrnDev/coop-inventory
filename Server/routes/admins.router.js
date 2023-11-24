@@ -11,11 +11,13 @@ const {
   getAllActivities,
   getActivityById,
   verifyAdmin,
-  updateLogin
+  updateLogin,
+  getAllDeletedAdmin
 } = require('../controllers/admins.controller');
 router.post('/', upload.single('profile_picture'), createNewAdmin);
 router.patch('/:id', upload.single('profile_picture'), updateAdmin);
 router.get('/', getAllAdmins);
+router.get('/deleted/list', getAllDeletedAdmin);
 router.patch('/login/update', updateLogin);
 router.get('/list/:id', getAdminById);
 router.post('/verify/user/login', verifyAdmin);

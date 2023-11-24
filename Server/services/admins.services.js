@@ -11,7 +11,8 @@ const {
   getAllActivitiesSearchQuery,
   getActivityByIdQuery,
   verifyAdminQuery,
-  updateLoginQuery
+  updateLoginQuery,
+  getAllDeletedAdminQuery
 } = adminQueries;
 const pool = require('../db/database');
 
@@ -78,6 +79,21 @@ module.exports = {
               profile_picture: value.profile_picture.toString('base64'),
             }))
             return resolve(admin);
+          }
+        }
+      );
+    })
+  },
+  getAllDeletedAdminDB: () => {
+    return new Promise((resolve, reject) => {
+      pool.execute(getAllDeletedAdminQuery,
+        [],
+        (error, result) => {
+          if (error) return reject(error);
+          if (result.length === 0) {
+            return resolve(null)
+          } else {
+            return resolve(result);
           }
         }
       );

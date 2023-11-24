@@ -277,6 +277,9 @@ module.exports = {
         getActivityByIdQuery: `
            SELECT * FROM activity WHERE id = ?
         `,
+        getAllDeletedAdminQuery: `
+           SELECT admin_id, admin_name, admin_username, role FROM admin WHERE isDeleted = 1
+        `,
     }
 }
 

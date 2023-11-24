@@ -11,7 +11,8 @@ const {
   getAllActivitiesSearchDB,
   getActivityByIdDB,
   verifyAdminDB,
-  updateLoginDB
+  updateLoginDB,
+  getAllDeletedAdminDB
 
 } = require("../services/admins.services");
 
@@ -80,6 +81,16 @@ module.exports = {
       if (result === null) return res.status(400).json({ message: 'There is no available admin' })
       if (!result) return res.status(400).json({ message: 'Failed to get all admin' })
       return res.status(200).json({ message: 'Successfully get all admins', result: result })
+    } catch (error) {
+      res.status(500).json({ message: 'Internal Server Error', error: error })
+    }
+  },
+  getAllDeletedAdmin: async (req, res) => {
+    try {
+      const result = await getAllDeletedAdminDB();
+      if (result === null) return res.status(400).json({ message: 'There is no deleted admin' })
+      if (!result) return res.status(400).json({ message: 'Failed to get all deleted admin' })
+      return res.status(200).json({ message: 'Successfully get all deleted admins', result: result })
     } catch (error) {
       res.status(500).json({ message: 'Internal Server Error', error: error })
     }
