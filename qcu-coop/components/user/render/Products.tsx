@@ -25,7 +25,7 @@ const RenderProducts = ({ products, search }: Props) => {
             href={`
             /products/${product.product_id}`}
             key={index}
-            className="h-fit "
+            className="h-fit"
           >
             <div className="bg-white overflow-hidden h-64 w-full shadow-xl rounded-lg flex flex-col p-2 hover:opacity-80 flex-1 md:h-72">
               <div className="relative w-full h-32 overflow-hidden rounded-md border border-black">

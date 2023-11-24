@@ -98,19 +98,19 @@ const Item = ({ product }: Props) => {
               <div id="quantity-container" className="flex items-center gap-2">
                 <Button
                   variant="secondary"
+                  onClick={() => count > 1 && setCount((prev) => prev - 1)}
+                >
+                  <Minus size={15} />
+                </Button>
+                <p className="text-lg font-semibold select-none">{count}</p>
+                <Button
+                  variant="secondary"
                   onClick={() =>
                     selectedVariant.variant_stocks >= count + 1 &&
                     setCount((prev) => prev + 1)
                   }
                 >
                   <Plus size={15} />
-                </Button>
-                <p className="text-lg font-semibold select-none">{count}</p>
-                <Button
-                  variant="secondary"
-                  onClick={() => count > 1 && setCount((prev) => prev - 1)}
-                >
-                  <Minus size={15} />
                 </Button>
               </div>
             </div>
