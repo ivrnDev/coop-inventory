@@ -12,7 +12,7 @@ const Analytics = async () => {
   return (
     <>
       <section className="min-h-admin-main p-7">
-        <div id="today-yesterday-sales" className="w-full flex gap-5">
+        <div id="all-time-container" className="w-full flex gap-5">
           <div className="w-full mb-4">
             <Card className="relative h-48 shadow-sm shadow-white p-3 rounded-2xl bg-gradient-to-br from-black via-slate-800 to-slate-900 flex flex-col justify-center">
               <h1 className="font-bold text-2xl ml-3 text-white absolute top-4 left-3">
@@ -57,7 +57,10 @@ const Analytics = async () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-5 mb-4 w-full">
+        <div
+          id="today-yesterday-container"
+          className="grid grid-cols-2 gap-5 mb-4 w-full"
+        >
           <Card className="relative h-fit shadow-sm p-3 rounded-lg">
             <h1 className="font-bold text-2xl ml-3 absolute top-4 left-3">
               SALES
@@ -123,6 +126,7 @@ const Analytics = async () => {
             />
           </Card>
         </div>
+
         <div id="card-container" className="grid grid-cols-4 gap-5 mb-4">
           <Card className="relative h-28 shadow-sm p-3 rounded-lg">
             <CardContent className="flex space-y-1 flex-col">
@@ -164,13 +168,70 @@ const Analytics = async () => {
               </h4>
             </CardContent>
           </Card>
+
+          <Card className="relative h-28 shadow-sm p-3 rounded-lg">
+            <CardContent className="flex space-y-1 flex-col">
+              <h2 className="text-2xl text-black font-bold">
+                ₱{" "}
+                {revenue?.month?.currentMonth.value.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }) ?? 0}
+              </h2>
+              <h4 className=" text-slate-700 font-bold capitalize">
+                Current Month
+              </h4>
+            </CardContent>
+          </Card>
+          <Card className="relative h-28 shadow-sm p-3 rounded-lg">
+            <CardContent className="flex space-y-1 flex-col">
+              <h2 className="text-2xl text-black font-bold">
+                ₱{" "}
+                {revenue?.month?.previousMonth.value.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }) ?? 0}
+              </h2>
+              <h4 className=" text-slate-700 font-bold capitalize">
+                Previous Month
+              </h4>
+            </CardContent>
+          </Card>
+          <Card className="relative h-28 shadow-sm p-3 rounded-lg">
+            <CardContent className="flex space-y-1 flex-col">
+              <h2 className="text-2xl text-black font-bold">
+                ₱{" "}
+                {revenue?.year?.currentYear.value.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }) ?? 0}
+              </h2>
+              <h4 className=" text-slate-700 font-bold capitalize">
+                Current Year
+              </h4>
+            </CardContent>
+          </Card>
+          <Card className="relative h-28 shadow-sm p-3 rounded-lg">
+            <CardContent className="flex space-y-1 flex-col">
+              <h2 className="text-2xl text-black font-bold">
+                ₱{" "}
+                {revenue?.year?.previousYear.value.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }) ?? 0}
+              </h2>
+              <h4 className=" text-slate-700 font-bold capitalize">
+                Previous Year
+              </h4>
+            </CardContent>
+          </Card>
         </div>
 
         <div
           id="second-section-container"
           className="w-full grid grid-cols-2 overflow-hidden"
         >
-          <div id="product-analytics-container" className="w-[80%] ml-12">
+          <div id="product-analytics-container" className="w-[80%]">
             <ProductAnalytics products={product} />
           </div>
         </div>
