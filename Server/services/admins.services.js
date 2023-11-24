@@ -12,7 +12,8 @@ const {
   getActivityByIdQuery,
   verifyAdminQuery,
   updateLoginQuery,
-  getAllDeletedAdminQuery
+  getAllDeletedAdminQuery,
+  deleteAdminQuery
 } = adminQueries;
 const pool = require('../db/database');
 
@@ -54,6 +55,17 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       pool.execute(updateLoginQuery,
         [admin_username, admin_password],
+        (error, result) => {
+          if (error) return reject(error);
+          return resolve(result);
+        }
+      );
+    })
+  },
+  deleteAdminDB: (id, isDeleted) => {
+    return new Promise(async (resolve, reject) => {
+      pool.execute(deleteAdminQuery,
+        [isDeleted, id],
         (error, result) => {
           if (error) return reject(error);
           return resolve(result);

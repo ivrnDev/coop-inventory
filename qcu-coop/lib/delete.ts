@@ -1,7 +1,9 @@
+import { deleteAdmin } from "./api/admin";
 import { deleteProduct } from "./api/products";
 
 const targetRequest: any = {
   deleteProduct: deleteProduct,
+  deleteAdmin: deleteAdmin,
 };
 
 export const handleAction = (

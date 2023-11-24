@@ -76,7 +76,7 @@ const DeleteButton = ({
       <Dialog>
         <DialogTrigger
           ref={deleteBtnRef}
-          className="bg-[#FB392D] rounded-md p-2 flex gap-2 justify-center items-center text-white"
+          className="bg-[#FB392D] rounded-md p-2 flex gap-2 justify-center items-center text-white font-bold"
         >
           <Image
             src="/icons/trash-icon.svg"

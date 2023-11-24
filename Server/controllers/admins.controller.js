@@ -12,7 +12,8 @@ const {
   getActivityByIdDB,
   verifyAdminDB,
   updateLoginDB,
-  getAllDeletedAdminDB
+  getAllDeletedAdminDB,
+  deleteAdminDB
 
 } = require("../services/admins.services");
 
@@ -71,6 +72,18 @@ module.exports = {
       if (result === null) return res.status(400).json({ message: `There is no available admin with an ID of ${id}` })
       if (!result) return res.status(400).json({ message: `Failed to update admin with an ID of ${id}` })
       return res.status(201).json({ message: 'Successfully updated the admin', result: result })
+    } catch (error) {
+      res.status(500).json({ message: 'Internal Server Error', error: error })
+    }
+  },
+  deleteAdmin: async (req, res) => {
+    const { isDeleted } = req.query
+    const { id } = req.params
+    try {
+      const result = await deleteAdminDB(id, isDeleted)
+      if (result === null) return res.status(400).json({ message: `There is no available admin with an ID of ${id}` })
+      if (!result) return res.status(400).json({ message: `Failed to delete admin with an ID of ${id}` })
+      return res.status(200).json({ message: 'Successfully deleted the admin', result: result })
     } catch (error) {
       res.status(500).json({ message: 'Internal Server Error', error: error })
     }

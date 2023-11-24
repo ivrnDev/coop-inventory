@@ -133,7 +133,42 @@ export async function getAllAdmin() {
     return null;
   }
 }
+export async function getAllDeletedAdmin() {
+  try {
+    const res = await fetch("http://localhost:3000/api/admin/deleted/list", {
+      next: {
+        revalidate: 0,
+      },
+    });
 
+    const data = await res.json();
+    return data.result;
+  } catch (error) {
+    return null;
+  }
+}
+
+export async function deleteAdmin(id: number, isDeleted: string) {
+  try {
+    const res = await fetch(
+      `http://localhost:3000/api/admin/deleted/list/${id}?isDeleted=${isDeleted}`,
+      {
+        method: "PATCH",
+      }
+    );
+
+    const data = await res.json();
+    return {
+      status: res.status,
+      data,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      data: null,
+    };
+  }
+}
 export async function getAdminByID(id: number) {
   try {
     const res = await fetch(`http://localhost:3000/api/admin/list/${id}`, {

@@ -14,10 +14,13 @@ import { Search } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import UpdateAccount from "../forms/UpdateAccount";
+import DeleteButton from "../../products/buttons/DeleteButton";
+import { rolePermissions } from "@/lib/permission";
 
 type Props = {
   admins: Admin[];
 };
+const { restricted } = rolePermissions;
 const FilteredAdmins = ({ admins }: Props) => {
   const [filter, setFilter] = useState<string>("");
 
@@ -83,17 +86,22 @@ const FilteredAdmins = ({ admins }: Props) => {
                       <UpdateAccount admin_id={admin.admin_id} />
                     </DialogContent>
                   </Dialog>
-                  {/* <Dialog>
-                  <DialogTrigger className="bg-[#FB392D] rounded-md p-1">
-                    <Image
-                      src="/icons/trash-icon.svg"
-                      alt="edit"
-                      width={20}
-                      height={20}
+                  <div>
+                    <DeleteButton
+                      roles={restricted}
+                      target={{
+                        id: admin.admin_id,
+                        object: admin.admin_name,
+                        target: "account",
+                      }}
+                      message={{
+                        success: `Sucessfully remove ${admin.admin_name} account`,
+                        failed: `Failed to remove ${admin.admin_name} account`,
+                      }}
+                      deleteTarget="deleteAdmin"
+                      isDeleted="1"
                     />
-                  </DialogTrigger>
-                  <DialogContent></DialogContent>
-                </Dialog> */}
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
