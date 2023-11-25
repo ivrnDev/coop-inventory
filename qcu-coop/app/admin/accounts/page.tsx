@@ -10,7 +10,7 @@ const Accounts = async () => {
   const deletedAdmin: DeletedAdmin[] =  await getAllDeletedAdmin();
   return (
     <section className="h-admin-main p-6">
-      <div className="relative border border-black h-full p-4 overflow-clip">
+      <div className="relative border border-black h-full p-4 overflow-y-auto">
         <div>
           <div className="float-right flex gap-3">
             <CreateAccount />
