@@ -8,7 +8,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       pool.execute(createTransactionQuery, [student_id, payment_method, reference_number || null, pickup_date], (error, result) => {
         if (error) reject(error);
-        const transaction_id = result.insertId;
+        const transaction_id = result?.insertId || 0;
         const transaction = {
           transaction_id,
           student_id,

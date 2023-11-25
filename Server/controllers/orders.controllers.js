@@ -12,7 +12,7 @@ module.exports = {
       const mysqlDateFormat = format(formattedDate, 'yyyy-MM-dd');
 
       const isVerified = await verifyCustomerDB(student_id, customer_name, customer_email);
-      if (!isVerified || isVerified === null) return res.status(400).json({ message: "Customer information is invalid" })
+      if (!isVerified || isVerified.length === 0) return res.status(400).json({ message: "Customer information is invalid" })
 
       const transaction = await createTransactionDB(student_id, payment_method, reference_number, mysqlDateFormat)
       if (!transaction) return res.status(400).json({ message: "Failed to create a new order, transaction failed" });
