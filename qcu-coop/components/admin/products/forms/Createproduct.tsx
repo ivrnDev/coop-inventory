@@ -212,12 +212,13 @@ const CreateProductForm = () => {
                     {selectedImage.image && (
                       <div
                         id="preview-image-container"
-                        className="relative w-full h-full object-contain"
+                        className="relative w-full h-full"
                       >
                         <Image
                           src={URL.createObjectURL(selectedImage.image)}
                           alt="Selected Image"
                           sizes="min-w-1"
+                          className="object-contain"
                           fill
                         />
                       </div>
@@ -231,7 +232,7 @@ const CreateProductForm = () => {
                           alt="Selected Image"
                           sizes="min-w-1"
                           fill
-                          className="rounded-lg object-cover"
+                          className="rounded-lg object-contain"
                         />
                       </AspectRatio>
                     </DialogContent>
@@ -250,12 +251,13 @@ const CreateProductForm = () => {
                     {selectedImage.albums[0] && (
                       <div
                         id="preview-image-container"
-                        className="relative w-full h-full object-contain"
+                        className="relative w-full h-full"
                       >
                         <Image
                           src={URL.createObjectURL(selectedImage.albums[0])}
                           alt="Selected Image"
                           sizes="min-w-1"
+                          className="object-contain"
                           fill
                         />
                       </div>
@@ -277,7 +279,7 @@ const CreateProductForm = () => {
                               alt="Selected Image"
                               sizes="min-w-1"
                               fill
-                              className="rounded-lg object-cover"
+                              className="rounded-lg object-contain"
                             />
                           </AspectRatio>
                         ))}
