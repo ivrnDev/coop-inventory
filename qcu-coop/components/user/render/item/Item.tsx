@@ -40,7 +40,7 @@ const Item = ({ product }: Props) => {
         <>
           <div
             id="info-container"
-            className="max-md:bg-white max-md:drop-shadow-md px-2 pt-2 flex flex-col gap-2 h-72 md:w-full md:gap-1"
+            className="max-md:bg-white max-md:drop-shadow-md px-2 pt-2 flex flex-col gap-2 h-fit md:w-full md:gap-1"
           >
             <h1 className="text-lg font-semibold md:text-2xl ">
               {product.display_name}
