@@ -6,7 +6,7 @@ const CreateProductPage = () => {
         <div className="bg-header-admin w-[100%] h-10 font-bold text-xl flex justify-center items-center text-white">
           CREATE PRODUCT
         </div>
-        <div className="bg-white w-full h-[calc(100%-2.5rem)] mt-15 oveflow-hidden py-5 px-9">
+        <div className="bg-white w-full h-[calc(100%-2.5rem)] oveflow-hidden">
           <CreateProductForm />
         </div>
       </div>
