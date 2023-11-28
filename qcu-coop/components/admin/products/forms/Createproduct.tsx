@@ -72,7 +72,7 @@ const steps = [
 const CreateProductForm = () => {
   const { toast } = useToast();
   const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const { restricted, moderate, unrestricted } = rolePermissions;
+  const { moderate } = rolePermissions;
   const [categories, setCategories] = useState<Categories[] | null>([]);
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [isAllowed, setIsAllowed] = useState<boolean>(false);
@@ -119,6 +119,12 @@ const CreateProductForm = () => {
 
   type FieldName = keyof ValidationProduct;
   const next = async () => {
+    append({
+      variant_name: "",
+      variant_symbol: "",
+      variant_price: "0",
+      variant_stocks: "0",
+    });
     if (currentStep < steps.length) {
       const fields = steps[currentStep - 1].fields;
       const validate = await trigger(fields as FieldName[], {
@@ -642,7 +648,6 @@ const CreateProductForm = () => {
                       {...register(`variants.${index}.variant_name` as const)}
                       id={`variants${index}.variant_name`}
                       autoComplete="off"
-                      placeholder="small e.g"
                       className={classNames({
                         "border-red-600":
                           errors.variants &&
@@ -739,7 +744,7 @@ const CreateProductForm = () => {
                 <Button
                   variant="destructive"
                   size="lg"
-                  onClick={() => remove(index)}
+                  onClick={() => fields.length > 1 && remove(index)}
                 >
                   DELETE
                 </Button>
