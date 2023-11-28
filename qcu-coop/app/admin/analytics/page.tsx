@@ -26,7 +26,7 @@ const Analytics = async () => {
               <CardContent className="mx-auto flex items-center space-x-20 mt-16">
                 <div>
                   <p className="text-4xl text-white font-bold text-center">
-                    {sold?.day?.today.value.toLocaleString() ?? 0}
+                    {sold?.day?.today?.value.toLocaleString() ?? 0}
                   </p>
                 </div>
               </CardContent>
@@ -46,7 +46,7 @@ const Analytics = async () => {
                 <div>
                   <p className="text-4xl text-white font-bold text-center">
                     ₱{" "}
-                    {revenue?.day?.today.value.toLocaleString("en-US", {
+                    {revenue?.day?.today?.value.toLocaleString("en-US", {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     }) ?? 0.0}
@@ -68,7 +68,7 @@ const Analytics = async () => {
             <CardContent className="w-full h-full flex items-center justify-around pt-4 mt-10">
               <div className="text-center h-fit">
                 <h2 className="text-3xl text-black font-bold">
-                  {sold?.day?.today.value ?? 0}
+                  {sold?.day?.today?.value ?? 0}
                 </h2>
                 <p className=" text-slate-700 font-bold capitalize text-2xl mt-2">
                   Today
@@ -76,7 +76,7 @@ const Analytics = async () => {
               </div>
               <div className="text-center h-fit">
                 <h2 className="text-3xl text-black font-bold">
-                  {sold?.day?.yesterday.value ?? 999}
+                  {sold?.day?.yesterday?.value ?? 999}
                 </h2>
                 <p className=" text-slate-700 font-bold capitalize text-2xl mt-2">
                   Yesterday
@@ -97,7 +97,7 @@ const Analytics = async () => {
               <div className="text-center h-fit">
                 <h2 className="text-3xl text-black font-bold">
                   ₱{" "}
-                  {revenue?.day?.today.value.toLocaleString("en-US", {
+                  {revenue?.day?.today?.value.toLocaleString("en-US", {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   }) ?? 0}
@@ -109,7 +109,7 @@ const Analytics = async () => {
               <div className="text-center h-fit">
                 <h2 className="text-3xl text-black font-bold">
                   ₱{" "}
-                  {revenue?.day?.yesterday.value.toLocaleString("en-US", {
+                  {revenue?.day?.yesterday?.value.toLocaleString("en-US", {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   }) ?? 999}
@@ -131,7 +131,7 @@ const Analytics = async () => {
           <Card className="relative h-28 shadow-sm p-3 rounded-lg">
             <CardContent className="flex space-y-1 flex-col">
               <h2 className="text-2xl text-black font-bold">
-                {sold?.month?.currentMonth.value ?? 0}
+                {sold?.month?.currentMonth?.value ?? 0}
               </h2>
               <h4 className=" text-slate-700 font-bold capitalize">
                 Current Month
@@ -141,7 +141,7 @@ const Analytics = async () => {
           <Card className="relative h-28 shadow-sm p-3 rounded-lg">
             <CardContent className="flex space-y-1 flex-col">
               <h2 className="text-2xl text-black font-bold">
-                {sold?.month?.previousMonth.value ?? 0}
+                {sold?.month?.previousMonth?.value ?? 0}
               </h2>
               <h4 className=" text-slate-700 font-bold capitalize">
                 Previous Month
@@ -151,7 +151,7 @@ const Analytics = async () => {
           <Card className="relative h-28 shadow-sm p-3 rounded-lg">
             <CardContent className="flex space-y-1 flex-col">
               <h2 className="text-2xl text-black font-bold">
-                {sold?.year?.currentYear.value ?? 0}
+                {sold?.year?.currentYear?.value ?? 0}
               </h2>
               <h4 className=" text-slate-700 font-bold capitalize">
                 Current Year
@@ -161,7 +161,7 @@ const Analytics = async () => {
           <Card className="relative h-28 shadow-sm p-3 rounded-lg">
             <CardContent className="flex space-y-1 flex-col">
               <h2 className="text-2xl text-black font-bold">
-                {sold?.year?.previousYear.value ?? 0}
+                {sold?.year?.previousYear?.value ?? 0}
               </h2>
               <h4 className=" text-slate-700 font-bold capitalize">
                 Previous Year
@@ -173,7 +173,7 @@ const Analytics = async () => {
             <CardContent className="flex space-y-1 flex-col">
               <h2 className="text-2xl text-black font-bold">
                 ₱{" "}
-                {revenue?.month?.currentMonth.value.toLocaleString("en-US", {
+                {revenue?.month?.currentMonth?.value.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 }) ?? 0}
@@ -187,7 +187,7 @@ const Analytics = async () => {
             <CardContent className="flex space-y-1 flex-col">
               <h2 className="text-2xl text-black font-bold">
                 ₱{" "}
-                {revenue?.month?.previousMonth.value.toLocaleString("en-US", {
+                {revenue?.month?.previousMonth?.value.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 }) ?? 0}
@@ -201,7 +201,7 @@ const Analytics = async () => {
             <CardContent className="flex space-y-1 flex-col">
               <h2 className="text-2xl text-black font-bold">
                 ₱{" "}
-                {revenue?.year?.currentYear.value.toLocaleString("en-US", {
+                {revenue?.year?.currentYear?.value.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 }) ?? 0}
@@ -215,7 +215,7 @@ const Analytics = async () => {
             <CardContent className="flex space-y-1 flex-col">
               <h2 className="text-2xl text-black font-bold">
                 ₱{" "}
-                {revenue?.year?.previousYear.value.toLocaleString("en-US", {
+                {revenue?.year?.previousYear?.value.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 }) ?? 0}
