@@ -26,7 +26,6 @@ export const ProductSchema = z.object({
   display_price: z
     .string()
     .trim()
-    .toLowerCase()
     .max(20, { message: "Display price cannot exceed 20 characters" })
     .refine((value) => value.length > 0, {
       message: "Display price is required",
