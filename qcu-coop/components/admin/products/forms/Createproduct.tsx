@@ -199,7 +199,7 @@ const CreateProductForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="grid grid-cols-2 w-full h-full overflow-y-auto"
+      className="relative grid grid-cols-2 w-full h-full overflow-y-auto bg-green-500"
     >
       {currentStep === 1 && (
         <>
@@ -405,28 +405,31 @@ const CreateProductForm = () => {
               </div>
             </div>
 
-            <div className="flex flex-col md:flex-row md:items-center md:space-x-10">
-              <Label htmlFor="product_name" className="font-bold">
-                Name
-              </Label>
-              <Input
-                {...register("product_name")}
-                id="product_name"
-                placeholder="Product Name"
-                autoComplete="off"
-                className={classNames({
-                  "border-red-600": errors.product_name,
-                  "bg-inputColor border-black": true,
-                })}
-              />
+            <div className="flex flex-col">
+              <div className="flex w-full space-x-5 items-center">
+                <Label htmlFor="product_name" className="font-bold">
+                  Name
+                </Label>
+                <Input
+                  {...register("product_name")}
+                  id="product_name"
+                  placeholder="Product Name"
+                  autoComplete="off"
+                  className={classNames({
+                    "border-red-600": errors.product_name,
+                    "bg-inputColor border-black": true,
+                  })}
+                />
+              </div>
               {errors.product_name && (
-                <p className="text-red-600 text-sm mt-2">
+                <p className="text-red-600 text-sm mt-1 text-center">
                   <>{errors.product_name?.message}</>
                 </p>
               )}
             </div>
 
-            <div className="flex flex-col md:flex-row md:items-center md:space-x-10">
+            <div className="flex flex-col">
+              <div className="flex w-full space-x-5 items-center">
               <Label
                 htmlFor="display_name"
                 className="font-bold whitespace-nowrap"
@@ -443,14 +446,17 @@ const CreateProductForm = () => {
                   "bg-inputColor border-black": true,
                 })}
               />
+              </div>
               {errors.display_name && (
-                <p className="text-red-600 text-sm mt-2">
+                <p className="text-red-600 text-sm mt-1 text-center">
                   <>{errors.display_name?.message}</>
                 </p>
               )}
             </div>
 
-            <div className="flex flex-col md:flex-row md:items-center md:space-x-10">
+            <div className="flex flex-col">
+              <div className="flex w-full space-x-5 items-center">
+
               <Label
                 htmlFor="display_price"
                 className="font-bold whitespace-nowrap"
@@ -467,6 +473,7 @@ const CreateProductForm = () => {
                   "bg-inputColor border-black": true,
                 })}
               />
+              </div>
               {errors.display_price && (
                 <p className="text-red-600 text-sm mt-2">
                   <>{errors.display_price?.message}</>
@@ -474,7 +481,8 @@ const CreateProductForm = () => {
               )}
             </div>
 
-            <div className="flex flex-col md:flex-row md:items-center md:space-x-10">
+            <div className="flex flex-col">
+              <div className="flex w-full space-x-5 items-center">
               <Label htmlFor="category_id" className="font-bold">
                 Category
               </Label>
@@ -488,7 +496,7 @@ const CreateProductForm = () => {
                         id="category_id"
                         className={classNames({
                           "border-red-600": errors.category_id,
-                          "bg-inputColor border-black": true,
+                          "bg-inputColor border-black w-1/2": true,
                         })}
                       >
                         <SelectValue placeholder="Select" />
@@ -505,7 +513,7 @@ const CreateProductForm = () => {
                                 value={`${String(category.category_id)}`}
                                 key={index}
                               >
-                                {category.category_name}
+                                {(category.category_name).toLocaleUpperCase()}
                               </SelectItem>
                             ))}
                         </SelectGroup>
@@ -514,8 +522,9 @@ const CreateProductForm = () => {
                   </>
                 )}
               />
+              </div>
               {errors.category_id && (
-                <p className="text-red-600 text-sm mt-2">
+                <p className="text-red-600 text-sm mt-1 text-center">
                   <>{errors.category_id?.message}</>
                 </p>
               )}
@@ -531,13 +540,13 @@ const CreateProductForm = () => {
                 name="status"
                 control={control}
                 render={({ field: { onChange, value } }) => (
-                  <>
+                  <>  
                     <Select onValueChange={onChange} value={value}>
                       <SelectTrigger
                         id="status"
                         className={classNames({
                           "border-red-600": errors.status,
-                          "bg-inputColor border-black": true,
+                          "bg-inputColor border-black w-1/2": true,
                         })}
                       >
                         <SelectValue placeholder="Select" />
@@ -571,7 +580,7 @@ const CreateProductForm = () => {
                         id="isFeatured"
                         className={classNames({
                           "border-red-600": errors.isFeatured,
-                          "bg-inputColor border-black": true,
+                          "bg-inputColor border-black w-1/2": true,
                         })}
                       >
                         <SelectValue placeholder="Select" />
@@ -616,7 +625,7 @@ const CreateProductForm = () => {
             variant="system"
             type="button"
             onClick={() => handlePrevNext("next")}
-            className="absolute right-5 bottom-5 w-[12%] flex justify-center items-center"
+            className="absolute right-0 bottom-0 w-[12%] flex justify-center items-center"
           >
             <p className="text-lg">Next</p>
             <div className="absolute right-6  w-5 h-5">
