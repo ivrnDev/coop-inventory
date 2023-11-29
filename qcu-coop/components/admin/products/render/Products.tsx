@@ -68,8 +68,8 @@ const AdminRenderProducts = ({ products, deletedProducts }: Props) => {
         <TrashArchive deletedProducts={deletedProducts} />
       </div>
 
-      <div className="relative border border-black rounded-md p-3 h-80 w-full overflow-hidden">
-        <div className="h-80 overflow-y-auto">
+      <div className="relative border border-black rounded-md p-3 h-96 w-full overflow-hidden">
+        <div className="h-full overflow-y-auto">
           {filteredProducts?.length > 0 ? (
             <Table>
               <TableHeader>
