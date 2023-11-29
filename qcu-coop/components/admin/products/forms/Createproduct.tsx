@@ -57,7 +57,7 @@ const steps = [
     fields: [
       "product_name",
       "display_name",
-      "display price",
+      "display_price",
       "product_description",
       "status",
       "isFeatured",
@@ -625,10 +625,10 @@ const CreateProductForm = () => {
             variant="system"
             type="button"
             onClick={() => handlePrevNext("next")}
-            className="absolute right-0 bottom-0 w-[12%] flex justify-center items-center"
+            className=" absolute right-0 bottom-0 w-[12%] flex justify-center items-center"
           >
             <p className="text-lg">Next</p>
-            <div className="absolute right-6  w-5 h-5">
+            <div className="absolute right-6 w-5 h-5">
               <Image
                 src="/icons/right-chevron-icon.svg"
                 alt="right-chevron"
