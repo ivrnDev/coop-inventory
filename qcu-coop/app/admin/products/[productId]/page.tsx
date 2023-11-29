@@ -16,16 +16,17 @@ export async function generateStaticParams() {
 
 const UpdateProductPage = async ({ params }: Params) => {
   const id = params?.productId as string;
-  // const product: Product[] = await getProductById(id);
   const categories: Categories[] = await getAllCategories();
 
   return (
-    <section className="relative w-full h-[500px] rounded-md flex items-center border border-solid border-black overflow-hidden">
-      <div className="absolute bg-header-admin w-[100%] h-10 top-0 left-0 justify-center text-white text-[1.2rem] rounded-t-md flex items-center font-bold">
-        EDIT PRODUCT
-      </div>
-      <div className="bg-white w-full h-[calc(100%-2.5rem)] mt-10 oveflow-hidden py-8 px-9">
-        <UpdateProductForm categories={categories} id={id} />
+    <section className="h-admin-main p-10 overflow-auto">
+      <div className="h-full border-black border rounded-md bg-white overflow-y-auto">
+        <div className="bg-header-admin w-[100%] h-10 font-bold text-xl flex justify-center items-center text-white">
+          EDIT PRODUCT
+        </div>
+        <div className="bg-white w-full h-[calc(100%-2.5rem)] overflow-hidden">
+          <UpdateProductForm categories={categories} id={id} />
+        </div>
       </div>
     </section>
   );
