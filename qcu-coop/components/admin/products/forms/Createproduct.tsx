@@ -77,6 +77,7 @@ const CreateProductForm = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [isAllowed, setIsAllowed] = useState<boolean>(false);
   const [adminId, setAdminId] = useState<number>(0);
+
   const [selectedImage, setSelectedImage] = useState<SelectedImage>({
     image: null,
     albums: [],
@@ -98,13 +99,20 @@ const CreateProductForm = () => {
     name: "variants",
     control,
   });
-
   useEffect(() => {
     const getCategories = async () => {
       const getCategories = await getAllCategories();
       if (!getCategories || getCategories.length === 0)
         return setCategories(null);
       setCategories(getCategories);
+      if (fields.length === 0) {
+        append({
+          variant_name: "",
+          variant_symbol: "",
+          variant_price: "0",
+          variant_stocks: "0",
+        });
+      }
     };
     getCategories();
   }, []);
@@ -119,12 +127,6 @@ const CreateProductForm = () => {
 
   type FieldName = keyof ValidationProduct;
   const next = async () => {
-    append({
-      variant_name: "",
-      variant_symbol: "",
-      variant_price: "0",
-      variant_stocks: "0",
-    });
     if (currentStep < steps.length) {
       const fields = steps[currentStep - 1].fields;
       const validate = await trigger(fields as FieldName[], {
@@ -631,17 +633,15 @@ const CreateProductForm = () => {
 
       {currentStep === 2 && (
         <>
-          <div id="variant-container" className="grid grid-cols-2 bg-[#37B3E2]">
+          <div
+            id="variant-container"
+            className="grid grid-cols-2 bg-[#37B3E2] overflow-auto"
+          >
             {fields.map((field, index) => (
-              <div key={field.id} className="p-2 flex flex-col space-y-3">
-                <div className="flex items-center">
-                  <Label
-                    htmlFor={`variants.${index}.variant_name`}
-                    className="font-bold"
-                  >
-                    Name
-                  </Label>
-                  <div>
+              <div key={field.id} className="p-4 flex flex-col space-y-3">
+                <div className="flex items-center space-x-5">
+                  <Label htmlFor={`variants.${index}.variant_name`}>Name</Label>
+                  <div className="w-full">
                     <Input
                       {...register(`variants.${index}.variant_name` as const)}
                       id={`variants${index}.variant_name`}
@@ -659,14 +659,12 @@ const CreateProductForm = () => {
                     )}
                   </div>
                 </div>
-                <div className="flex">
-                  <label
-                    htmlFor={`variants.${index}.variant_symbol`}
-                    className="text-right"
-                  >
+
+                <div className="flex items-center space-x-5">
+                  <Label htmlFor={`variants.${index}.variant_symbol`}>
                     Symbol
-                  </label>
-                  <div>
+                  </Label>
+                  <div className="w-full">
                     <Input
                       {...register(`variants.${index}.variant_symbol` as const)}
                       id={`variants.${index}.variant_symbol`}
@@ -685,14 +683,14 @@ const CreateProductForm = () => {
                     )}
                   </div>
                 </div>
-                <div className="flex">
+                <div className="flex items-center space-x-5">
                   <Label
                     htmlFor={`variants.${index}.variant_price`}
                     className="text-right"
                   >
                     Price
                   </Label>
-                  <div>
+                  <div className="w-full">
                     <Input
                       {...register(`variants.${index}.variant_price` as const)}
                       type="number"
@@ -712,14 +710,14 @@ const CreateProductForm = () => {
                     )}
                   </div>
                 </div>
-                <div className="flex ">
+                <div className="flex items-center space-x-5">
                   <Label
                     htmlFor={`variants.${index}.variant_stocks`}
                     className="text-right"
                   >
                     Stocks
                   </Label>
-                  <div>
+                  <div className="w-full">
                     <Input
                       {...register(`variants.${index}.variant_stocks` as const)}
                       type="number"
@@ -741,10 +739,9 @@ const CreateProductForm = () => {
                 </div>
                 <Button
                   variant="destructive"
-                  size="lg"
                   onClick={() => fields.length > 1 && remove(index)}
                 >
-                  DELETE
+                  REMOVE
                 </Button>
               </div>
             ))}
@@ -760,7 +757,7 @@ const CreateProductForm = () => {
                 variant_stocks: "0",
               })
             }
-            className="absolute right-10"
+            className="absolute right-10 top-2"
           >
             Add Variant
           </Button>
@@ -768,7 +765,7 @@ const CreateProductForm = () => {
             variant="system"
             type="button"
             onClick={() => handlePrevNext("prev")}
-            className="absolute left-5 bottom-5 w-[12%] flex justify-center items-center"
+            className="absolute left-0 bottom-0 w-[12%] flex justify-center items-center"
           >
             <div className="absolute left-6 w-5 h-5">
               <Image
@@ -786,7 +783,7 @@ const CreateProductForm = () => {
                 ref={buttonRef}
                 variant="system"
                 type="button"
-                className="absolute right-5 bottom-5 w-[14%] flex space-x-3 "
+                className="absolute right-0 bottom-0 w-[14%] flex space-x-3 "
               >
                 <div className="relative w-5 h-5 float-left">
                   <Image

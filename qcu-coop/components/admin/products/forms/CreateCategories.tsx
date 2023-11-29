@@ -100,12 +100,12 @@ const CreateCategoriesForm = () => {
         <DialogTrigger asChild>
           <Button variant={"outline"}>Create Category</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="w-48">
           <form onSubmit={handleSubmit(onSubmit)}>
             <DialogHeader>
               <DialogTitle>CREATE CATEGORY</DialogTitle>
             </DialogHeader>
-            <div className="flex flex-col space-y-1.5">
+            <div className="flex flex-col space-y-1 mt-5">
               <Label htmlFor="category_name">Display Name</Label>
               <Input
                 {...register("category_name")}
