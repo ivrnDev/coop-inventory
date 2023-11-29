@@ -199,7 +199,7 @@ const CreateProductForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="relative grid grid-cols-2 w-full h-full overflow-y-auto bg-green-500"
+      className="relative grid grid-cols-2 w-full h-full overflow-y-auto"
     >
       {currentStep === 1 && (
         <>
@@ -416,206 +416,195 @@ const CreateProductForm = () => {
                   placeholder="Product Name"
                   autoComplete="off"
                   className={classNames({
+                    "border-black": errors.product_name === undefined,
                     "border-red-600": errors.product_name,
-                    "bg-inputColor border-black": true,
+                    "bg-inputColor": true,
                   })}
                 />
               </div>
-              {errors.product_name && (
-                <p className="text-red-600 text-sm mt-1 text-center">
-                  <>{errors.product_name?.message}</>
-                </p>
-              )}
             </div>
 
             <div className="flex flex-col">
               <div className="flex w-full space-x-5 items-center">
-              <Label
-                htmlFor="display_name"
-                className="font-bold whitespace-nowrap"
-              >
-                Display Name
-              </Label>
-              <Input
-                {...register("display_name")}
-                id="display_name"
-                placeholder="Display Name"
-                autoComplete="off"
-                className={classNames({
-                  "border-red-600": errors.display_name,
-                  "bg-inputColor border-black": true,
-                })}
-              />
+                <Label
+                  htmlFor="display_name"
+                  className="font-bold whitespace-nowrap"
+                >
+                  Display Name
+                </Label>
+                <Input
+                  {...register("display_name")}
+                  id="display_name"
+                  placeholder="Display Name"
+                  autoComplete="off"
+                  className={classNames({
+                    "border-black": errors.display_name === undefined,
+                    "border-red-600": errors.display_name,
+                    "bg-inputColor ": true,
+                  })}
+                />
               </div>
-              {errors.display_name && (
-                <p className="text-red-600 text-sm mt-1 text-center">
-                  <>{errors.display_name?.message}</>
-                </p>
-              )}
             </div>
 
             <div className="flex flex-col">
               <div className="flex w-full space-x-5 items-center">
-
-              <Label
-                htmlFor="display_price"
-                className="font-bold whitespace-nowrap"
-              >
-                Display Price
-              </Label>
-              <Input
-                {...register("display_price")}
-                id="display_price"
-                placeholder="Display Price"
-                autoComplete="off"
-                className={classNames({
-                  "border-red-600": errors.display_price,
-                  "bg-inputColor border-black": true,
-                })}
-              />
+                <Label
+                  htmlFor="display_price"
+                  className="font-bold whitespace-nowrap"
+                >
+                  Display Price
+                </Label>
+                <Input
+                  {...register("display_price")}
+                  id="display_price"
+                  placeholder="Display Price"
+                  autoComplete="off"
+                  className={classNames({
+                    "border-black": errors.display_price === undefined,
+                    "border-red-600": errors.display_price,
+                    "bg-inputColor": true,
+                  })}
+                />
               </div>
-              {errors.display_price && (
-                <p className="text-red-600 text-sm mt-2">
-                  <>{errors.display_price?.message}</>
-                </p>
-              )}
             </div>
 
             <div className="flex flex-col">
               <div className="flex w-full space-x-5 items-center">
-              <Label htmlFor="category_id" className="font-bold">
-                Category
-              </Label>
-              <Controller
-                name="category_id"
-                control={control}
-                render={({ field }) => (
-                  <>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger
-                        id="category_id"
-                        className={classNames({
-                          "border-red-600": errors.category_id,
-                          "bg-inputColor border-black w-1/2": true,
-                        })}
+                <Label htmlFor="category_id" className="font-bold">
+                  Category
+                </Label>
+                <Controller
+                  name="category_id"
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
                       >
-                        <SelectValue placeholder="Select" />
-                      </SelectTrigger>
-                      <SelectContent position="popper">
-                        <SelectGroup>
-                          {!categories && (
-                            <SelectLabel>No Categories</SelectLabel>
-                          )}
-                          {categories &&
-                            categories.length > 0 &&
-                            categories.map((category, index) => (
-                              <SelectItem
-                                value={`${String(category.category_id)}`}
-                                key={index}
-                              >
-                                {(category.category_name).toLocaleUpperCase()}
-                              </SelectItem>
-                            ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </>
-                )}
-              />
+                        <SelectTrigger
+                          id="category_id"
+                          className={classNames({
+                            "border-black": errors.category_id === undefined,
+                            "border-red-600": errors.category_id,
+                            "bg-inputColor w-1/2": true,
+                          })}
+                        >
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent position="popper">
+                          <SelectGroup>
+                            {!categories && (
+                              <SelectLabel>No Categories</SelectLabel>
+                            )}
+                            {categories &&
+                              categories.length > 0 &&
+                              categories.map((category, index) => (
+                                <SelectItem
+                                  value={`${String(category.category_id)}`}
+                                  key={index}
+                                >
+                                  {category.category_name}
+                                </SelectItem>
+                              ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </>
+                  )}
+                />
               </div>
-              {errors.category_id && (
-                <p className="text-red-600 text-sm mt-1 text-center">
-                  <>{errors.category_id?.message}</>
-                </p>
-              )}
             </div>
           </div>
 
           <div id="second-section" className="p-5 flex flex-col space-y-5">
-            <div className="flex flex-col md:flex-row md:items-center md:space-x-10">
-              <Label htmlFor="status" className="font-bold">
-                Status
-              </Label>
-              <Controller
-                name="status"
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <>  
-                    <Select onValueChange={onChange} value={value}>
-                      <SelectTrigger
-                        id="status"
-                        className={classNames({
-                          "border-red-600": errors.status,
-                          "bg-inputColor border-black w-1/2": true,
-                        })}
+            <div className="flex flex-col">
+              <div className="flex w-full space-x-5 items-center">
+                <Label htmlFor="status" className="font-bold">
+                  Status
+                </Label>
+                <Controller
+                  name="status"
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <>
+                      <Select onValueChange={onChange} value={value}>
+                        <SelectTrigger
+                          id="status"
+                          className={classNames({
+                            "border-black": errors.status === undefined,
+                            "border-red-600": errors.status,
+                            "bg-inputColor w-1/2": true,
+                          })}
+                        >
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent position="popper">
+                          <SelectItem value="active">Active</SelectItem>
+                          <SelectItem value="inactive">Inactive</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </>
+                  )}
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <div className="flex w-full space-x-5 items-center">
+                <Label htmlFor="isFeatured" className="font-bold">
+                  Featured
+                </Label>
+                <Controller
+                  name="isFeatured"
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
                       >
-                        <SelectValue placeholder="Select" />
-                      </SelectTrigger>
-                      <SelectContent position="popper">
-                        <SelectItem value="active">Active</SelectItem>
-                        <SelectItem value="inactive">Inactive</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </>
-                )}
-              />
-              {errors.status && (
-                <p className="text-red-600 text-sm mt-2">
-                  <>{errors.status?.message}</>
-                </p>
-              )}
+                        <SelectTrigger
+                          id="isFeatured"
+                          className={classNames({
+                            "border-black": errors.isFeatured === undefined,
+                            "border-red-600": errors.isFeatured,
+                            "bg-inputColor w-1/2 relative": true,
+                          })}
+                        >
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent position="popper">
+                          <SelectItem value="1">Yes</SelectItem>
+                          <SelectItem value="0">No</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </>
+                  )}
+                />
+              </div>
             </div>
 
             <div className="flex flex-col md:flex-row md:items-center md:space-x-10">
-              <Label htmlFor="isFeatured" className="font-bold">
-                Featured
-              </Label>
-              <Controller
-                name="isFeatured"
-                control={control}
-                render={({ field }) => (
-                  <>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger
-                        id="isFeatured"
-                        className={classNames({
-                          "border-red-600": errors.isFeatured,
-                          "bg-inputColor border-black w-1/2": true,
-                        })}
-                      >
-                        <SelectValue placeholder="Select" />
-                      </SelectTrigger>
-                      <SelectContent position="popper">
-                        <SelectItem value="1">Yes</SelectItem>
-                        <SelectItem value="0">No</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </>
-                )}
-              />
-              {errors.isFeatured && (
-                <p className="text-red-600 text-sm mt-2">
-                  <>{errors.isFeatured?.message}</>
-                </p>
-              )}
-            </div>
+              <div className="flex w-full space-x-5 items-center">
+                <Label htmlFor="product_description" className="font-bold">
+                  Description
+                </Label>
+                <Textarea
+                  {...register("product_description")}
+                  id="product_description"
+                  placeholder="Description"
+                  autoComplete="off"
+                  className={classNames({
+                    "border-black": errors.product_description === undefined,
+                    "border-red-600": errors.product_description,
+                    "bg-inputColor max-h-52": true,
+                  })}
+                />
+              </div>
 
-            <div className="flex flex-col md:flex-row md:items-center md:space-x-10">
-              <Label htmlFor="product_description" className="font-bold">
-                Description
-              </Label>
-              <Textarea
-                {...register("product_description")}
-                id="product_description"
-                placeholder="Description"
-                autoComplete="off"
-                className={classNames({
-                  "border-red-600": errors.product_description,
-                  "bg-inputColor border-black": true,
-                })}
-              />
               {errors.product_description && (
-                <p className="text-red-600 text-sm mt-2">
+                <p className="text-red-600 text-sm mt-1 text-center">
                   <>{errors.product_description?.message}</>
                 </p>
               )}
