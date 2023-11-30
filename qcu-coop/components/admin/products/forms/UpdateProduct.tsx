@@ -210,468 +210,458 @@ const UpdateProductForm = ({ categories, id }: Props) => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="relative grid grid-cols-2 w-full h-full overflow-y-auto bg-red-500"
+      className="relative w-full h-full overflow-y-hidden"
     >
-      <RadioGroup defaultValue="product" className="absolute flex w-full">
-        <div className="flex items-center space-x-2 absolute right-72 ">
-          <RadioGroupItem
-            value="variation"
-            id="variation"
-            onClick={() => handlePrevNext(2)}
-          />
-          <Label htmlFor="variation">Variation</Label>
-        </div>
-        <div className="flex items-center space-x-2 absolute left-24">
-          <RadioGroupItem
-            value="product"
-            id="product"
-            onClick={() => handlePrevNext(1)}
-          />
-          <Label htmlFor="product">Product</Label>
-        </div>
-      </RadioGroup>
+      <div className="w-full absolute top-4 left-0">
+        <RadioGroup
+          defaultValue="product"
+          className="flex flex-row-reverse justify-around"
+        >
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem
+              value="variation"
+              id="variation"
+              onClick={() => handlePrevNext(2)}
+            />
+            <Label htmlFor="variation">Variation</Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem
+              value="product"
+              id="product"
+              onClick={() => handlePrevNext(1)}
+            />
+            <Label htmlFor="product">Product</Label>
+          </div>
+        </RadioGroup>
+      </div>
+
       {currentStep === 1 && (
         <>
-          <div id="first-section" className="p-5 flex flex-col space-y-5 mt-2">
-            <Label className="font-bold">Images / Albums</Label>
-            <div id="image-container" className="flex space-x-2">
-              <div id="product-image-preview">
-                <Dialog>
-                  <DialogTrigger
-                    className={classNames({
-                      "bg-inputColor border border-black w-24 h-24 cursor-default":
-                        true,
-                      "cursor-pointer": selectedImage.image,
-                    })}
-                  >
+          <div className="grid grid-cols-2 w-full h-full overflow-y-auto pt-3">
+            <div
+              id="first-section"
+              className="p-5 flex flex-col space-y-5 mt-2"
+            >
+              <Label className="font-bold">Images / Albums</Label>
+              <div id="image-container" className="flex space-x-2">
+                <div id="product-image-preview">
+                  <Dialog>
+                    <DialogTrigger
+                      className={classNames({
+                        "bg-inputColor border border-black w-24 h-24 cursor-default":
+                          true,
+                        "cursor-pointer": selectedImage.image,
+                      })}
+                    >
+                      {selectedImage.image && (
+                        <div
+                          id="preview-image-container"
+                          className="relative w-full h-full"
+                        >
+                          <Image
+                            src={URL.createObjectURL(selectedImage.image)}
+                            alt="Selected Image"
+                            sizes="min-w-1"
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
+                      )}
+                    </DialogTrigger>
                     {selectedImage.image && (
-                      <div
-                        id="preview-image-container"
-                        className="relative w-full h-full"
-                      >
-                        <Image
-                          src={URL.createObjectURL(selectedImage.image)}
-                          alt="Selected Image"
-                          sizes="min-w-1"
-                          fill
-                          className="object-contain"
-                        />
-                      </div>
+                      <DialogContent>
+                        <AspectRatio ratio={10 / 10} className="absolute">
+                          <Image
+                            src={URL.createObjectURL(selectedImage.image)}
+                            alt="Selected Image"
+                            sizes="min-w-1"
+                            fill
+                            className="rounded-lg object-contain"
+                          />
+                        </AspectRatio>
+                      </DialogContent>
                     )}
-                  </DialogTrigger>
-                  {selectedImage.image && (
-                    <DialogContent>
-                      <AspectRatio ratio={10 / 10} className="absolute">
-                        <Image
-                          src={URL.createObjectURL(selectedImage.image)}
-                          alt="Selected Image"
-                          sizes="min-w-1"
-                          fill
-                          className="rounded-lg object-contain"
-                        />
-                      </AspectRatio>
-                    </DialogContent>
-                  )}
-                </Dialog>
-              </div>
-              <div id="product-album-preview">
-                <Dialog>
-                  <DialogTrigger
+                  </Dialog>
+                </div>
+                <div id="product-album-preview">
+                  <Dialog>
+                    <DialogTrigger
+                      className={classNames({
+                        "bg-inputColor border border-black w-24 h-24 cursor-default":
+                          true,
+                        "cursor-pointer": selectedImage.albums.length > 0,
+                      })}
+                    >
+                      {selectedImage.albums[0] && (
+                        <div
+                          id="preview-image-container"
+                          className="relative w-full h-full"
+                        >
+                          <Image
+                            src={URL.createObjectURL(selectedImage.albums[0])}
+                            alt="Selected Image"
+                            sizes="min-w-1"
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
+                      )}
+                    </DialogTrigger>
+                    {selectedImage.albums.length > 0 && (
+                      <DialogContent className="flex justify-center items-center">
+                        <div
+                          className={classNames({
+                            "w-full h-[500px] gap-1 overflow-y-auto flex flex-wrap":
+                              true,
+                            "grid grid-cols-2":
+                              selectedImage.albums.length >= 4,
+                          })}
+                        >
+                          {selectedImage.albums.map((album, index) => (
+                            <AspectRatio ratio={1 / 1} key={index} className="">
+                              <Image
+                                src={URL.createObjectURL(album)}
+                                alt="Selected Image"
+                                sizes="min-w-1"
+                                fill
+                                className="rounded-lg object-contain"
+                              />
+                            </AspectRatio>
+                          ))}
+                        </div>
+                      </DialogContent>
+                    )}
+                  </Dialog>
+                </div>
+                <div className="flex">
+                  <Label
+                    htmlFor="display_image"
                     className={classNames({
-                      "bg-inputColor border border-black w-24 h-24 cursor-default":
+                      "border-red-600": errors.display_image,
+                      "border-black": errors.display_image === undefined,
+                      "bg-inputColor border  hover:cursor-pointer w-24 h-24 flex flex-col justify-center items-center":
                         true,
-                      "cursor-pointer": selectedImage.albums.length > 0,
                     })}
                   >
-                    {selectedImage.albums[0] && (
-                      <div
-                        id="preview-image-container"
-                        className="relative w-full h-full"
-                      >
-                        <Image
-                          src={URL.createObjectURL(selectedImage.albums[0])}
-                          alt="Selected Image"
-                          sizes="min-w-1"
-                          fill
-                          className="object-contain"
+                    <div id="add-icon-container" className="relative w-10 h-10">
+                      <Image
+                        src="/icons/add-image-icon.svg"
+                        alt="add-image-icon"
+                        sizes="min-w-1"
+                        fill
+                      />
+                    </div>
+                    <p>{selectedImage.image ? "Edit Image" : "Add Image"}</p>
+                    <p>{imageNumber.image}/1</p>
+                  </Label>
+                  <Controller
+                    name="display_image"
+                    control={control}
+                    render={({ field: { value, onChange, ...field } }) => (
+                      <>
+                        <Input
+                          {...field}
+                          onChange={(event) => {
+                            const selectedFile = event.target.files;
+                            if (selectedFile) {
+                              const imageFile = selectedFile[0];
+                              onChange(imageFile);
+                              setSelectedImage((prevFiles) => ({
+                                ...prevFiles,
+                                image: imageFile,
+                              }));
+                              setImageNumber((prevCount) => ({
+                                ...prevCount,
+                                image: selectedFile.length,
+                              }));
+                            }
+                          }}
+                          type="file"
+                          id="display_image"
+                          className={classNames({
+                            "border-red-600": errors.display_image,
+                            "border-black": errors.display_image === undefined,
+                            hidden: true,
+                          })}
                         />
-                      </div>
+                      </>
                     )}
-                  </DialogTrigger>
-                  {selectedImage.albums.length > 0 && (
-                    <DialogContent className="flex justify-center items-center">
-                      <div
-                        className={classNames({
-                          "w-full h-[500px] gap-1 overflow-y-auto flex flex-wrap":
-                            true,
-                          "grid grid-cols-2": selectedImage.albums.length >= 4,
-                        })}
-                      >
-                        {selectedImage.albums.map((album, index) => (
-                          <AspectRatio ratio={1 / 1} key={index} className="">
-                            <Image
-                              src={URL.createObjectURL(album)}
-                              alt="Selected Image"
-                              sizes="min-w-1"
-                              fill
-                              className="rounded-lg object-contain"
-                            />
-                          </AspectRatio>
-                        ))}
-                      </div>
-                    </DialogContent>
+                  />
+                  {errors.display_image && (
+                    <p className="text-red-600 text-sm mt-2">
+                      <>{errors.display_image?.message}</>
+                    </p>
                   )}
-                </Dialog>
-              </div>
-              <div className="flex">
-                <Label
-                  htmlFor="display_image"
-                  className="bg-inputColor border border-black hover:cursor-pointer w-24 h-24 flex flex-col justify-center items-center"
-                >
-                  <div id="add-icon-container" className="relative w-10 h-10">
-                    <Image
-                      src="/icons/add-image-icon.svg"
-                      alt="add-image-icon"
-                      sizes="min-w-1"
-                      fill
-                    />
-                  </div>
-                  <p>{selectedImage.image ? "Edit Image" : "Add Image"}</p>
-                  <p>{imageNumber.image}/1</p>
-                </Label>
-                <Controller
-                  name="display_image"
-                  control={control}
-                  render={({ field: { value, onChange, ...field } }) => (
-                    <>
-                      <Input
-                        {...field}
-                        onChange={(event) => {
-                          const selectedFile = event.target.files;
-                          if (selectedFile) {
-                            const imageFile = selectedFile[0];
-                            onChange(imageFile);
-                            setSelectedImage((prevFiles) => ({
-                              ...prevFiles,
-                              image: imageFile,
-                            }));
-                            setImageNumber((prevCount) => ({
-                              ...prevCount,
-                              image: selectedFile.length,
-                            }));
-                          }
-                        }}
-                        type="file"
-                        id="display_image"
-                        className={classNames({
-                          "border-red-600": errors.display_image,
-                          "border-black": errors.display_image === undefined,
-                          hidden: true,
-                        })}
+                </div>
+                <div className="flex">
+                  <Label
+                    htmlFor="product_album"
+                    className="bg-inputColor border border-black hover:cursor-pointer w-24 h-24 flex flex-col justify-center items-center"
+                  >
+                    <div id="add-icon-container" className="relative w-10 h-10">
+                      <Image
+                        src="/icons/add-image-icon.svg"
+                        alt="add-image-icon"
+                        sizes="min-w-1"
+                        fill
                       />
-                    </>
+                    </div>
+                    <p>
+                      {selectedImage.albums.length > 0
+                        ? "Edit Image"
+                        : "Add Image"}
+                    </p>
+                    <p>{imageNumber.albums}/10</p>
+                  </Label>
+                  <Controller
+                    name="product_album"
+                    control={control}
+                    render={({ field: { value, onChange, ...field } }) => (
+                      <>
+                        <Input
+                          {...field}
+                          onChange={(event) => {
+                            const selectedFile = event.target.files;
+                            if (selectedFile) {
+                              const albumFiles = Array.from(selectedFile);
+                              onChange(albumFiles);
+                              setSelectedImage((prevFiles) => ({
+                                ...prevFiles,
+                                albums: albumFiles,
+                              }));
+                              setImageNumber((prevCount) => ({
+                                ...prevCount,
+                                ["albums"]: selectedFile.length,
+                              }));
+                            }
+                          }}
+                          type="file"
+                          id="product_album"
+                          multiple
+                          className={classNames({
+                            "border-red-600": errors.product_album,
+                            hidden: true,
+                          })}
+                        />
+                      </>
+                    )}
+                  />
+                  {errors.product_album && (
+                    <p className="text-red-600 text-sm mt-2">
+                      <>{errors.product_album?.message}</>
+                    </p>
                   )}
-                />
-                {errors.display_image && (
-                  <p className="text-red-600 text-sm mt-2">
-                    <>{errors.display_image?.message}</>
+                </div>
+              </div>
+
+              <div className="flex flex-col">
+                <div className="flex w-full space-x-5 items-center">
+                  <Label htmlFor="product_name" className="font-bold">
+                    Name
+                  </Label>
+                  <Input
+                    {...register("product_name")}
+                    id="product_name"
+                    placeholder="Product Name"
+                    autoComplete="off"
+                    disabled
+                    className={classNames({
+                      "border-red-600": errors.product_name,
+                      "border-black": errors.product_name === undefined,
+                      "bg-inputColor border-black": true,
+                    })}
+                  />
+                </div>
+                {errors.product_name && (
+                  <p className="text-red-600 text-sm mt-1 text-center">
+                    <>{errors.product_name?.message}</>
                   </p>
                 )}
               </div>
-              <div className="flex">
-                <Label
-                  htmlFor="product_album"
-                  className="bg-inputColor border border-black hover:cursor-pointer w-24 h-24 flex flex-col justify-center items-center"
-                >
-                  <div id="add-icon-container" className="relative w-10 h-10">
-                    <Image
-                      src="/icons/add-image-icon.svg"
-                      alt="add-image-icon"
-                      sizes="min-w-1"
-                      fill
-                    />
-                  </div>
-                  <p>
-                    {selectedImage.albums.length > 0
-                      ? "Edit Image"
-                      : "Add Image"}
-                  </p>
-                  <p>{imageNumber.albums}/10</p>
-                </Label>
-                <Controller
-                  name="product_album"
-                  control={control}
-                  render={({ field: { value, onChange, ...field } }) => (
-                    <>
-                      <Input
-                        {...field}
-                        onChange={(event) => {
-                          const selectedFile = event.target.files;
-                          if (selectedFile) {
-                            const albumFiles = Array.from(selectedFile);
-                            onChange(albumFiles);
-                            setSelectedImage((prevFiles) => ({
-                              ...prevFiles,
-                              albums: albumFiles,
-                            }));
-                            setImageNumber((prevCount) => ({
-                              ...prevCount,
-                              ["albums"]: selectedFile.length,
-                            }));
-                          }
-                        }}
-                        type="file"
-                        id="product_album"
-                        multiple
-                        className={classNames({
-                          "border-red-600": errors.product_album,
-                          hidden: true,
-                        })}
-                      />
-                    </>
-                  )}
-                />
-                {errors.product_album && (
-                  <p className="text-red-600 text-sm mt-2">
-                    <>{errors.product_album?.message}</>
-                  </p>
-                )}
-              </div>
-            </div>
 
-            <div className="flex flex-col">
-              <div className="flex w-full space-x-5 items-center">
-                <Label htmlFor="product_name" className="font-bold">
-                  Name
-                </Label>
-                <Input
-                  {...register("product_name")}
-                  id="product_name"
-                  placeholder="Product Name"
-                  autoComplete="off"
-                  disabled
-                  className={classNames({
-                    "border-red-600": errors.product_name,
-                    "border-black": errors.product_name === undefined,
-                    "bg-inputColor border-black": true,
-                  })}
-                />
+              <div className="flex flex-col">
+                <div className="flex w-full space-x-5 items-center">
+                  <Label
+                    htmlFor="display_name"
+                    className="font-bold whitespace-nowrap"
+                  >
+                    Display Name
+                  </Label>
+                  <Input
+                    {...register("display_name")}
+                    id="display_name"
+                    placeholder="Display Name"
+                    autoComplete="off"
+                    className={classNames({
+                      "border-red-600": errors.display_name,
+                      "border-black": errors.display_name === undefined,
+                      "bg-inputColor": true,
+                    })}
+                  />
+                </div>
               </div>
-              {errors.product_name && (
-                <p className="text-red-600 text-sm mt-1 text-center">
-                  <>{errors.product_name?.message}</>
-                </p>
-              )}
-            </div>
 
-            <div className="flex flex-col">
-              <div className="flex w-full space-x-5 items-center">
-                <Label
-                  htmlFor="display_name"
-                  className="font-bold whitespace-nowrap"
-                >
-                  Display Name
-                </Label>
-                <Input
-                  {...register("display_name")}
-                  id="display_name"
-                  placeholder="Display Name"
-                  autoComplete="off"
-                  className={classNames({
-                    "border-red-600": errors.display_name,
-                    "border-black": errors.display_name === undefined,
-                    "bg-inputColor border-black": true,
-                  })}
-                />
+              <div className="flex flex-col">
+                <div className="flex w-full space-x-5 items-center">
+                  <Label
+                    htmlFor="display_price"
+                    className="font-bold whitespace-nowrap"
+                  >
+                    Display Price
+                  </Label>
+                  <Input
+                    {...register("display_price")}
+                    id="display_price"
+                    placeholder="Display Price"
+                    autoComplete="off"
+                    className={classNames({
+                      "border-red-600": errors.display_price,
+                      "border-black": errors.display_price === undefined,
+                      "bg-inputColor border0black": true,
+                    })}
+                  />
+                </div>
               </div>
-              {errors.display_name && (
-                <p className="text-red-600 text-sm mt-1 text-center">
-                  <>{errors.display_name?.message}</>
-                </p>
-              )}
-            </div>
 
-            <div className="flex flex-col">
-              <div className="flex w-full space-x-5 items-center">
-                <Label
-                  htmlFor="display_price"
-                  className="font-bold whitespace-nowrap"
-                >
-                  Display Price
-                </Label>
-                <Input
-                  {...register("display_price")}
-                  id="display_price"
-                  placeholder="Display Price"
-                  autoComplete="off"
-                  className={classNames({
-                    "border-red-600": errors.display_price,
-                    "border-black": errors.display_price === undefined,
-                    "bg-inputColor border-black": true,
-                  })}
-                />
-              </div>
-              {errors.display_price && (
-                <p className="text-red-600 text-sm mt-1 text-center">
-                  <>{errors.display_price?.message}</>
-                </p>
-              )}
-            </div>
-
-            <div className="flex flex-col">
-              <div className="flex w-full space-x-5 items-center">
-                <Label htmlFor="category_id" className="font-bold">
-                  Category
-                </Label>
-                <Controller
-                  name="category_id"
-                  control={control}
-                  render={({ field }) => (
-                    <>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <SelectTrigger
-                          id="category_id"
-                          className={classNames({
-                            "border-red-600": errors.category_id,
-                            "border-black": errors.category_id === undefined,
-                            "bg-inputColor border-black w-1/2": true,
-                          })}
+              <div className="flex flex-col">
+                <div className="flex w-full space-x-5 items-center">
+                  <Label htmlFor="category_id" className="font-bold">
+                    Category
+                  </Label>
+                  <Controller
+                    name="category_id"
+                    control={control}
+                    render={({ field }) => (
+                      <>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
                         >
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                        <SelectContent position="popper">
-                          <SelectGroup>
-                            {!categories && (
-                              <SelectLabel>No Categories</SelectLabel>
-                            )}
-                            {categories &&
-                              categories.length > 0 &&
-                              categories.map((category, index) => (
-                                <SelectItem
-                                  value={`${String(category.category_id)}`}
-                                  key={index}
-                                >
-                                  {category.category_name}
-                                </SelectItem>
-                              ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </>
-                  )}
-                />
+                          <SelectTrigger
+                            id="category_id"
+                            className={classNames({
+                              "border-red-600": errors.category_id,
+                              "border-black": errors.category_id === undefined,
+                              "bg-inputColor border0black w-1/2": true,
+                            })}
+                          >
+                            <SelectValue placeholder="Select" />
+                          </SelectTrigger>
+                          <SelectContent position="popper">
+                            <SelectGroup>
+                              {!categories && (
+                                <SelectLabel>No Categories</SelectLabel>
+                              )}
+                              {categories &&
+                                categories.length > 0 &&
+                                categories.map((category, index) => (
+                                  <SelectItem
+                                    value={`${String(category.category_id)}`}
+                                    key={index}
+                                  >
+                                    {category.category_name}
+                                  </SelectItem>
+                                ))}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      </>
+                    )}
+                  />
+                </div>
               </div>
-              {errors.category_id && (
-                <p className="text-red-600 text-sm mt-1 text-center">
-                  <>{errors.category_id?.message}</>
-                </p>
-              )}
             </div>
-          </div>
 
-          <div id="second-section" className="p-5 flex flex-col space-y-5 mt-2">
-            <div className="flex flex-col">
-              <div className="flex w-full space-x-5 items-center">
-                <Label htmlFor="status" className="font-bold">
-                  Status
-                </Label>
-                <Controller
-                  name="status"
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <>
-                      <Select onValueChange={onChange} value={value}>
-                        <SelectTrigger
-                          id="status"
-                          className={classNames({
-                            "border-red-600": errors.status,
-                            "border-black": errors.status === undefined,
-                            "bg-inputColor border-black w-1/2": true,
-                          })}
+            <div
+              id="second-section"
+              className="p-5 flex flex-col space-y-5 mt-6"
+            >
+              <div className="flex flex-col">
+                <div className="flex w-full space-x-5 items-center">
+                  <Label htmlFor="status" className="font-bold">
+                    Status
+                  </Label>
+                  <Controller
+                    name="status"
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <>
+                        <Select onValueChange={onChange} value={value}>
+                          <SelectTrigger
+                            id="status"
+                            className={classNames({
+                              "border-red-600": errors.status,
+                              "border-black": errors.status === undefined,
+                              "bg-inputColor border0black w-1/2": true,
+                            })}
+                          >
+                            <SelectValue placeholder="Select" />
+                          </SelectTrigger>
+                          <SelectContent position="popper">
+                            <SelectItem value="active">Active</SelectItem>
+                            <SelectItem value="inactive">Inactive</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col">
+                <div className="flex w-full space-x-5 items-center">
+                  <Label htmlFor="isFeatured" className="font-bold">
+                    Featured
+                  </Label>
+                  <Controller
+                    name="isFeatured"
+                    control={control}
+                    render={({ field }) => (
+                      <>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
                         >
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                        <SelectContent position="popper">
-                          <SelectItem value="active">Active</SelectItem>
-                          <SelectItem value="inactive">Inactive</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </>
-                  )}
-                />
+                          <SelectTrigger
+                            id="isFeatured"
+                            className={classNames({
+                              "border-red-600": errors.isFeatured,
+                              "border-black": errors.isFeatured === undefined,
+                              "bg-inputColor border0black w-1/2": true,
+                            })}
+                          >
+                            <SelectValue placeholder="Select" />
+                          </SelectTrigger>
+                          <SelectContent position="popper">
+                            <SelectItem value="1">Yes</SelectItem>
+                            <SelectItem value="0">No</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </>
+                    )}
+                  />
+                </div>
               </div>
-              {errors.status && (
-                <p className="text-red-600 text-sm mt-1 text-center">
-                  <>{errors.status?.message}</>
-                </p>
-              )}
-            </div>
 
-            <div className="flex flex-col">
-              <div className="flex w-full space-x-5 items-center">
-                <Label htmlFor="isFeatured" className="font-bold">
-                  Featured
-                </Label>
-                <Controller
-                  name="isFeatured"
-                  control={control}
-                  render={({ field }) => (
-                    <>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <SelectTrigger
-                          id="isFeatured"
-                          className={classNames({
-                            "border-red-600": errors.isFeatured,
-                            "border-black": errors.isFeatured === undefined,
-                            "bg-inputColor border-black w-1/2": true,
-                          })}
-                        >
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                        <SelectContent position="popper">
-                          <SelectItem value="1">Yes</SelectItem>
-                          <SelectItem value="0">No</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </>
-                  )}
-                />
+              <div className="flex flex-col">
+                <div className="flex w-full space-x-5 items-center">
+                  <Label htmlFor="product_description" className="font-bold">
+                    Description
+                  </Label>
+                  <Textarea
+                    {...register("product_description")}
+                    id="product_description"
+                    placeholder="Description"
+                    autoComplete="off"
+                    className={classNames({
+                      "border-red-600": errors.product_description,
+                      "border-black": errors.product_description === undefined,
+                      "bg-inputColor border0black max-h-52 min-h-[10rem]": true,
+                    })}
+                  />
+                </div>
               </div>
-              {errors.isFeatured && (
-                <p className="text-red-600 text-sm mt-1 text-center">
-                  <>{errors.isFeatured?.message}</>
-                </p>
-              )}
-            </div>
-
-            <div className="flex flex-col">
-              <div className="flex w-full space-x-5 items-center">
-                <Label htmlFor="product_description" className="font-bold">
-                  Description
-                </Label>
-                <Textarea
-                  {...register("product_description")}
-                  id="product_description"
-                  placeholder="Description"
-                  autoComplete="off"
-                  className={classNames({
-                    "border-red-600": errors.product_description,
-                    "border-black": errors.product_description === undefined,
-                    "bg-inputColor border-black max-h-52": true,
-                  })}
-                />
-              </div>
-              {errors.product_description && (
-                <p className="text-red-600 text-sm mt-1 text-center">
-                  <>{errors.product_description?.message}</>
-                </p>
-              )}
             </div>
           </div>
 
@@ -681,7 +671,7 @@ const UpdateProductForm = ({ categories, id }: Props) => {
               ref={buttonRef}
             >
               <div
-                id="add-icon-contaier"
+                id="add-icon-container"
                 className="relative w-5 h-5 float-left"
               >
                 <Image
