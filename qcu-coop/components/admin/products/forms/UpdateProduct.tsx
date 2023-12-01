@@ -30,6 +30,7 @@ import { rolePermissions } from "@/lib/permission";
 import { createActivity } from "@/lib/api/activity";
 import Permission from "../../Permission";
 import UpdateVariant from "./updateVariant";
+import { ScrollUpButton } from "@radix-ui/react-select";
 
 type Props = {
   categories: Categories[];
@@ -682,23 +683,24 @@ const UpdateProductForm = ({ categories, id }: Props) => {
 
           <Dialog>
             <DialogTrigger
+              asChild
               className="h-fit absolute right-5 bottom-5 w-[14%] flex space-x-3"
-              ref={buttonRef}
             >
-              <div
-                id="add-icon-container"
-                className="relative w-5 h-5 float-left"
+              <Button
+                variant="submit"
+                ref={buttonRef}
+                className="flex space-x-2"
               >
-                <Image
-                  src="/icons/add-sign-icon.svg"
-                  alt="add-sign"
-                  sizes="min-w-1"
-                  fill
-                />
-              </div>
-              <p className="text-lg whitespace-nowrap">
-                {isSubmitting ? "Update Item" : "Update Item"}
-              </p>
+                <div className="relative w-5 h-5">
+                  <Image
+                    src="/icons/add-sign-icon.svg"
+                    alt="add-sign"
+                    sizes="min-w-1"
+                    fill
+                  />
+                </div>
+                <p className="text-base font-semibold">{isSubmitting ? "Updating Item" : "Update Item"}</p>
+              </Button>
             </DialogTrigger>
             <DialogContent>
               <Permission
