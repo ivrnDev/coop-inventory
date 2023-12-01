@@ -192,6 +192,7 @@ const UpdateVariant = ({ productId, productName }: Props) => {
                 <Input
                   {...register(`variants.${index}.variant_stocks` as const, {valueAsNumber: true})}
                   type="number"
+                  max={100}
                   id={`variants.${index}.variant_stocks`}
                   autoComplete="off"
                   className={classNames({
