@@ -70,7 +70,7 @@ export const ProductSchema = z.object({
         return allowedFileTypes.includes(file.type);
       },
       {
-        message: "Invalid file type. Only JPEG and PNG images are allowed.",
+        message: "Invalid file type.",
       }
     ),
   product_album: z
@@ -88,7 +88,7 @@ export const ProductSchema = z.object({
         return true;
       },
       {
-        message: "Invalid file type. Only JPEG and PNG images are allowed.",
+        message: "Invalid file type.",
       }
     ),
   variants: z.array(Variants).optional(),
