@@ -339,7 +339,6 @@ module.exports = {
   deleteCategoryById: async (req, res) => {
     const { id } = req.params;
     const { action } = req.query;
-    console.log({id, action})
     try {
       const result = await deleteCategoryByIdDB(action, id)
       if (!result) return res.status(400).json({ message: `Failed to update isDeleted in category with an ID of ${id}` });
