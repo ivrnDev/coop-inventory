@@ -8,7 +8,6 @@ import {
   TableRow,
   TableBody,
 } from "@/components/ui/table";
-import { getDeletedProducts } from "@/lib/api/products";
 import { DeletedProducts } from "@/types/products/products";
 import { Dialog } from "@radix-ui/react-dialog";
 import { rolePermissions } from "@/lib/permission";

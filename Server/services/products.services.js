@@ -29,7 +29,7 @@ const {
   updateProductImageQuery,
   getProductByFeaturedQuery,
   getDeletedProductsQuery,
-  getAllActiveProductsQuery
+  getAllActiveProductsQuery,
 } = productQueries
 const { getProductAlbumByIdDB } = require('./albums.services.js')
 

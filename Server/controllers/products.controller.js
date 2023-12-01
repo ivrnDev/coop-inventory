@@ -329,11 +329,11 @@ module.exports = {
   },
   deleteCategoryById: async (req, res) => {
     const { id } = req.params;
-    const { remove } = req.query;
+    const { action } = req.query;
     try {
-      const result = await deleteCategoryByIdDB(remove, id)
-      if (!result) return res.status(400).json({ message: `Failed to update isDeleted in K with an ID of ${id}` });
-      return res.status(201).json({ message: `Successfully updated isDeleted K ID of ${id}`, result: result })
+      const result = await deleteCategoryByIdDB(action, id)
+      if (!result) return res.status(400).json({ message: `Failed to update isDeleted in category with an ID of ${id}` });
+      return res.status(201).json({ message: `Successfully updated isDeleted category ID of ${id}`, result: result })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }
