@@ -26,11 +26,8 @@ export const Variants = z.object({
       message: "Variant price is required",
     }),
   variant_stocks: z
-    .string()
-    .max(6, { message: "Variant stocks cannot exceed 6 digits" })
-    .refine((value) => value.length >= 0, {
-      message: "Variant stocks is required",
-    }),
+    .number()
+    .max(100, { message: "Variant stocks cannot exceed to 100" }),
 });
 export const VariantSchema = z.object({
   variants: z.array(Variants),

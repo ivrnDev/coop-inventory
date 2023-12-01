@@ -16,10 +16,10 @@ import RestoreButton from "../buttons/Restore";
 import { Trash2 } from "lucide-react";
 
 type Props = {
-  deletedProducts: DeletedProducts[]
-}
+  deletedProducts: DeletedProducts[];
+};
 
-const TrashArchive = ({deletedProducts}: Props) => {
+const TrashArchive = ({ deletedProducts }: Props) => {
   const { restricted } = rolePermissions;
   return (
     <>
@@ -30,15 +30,15 @@ const TrashArchive = ({deletedProducts}: Props) => {
           </div>
         </DialogTrigger>
         <DialogContent>
-          <Table>
-            <TableHeader>
-              <TableHead>Product ID</TableHead>
-              <TableHead>Product Name</TableHead>
-              <TableHead>Stocks</TableHead>
-            </TableHeader>
-            <TableBody>
-              {deletedProducts?.length > 0 &&
-                deletedProducts.map((product, index) => (
+          {deletedProducts?.length > 0 ? (
+            <Table>
+              <TableHeader>
+                <TableHead>Product ID</TableHead>
+                <TableHead>Product Name</TableHead>
+                <TableHead>Stocks</TableHead>
+              </TableHeader>
+              <TableBody>
+                {deletedProducts.map((product, index) => (
                   <TableRow key={index}>
                     <TableCell>{product.product_id}</TableCell>
                     <TableCell>{product.product_name}</TableCell>
@@ -63,8 +63,11 @@ const TrashArchive = ({deletedProducts}: Props) => {
                     </TableCell>
                   </TableRow>
                 ))}
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+          ) : (
+            <p className="font-semibold text-lg text-center">Empty Trash</p>
+          )}
         </DialogContent>
       </Dialog>
     </>

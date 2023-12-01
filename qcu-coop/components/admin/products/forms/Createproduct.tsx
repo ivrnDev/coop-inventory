@@ -110,7 +110,7 @@ const CreateProductForm = () => {
           variant_name: "",
           variant_symbol: "",
           variant_price: "0",
-          variant_stocks: "0",
+          variant_stocks: 0,
         });
       }
     };
@@ -731,8 +731,12 @@ const CreateProductForm = () => {
                   </Label>
                   <div className="w-full">
                     <Input
-                      {...register(`variants.${index}.variant_stocks` as const)}
+                      {...register(
+                        `variants.${index}.variant_stocks` as const,
+                        { valueAsNumber: true }
+                      )}
                       type="number"
+                      max={100}
                       id={`variants.${index}.variant_stocks`}
                       autoComplete="off"
                       className={classNames({
@@ -766,7 +770,7 @@ const CreateProductForm = () => {
                 variant_name: "",
                 variant_symbol: "",
                 variant_price: "0",
-                variant_stocks: "0",
+                variant_stocks: 0,
               })
             }
             className="absolute right-10 top-2"

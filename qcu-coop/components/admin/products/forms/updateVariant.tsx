@@ -54,7 +54,7 @@ const UpdateVariant = ({ productId, productName }: Props) => {
               variant_name: variant.variant_name || "",
               variant_symbol: variant.variant_symbol || "",
               variant_price: String(variant.variant_price) || "0",
-              variant_stocks: String(variant.variant_stocks) || "0",
+              variant_stocks: Number(variant.variant_stocks) || 0,
             })),
         };
         reset(defaultFormValues);
@@ -190,7 +190,7 @@ const UpdateVariant = ({ productId, productName }: Props) => {
               <Label htmlFor={`variants.${index}.variant_stocks`}>Stocks</Label>
               <div className="w-full">
                 <Input
-                  {...register(`variants.${index}.variant_stocks` as const)}
+                  {...register(`variants.${index}.variant_stocks` as const, {valueAsNumber: true})}
                   type="number"
                   id={`variants.${index}.variant_stocks`}
                   autoComplete="off"
@@ -226,7 +226,7 @@ const UpdateVariant = ({ productId, productName }: Props) => {
             variant_name: "",
             variant_symbol: "",
             variant_price: "0",
-            variant_stocks: "0",
+            variant_stocks: 0,
           })
         }
         className="absolute right-10 top-2"
