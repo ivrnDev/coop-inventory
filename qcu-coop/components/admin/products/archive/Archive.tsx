@@ -32,9 +32,11 @@ const TrashArchive = ({ deletedProducts }: Props) => {
           {deletedProducts?.length > 0 ? (
             <Table>
               <TableHeader>
-                <TableHead>Product ID</TableHead>
-                <TableHead>Product Name</TableHead>
-                <TableHead>Stocks</TableHead>
+                <TableRow>
+                  <TableHead>Product ID</TableHead>
+                  <TableHead>Product Name</TableHead>
+                  <TableHead>Stocks</TableHead>
+                </TableRow>
               </TableHeader>
               <TableBody>
                 {deletedProducts.map((product, index) => (

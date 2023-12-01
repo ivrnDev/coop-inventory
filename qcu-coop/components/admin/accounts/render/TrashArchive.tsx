@@ -33,10 +33,12 @@ const TrashArchive = ({ deletedAdmin }: Props) => {
           {deletedAdmin?.length > 0 ? (
             <Table>
               <TableHeader>
-                <TableHead>ID</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Username</TableHead>
-                <TableHead>Role</TableHead>
+                <TableRow>
+                  <TableHead>ID</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Username</TableHead>
+                  <TableHead>Role</TableHead>
+                </TableRow>
               </TableHeader>
               <TableBody>
                 {deletedAdmin.map((admin, index) => (
