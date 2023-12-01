@@ -66,3 +66,7 @@ export type DeletedProducts  = {
   product_name: string;
   product_stocks: number;
 }
+export type DeletedCategories = {
+  category_id: number;
+  category_name: string;
+};

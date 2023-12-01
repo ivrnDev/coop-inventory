@@ -75,6 +75,23 @@ export async function getAllCategories() {
     return [];
   }
 }
+export async function getAllDeletedCategories() {
+  try {
+    const res = await fetch(
+      `http://localhost:3000/api/products/category/deleted`,
+      {
+        next: {
+          revalidate: 0,
+        },
+      }
+    );
+
+    const data = await res.json();
+    return data.result;
+  } catch (error) {
+    return [];
+  }
+}
 export async function getCategoryById(id: number) {
   try {
     const res = await fetch(

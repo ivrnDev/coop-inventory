@@ -21,6 +21,7 @@ const {
   updateProductImage,
   getProductByFeatured,
   getDeletedProducts,
+  getAllDeletedCategory
 
 } = require('../controllers/products.controller')
 const express = require('express');
@@ -52,6 +53,7 @@ router.post('/category', upload.single('category_image'), createNewCategory);
 router.patch('/category/:id', upload.single('category_image'), updateCategoryById);
 router.patch('/category/action/:id', deleteCategoryById); //Params (action) 
 router.get('/category/list', getAllCategory);
+router.get('/category/deleted', getAllDeletedCategory);
 router.get('/category/:id', getCategoryById);
 
 

@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useRef, useState } from "react";
 import { deleteCategory, getCategoryById } from "@/lib/api/categories";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
@@ -6,13 +7,15 @@ import { rolePermissions } from "@/lib/permission";
 import { toast } from "@/components/ui/use-toast";
 import { createActivity } from "@/lib/api/activity";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 type Props = {
   categoryId: number;
 };
-const DeleteButton = ({ categoryId }: Props) => {
-  const deleteBtnRef = useRef<HTMLButtonElement | null>(null);
-  const { moderate } = rolePermissions;
+const RestoreCategories = ({ categoryId }: Props) => {
+  const router = useRouter();
+  const restoreBtnRef = useRef<HTMLButtonElement | null>(null);
+  const { restricted } = rolePermissions;
   const [adminId, setadminId] = useState<number>(0);
   const [isAllowed, setisAllowed] = useState<boolean>(false);
 
@@ -21,27 +24,28 @@ const DeleteButton = ({ categoryId }: Props) => {
       setisAllowed(true);
       admin && setadminId(admin);
     }
-    !isAllowed && deleteBtnRef.current && deleteBtnRef.current.click();
+    !isAllowed && restoreBtnRef.current && restoreBtnRef.current.click();
   };
   const onSubmit = async () => {
     if (isAllowed) {
       try {
         const getCategory = await getCategoryById(categoryId);
-        const categoryName = getCategory[0].category_name;
-        const removeCategory = await deleteCategory(categoryId, 1);
-
+        const categoryName = getCategory[0]?.category_name;
+        const removeCategory = await deleteCategory(categoryId, 0);
         if (removeCategory.status === 200) {
           await createActivity(
-            { action: "deleted", target: "category", object: categoryName },
+            { action: "restore", target: "category", object: categoryName },
             adminId
           );
           toast({
-            description: "Successfully deleted the category",
+            description: "Successfully restore the category",
           });
+          router.refresh();
         }
       } catch (error) {
         toast({
-          description: "Please select category first",
+          variant: "destructive",
+          description: `Something went wrong.`,
         });
       }
     }
@@ -57,16 +61,20 @@ const DeleteButton = ({ categoryId }: Props) => {
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <Button type="button" variant="destructive" ref={deleteBtnRef}>
-            Delete
+          <Button
+            type="button"
+            className="bg-gray-400 rounded-md p-2 flex gap-2 justify-center items-center text-white"
+            ref={restoreBtnRef}
+          >
+            Restore
           </Button>
         </DialogTrigger>
         <DialogContent>
-          <Permission roles={moderate} handlePermission={handlePermission} />
+          <Permission roles={restricted} handlePermission={handlePermission} />
         </DialogContent>
       </Dialog>
     </>
   );
 };
 
-export default DeleteButton;
+export default RestoreCategories;

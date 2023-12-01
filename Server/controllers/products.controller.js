@@ -9,7 +9,7 @@ const {
   getVariantByProductIdDB,
   deleteVariantsDB,
   updateProductsDB,
-  updateVariantsDB,
+  getAllDeletedCategoryDB,
   deleteProductByIdDB,
   getAllProductsDB,
   getProductByIdDB,
@@ -283,9 +283,9 @@ module.exports = {
   getAllCategory: async (req, res) => {
     try {
       const result = await getAllCategoryDB()
-      if (result === null) return res.status(404).json({ message: "There is no existing K" })
-      if (!result) return res.status(400).json({ message: "Failed to get all K" })
-      return res.status(200).json({ message: `Successfully get all K`, result: result })
+      if (result === null) return res.status(404).json({ message: "There is no existing category" })
+      if (!result) return res.status(400).json({ message: "Failed to get all category" })
+      return res.status(200).json({ message: `Successfully get all category`, result: result })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }
@@ -294,8 +294,17 @@ module.exports = {
     try {
       const { id } = req.params
       const result = await getCategoryByIdDB(id)
-      if (result === null) return res.status(400).json({ error: `There is no existing K with an ID of ${id}` })
-      return res.status(201).json({ message: `Successfully get K with an ID of ${id}`, result: result })
+      if (result === null) return res.status(400).json({ error: `There is no existing category with an ID of ${id}` })
+      return res.status(201).json({ message: `Successfully get category with an ID of ${id}`, result: result })
+    } catch (error) {
+      return res.status(500).json({ message: "Internal Server Error", error: error })
+    }
+  },
+  getAllDeletedCategory: async (req, res) => {
+    try {
+      const result = await getAllDeletedCategoryDB()
+      if (result === null) return res.status(400).json({ error: `There is no existing deleted category` })
+      return res.status(201).json({ message: `Successfully get deleted category`, result: result })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }
@@ -330,10 +339,11 @@ module.exports = {
   deleteCategoryById: async (req, res) => {
     const { id } = req.params;
     const { action } = req.query;
+    console.log({id, action})
     try {
       const result = await deleteCategoryByIdDB(action, id)
       if (!result) return res.status(400).json({ message: `Failed to update isDeleted in category with an ID of ${id}` });
-      return res.status(201).json({ message: `Successfully updated isDeleted category ID of ${id}`, result: result })
+      return res.status(200).json({ message: `Successfully updated isDeleted category ID of ${id}`, result: result })
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error", error: error })
     }

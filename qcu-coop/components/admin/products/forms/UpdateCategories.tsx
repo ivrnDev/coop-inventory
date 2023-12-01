@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/select";
 import { Categories } from "@/types/products/products";
 import DeleteButton from "../buttons/Delete";
+import TrashArchiveCategories from "../archive/CategoryArchive";
 
 const UpdateCategoriesForm = () => {
   const { toast } = useToast();
@@ -131,41 +132,46 @@ const UpdateCategoriesForm = () => {
             <DialogHeader>
               <DialogTitle>Update Category</DialogTitle>
             </DialogHeader>
-            <Controller
-              name="category_id"
-              control={control}
-              render={({ field }) => (
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger
-                    className={classNames({
-                      "border-red-600": errors.category_id,
-                      "w-[180px] mt-5": true,
-                    })}
-                  >
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Categories</SelectLabel>
-                      {categories &&
-                        categories.map((category, index) => (
-                          <SelectItem
-                            key={index}
-                            value={`${category.category_id}`}
-                          >
-                            {category.category_name}
-                          </SelectItem>
-                        ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+            <div className="w-full flex justify-between">
+              <div>
+              <Controller
+                name="category_id"
+                control={control}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger
+                      className={classNames({
+                        "border-red-600": errors.category_id,
+                        "w-[180px] mt-5": true,
+                      })}
+                    >
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Categories</SelectLabel>
+                        {categories &&
+                          categories.map((category, index) => (
+                            <SelectItem
+                              key={index}
+                              value={`${category.category_id}`}
+                            >
+                              {category.category_name}
+                            </SelectItem>
+                          ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.category_id && (
+                <p className="text-red-600 text-sm mt-2">
+                  <>{errors.category_id?.message}</>
+                </p>
               )}
-            />
-            {errors.category_id && (
-              <p className="text-red-600 text-sm mt-2">
-                <>{errors.category_id?.message}</>
-              </p>
-            )}
+              </div>
+              <TrashArchiveCategories />
+            </div>
 
             <div className="flex flex-col space-y-1.5 mt-3">
               <Label htmlFor="category_name">Display Name</Label>

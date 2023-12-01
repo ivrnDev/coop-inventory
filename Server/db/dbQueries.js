@@ -73,10 +73,13 @@ module.exports = {
             DELETE FROM variant WHERE product_id = ?
         `,
         getAllCategoryQuery: `
-            SELECT * FROM category WHERE isDeleted = '0';
+            SELECT * FROM category WHERE isDeleted = '0'
+        `,
+        getAllDeletedCategoryQuery: `
+            SELECT category_id, category_name FROM category WHERE isDeleted = '1'
         `,
         getCategoryByIdQuery: `
-            SELECT * FROM category WHERE category_id = ? AND isDeleted = 0;
+            SELECT * FROM category WHERE category_id = ?
         `,
         getCategoryByNameQuery: `
             SELECT category_name FROM category WHERE category_name = ?

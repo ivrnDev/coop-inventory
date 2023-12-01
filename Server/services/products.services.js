@@ -26,6 +26,7 @@ const {
   createNewCategoryQuery,
   updateCategoryByIdQuery,
   deleteCategoryByIdQuery,
+  getAllDeletedCategoryQuery,
   updateProductImageQuery,
   getProductByFeaturedQuery,
   getDeletedProductsQuery,
@@ -342,6 +343,15 @@ module.exports = {
           category_image: category.category_image.toString('base64')
         }))
         return resolve(categories)
+      })
+    })
+  },
+  getAllDeletedCategoryDB: () => {
+    return new Promise((resolve, reject) => {
+      pool.execute(getAllDeletedCategoryQuery, [], (error, result) => {
+        if (error) return reject(error)
+        if (result.length === 0) return resolve(null)
+        return resolve(result)
       })
     })
   },
