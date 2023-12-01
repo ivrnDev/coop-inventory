@@ -32,7 +32,6 @@ const UpdateVariant = ({ productId, productName }: Props) => {
     handleSubmit,
     control,
     reset,
-    setValue,
     formState: { errors, isSubmitting },
   } = useForm<ValidateVariant>({
     resolver: zodResolver(VariantSchema),
@@ -60,7 +59,7 @@ const UpdateVariant = ({ productId, productName }: Props) => {
         };
         reset(defaultFormValues);
       }
-    }
+    };
     getProduct();
   }, []);
 
@@ -122,18 +121,13 @@ const UpdateVariant = ({ productId, productName }: Props) => {
     <>
       <div
         id="variant-container"
-        className="grid grid-cols-2 bg-[#37B3E2] mt-5"
+        className="grid grid-cols-2 bg-[#37B3E2] overflow-auto"
       >
         {fields.map((field, index) => (
           <div key={field.id} className="p-2 flex flex-col space-y-3">
-            <div className="flex items-center">
-              <Label
-                htmlFor={`variants.${index}.variant_name`}
-                className="font-bold"
-              >
-                Name
-              </Label>
-              <div>
+            <div className="flex items-center space-x-5">
+              <Label htmlFor={`variants.${index}.variant_name`}>Name</Label>
+              <div className="w-full">
                 <Input
                   {...register(`variants.${index}.variant_name` as const)}
                   id={`variants${index}.variant_name`}
@@ -151,14 +145,9 @@ const UpdateVariant = ({ productId, productName }: Props) => {
                 )}
               </div>
             </div>
-            <div className="flex">
-              <label
-                htmlFor={`variants.${index}.variant_symbol`}
-                className="text-right"
-              >
-                Symbol
-              </label>
-              <div>
+            <div className="flex items-center space-x-5">
+              <Label htmlFor={`variants.${index}.variant_symbol`}>Symbol</Label>
+              <div className="w-full">
                 <Input
                   {...register(`variants.${index}.variant_symbol` as const)}
                   id={`variants.${index}.variant_symbol`}
@@ -176,14 +165,9 @@ const UpdateVariant = ({ productId, productName }: Props) => {
                 )}
               </div>
             </div>
-            <div className="flex">
-              <Label
-                htmlFor={`variants.${index}.variant_price`}
-                className="text-right"
-              >
-                Price
-              </Label>
-              <div>
+            <div className="flex items-center space-x-5">
+              <Label htmlFor={`variants.${index}.variant_price`}>Price</Label>
+              <div className="w-full">
                 <Input
                   {...register(`variants.${index}.variant_price` as const)}
                   type="number"
@@ -202,14 +186,9 @@ const UpdateVariant = ({ productId, productName }: Props) => {
                 )}
               </div>
             </div>
-            <div className="flex ">
-              <Label
-                htmlFor={`variants.${index}.variant_stocks`}
-                className="text-right"
-              >
-                Stocks
-              </Label>
-              <div>
+            <div className="flex items-center space-x-5 ">
+              <Label htmlFor={`variants.${index}.variant_stocks`}>Stocks</Label>
+              <div className="w-full">
                 <Input
                   {...register(`variants.${index}.variant_stocks` as const)}
                   type="number"
@@ -233,7 +212,7 @@ const UpdateVariant = ({ productId, productName }: Props) => {
               size="lg"
               onClick={() => handleRemoveForm(index)}
             >
-              DELETE
+              REMOVE
             </Button>
           </div>
         ))}
@@ -250,26 +229,33 @@ const UpdateVariant = ({ productId, productName }: Props) => {
             variant_stocks: "0",
           })
         }
-        className="absolute right-10"
+        className="absolute right-10 top-2"
       >
         Add Variant
       </Button>
+
       <Dialog>
         <DialogTrigger
-          className="h-fit absolute right-5 bottom-5 w-[14%] flex space-x-3 bg-green-600"
-          ref={buttonRef}
+          asChild
+          className="h-fit absolute right-5 bottom-5 w-[14%] flex space-x-3"
         >
-          <div className="relative w-5 h-5 float-left">
-            <Image
-              src="/icons/add-sign-icon.svg"
-              alt="add-sign"
-              sizes="min-w-1"
-              fill
-            />
-          </div>
-          <p className="text-lg whitespace-nowrap">
-            {isSubmitting ? "Updating Variant" : "Update Variant"}
-          </p>
+          <Button
+            variant="submit"
+            ref={buttonRef}
+            className="flex space-x-2 w-fit"
+          >
+            <div className="relative w-5 h-5">
+              <Image
+                src="/icons/add-sign-icon.svg"
+                alt="add-sign"
+                sizes="min-w-1"
+                fill
+              />
+            </div>
+            <p className="text-base font-semibold">
+              {isSubmitting ? "Updating Variants" : "Update Variants"}
+            </p>
+          </Button>
         </DialogTrigger>
         <DialogContent>
           <Permission roles={moderate} handlePermission={handlePermission} />

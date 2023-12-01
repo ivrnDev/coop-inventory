@@ -680,7 +680,6 @@ const UpdateProductForm = ({ categories, id }: Props) => {
               </div>
             </div>
           </div>
-
           <Dialog>
             <DialogTrigger
               asChild
@@ -699,7 +698,9 @@ const UpdateProductForm = ({ categories, id }: Props) => {
                     fill
                   />
                 </div>
-                <p className="text-base font-semibold">{isSubmitting ? "Updating Item" : "Update Item"}</p>
+                <p className="text-base font-semibold">
+                  {isSubmitting ? "Updating Item" : "Update Item"}
+                </p>
               </Button>
             </DialogTrigger>
             <DialogContent>
@@ -713,9 +714,9 @@ const UpdateProductForm = ({ categories, id }: Props) => {
       )}
 
       {currentStep === 2 && (
-        <>
+        <div className="grid grid-cols-2 w-full h-full overflow-y-auto pt-10 ">
           <UpdateVariant productId={id} productName={productName} />
-        </>
+        </div>
       )}
     </form>
   );
