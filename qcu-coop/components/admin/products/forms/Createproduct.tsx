@@ -737,6 +737,7 @@ const CreateProductForm = () => {
                       )}
                       type="number"
                       max={100}
+                      min={0}
                       id={`variants.${index}.variant_stocks`}
                       autoComplete="off"
                       className={classNames({
@@ -755,7 +756,16 @@ const CreateProductForm = () => {
                 </div>
                 <Button
                   variant="destructive"
-                  onClick={() => fields.length > 1 && remove(index)}
+                  type="button"
+                  onClick={() => {
+                    fields.length > 1
+                      ? remove(index)
+                      : toast({
+                          variant: "destructive",
+                          title: "Failed to remove variant.",
+                          description: "There must be atleast 1 variant.",
+                        });
+                  }}
                 >
                   REMOVE
                 </Button>

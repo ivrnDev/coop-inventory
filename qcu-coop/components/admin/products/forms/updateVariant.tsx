@@ -27,11 +27,13 @@ const UpdateVariant = ({ productId, productName }: Props) => {
   const { moderate } = rolePermissions;
   const [isAllowed, setIsAllowed] = useState<boolean>(false);
   const [adminId, setAdminId] = useState<number>(0);
+  const [maxStocks, setMaxStocks] = useState<number>(100);
   const {
     register,
     handleSubmit,
     control,
     reset,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<ValidateVariant>({
     resolver: zodResolver(VariantSchema),
@@ -121,7 +123,7 @@ const UpdateVariant = ({ productId, productName }: Props) => {
     <>
       <div
         id="variant-container"
-        className="grid grid-cols-2 bg-[#37B3E2] overflow-auto"
+        className="grid grid-cols-2 bg-[#37B3E2] overflow-auto border-black border rounded-md"
       >
         {fields.map((field, index) => (
           <div key={field.id} className="p-2 flex flex-col space-y-3">
@@ -190,15 +192,31 @@ const UpdateVariant = ({ productId, productName }: Props) => {
               <Label htmlFor={`variants.${index}.variant_stocks`}>Stocks</Label>
               <div className="w-full">
                 <Input
-                  {...register(`variants.${index}.variant_stocks` as const, {valueAsNumber: true})}
+                  {...register(`variants.${index}.variant_stocks` as const, {
+                    valueAsNumber: true,
+                  })}
                   type="number"
-                  max={100}
+                  max={maxStocks}
+                  min={0}
                   id={`variants.${index}.variant_stocks`}
                   autoComplete="off"
                   className={classNames({
-                    "border-red-600":
+                    "border-red-600 bg-white":
                       errors.variants && errors.variants[index]?.variant_stocks,
                     "": true,
+                    "bg-[#52B788]":
+                      watch(`variants.${index}.variant_stocks`) <= maxStocks,
+                    "bg-[#BCE784]":
+                      watch(`variants.${index}.variant_stocks`) <
+                      0.7 * maxStocks,
+                    "bg-[#EAB61A]":
+                      watch(`variants.${index}.variant_stocks`) <
+                      0.5 * maxStocks,
+                    "bg-[#DE1919]":
+                      watch(`variants.${index}.variant_stocks`) <
+                      0.3 * maxStocks,
+                    "bg-black text-white":
+                      watch(`variants.${index}.variant_stocks`) == 0,
                   })}
                 />
                 {errors.variants && (

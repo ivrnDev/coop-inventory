@@ -27,7 +27,8 @@ export const Variants = z.object({
     }),
   variant_stocks: z
     .number()
-    .max(100, { message: "Variant stocks cannot exceed to 100" }),
+    .max(100, { message: "Variant stocks cannot exceed to 100" })
+    .min(0, { message: "Variant stocks must be any positive number" }),
 });
 export const VariantSchema = z.object({
   variants: z.array(Variants),
