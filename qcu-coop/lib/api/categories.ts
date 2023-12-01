@@ -37,10 +37,10 @@ export async function updateCategory(form: FormData, id: number) {
     };
   }
 }
-export async function deleteCategory(action: number, id: number) {
+export async function deleteCategory(id: number, isDeleted: number, ) {
   try {
     const res = await fetch(
-      `http://localhost:3000/api/products/category/action/${id}?action=${action}`,
+      `http://localhost:3000/api/products/category/action/${id}?action=${isDeleted}`,
       {
         method: "PATCH",
       }
