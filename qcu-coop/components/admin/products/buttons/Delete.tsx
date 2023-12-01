@@ -5,6 +5,7 @@ import Permission from "../../Permission";
 import { rolePermissions } from "@/lib/permission";
 import { toast } from "@/components/ui/use-toast";
 import { createActivity } from "@/lib/api/activity";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   categoryId: number;
@@ -55,7 +56,11 @@ const DeleteButton = ({ categoryId }: Props) => {
   return (
     <>
       <Dialog>
-        <DialogTrigger ref={deleteBtnRef}>Delete</DialogTrigger>
+        <DialogTrigger asChild>
+          <Button variant="destructive" ref={deleteBtnRef}>
+            Delete
+          </Button>
+        </DialogTrigger>
         <DialogContent>
           <Permission roles={moderate} handlePermission={handlePermission} />
         </DialogContent>

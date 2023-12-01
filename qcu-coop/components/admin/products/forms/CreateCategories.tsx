@@ -117,7 +117,7 @@ const CreateCategoriesForm = () => {
                 })}
               />
               {errors.category_name && (
-                <p className="text-red-600 text-sm mt-2">
+                <p className="text-red-600 text-sm mt-2 text-center">
                   {errors.category_name?.message}
                 </p>
               )}
@@ -143,14 +143,16 @@ const CreateCategoriesForm = () => {
               )}
             />
             {errors.category_image && (
-              <p className="text-red-600 text-sm mt-2">
+              <p className="text-red-600 text-sm mt-2 text-center">
                 <>{errors.category_image?.message}</>
               </p>
             )}
-            <DialogFooter>
+            <DialogFooter className="mt-2">
               <Dialog>
-                <DialogTrigger ref={buttonRef}>
-                  {isSubmitting ? "Submitting" : "Submit"}
+                <DialogTrigger asChild>
+                  <Button variant="submit" ref={buttonRef}>
+                    {isSubmitting ? "Submitting" : "Submit"}
+                  </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <Permission

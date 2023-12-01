@@ -139,7 +139,7 @@ const UpdateCategoriesForm = () => {
                   <SelectTrigger
                     className={classNames({
                       "border-red-600": errors.category_id,
-                      "w-[180px]": true,
+                      "w-[180px] mt-5": true,
                     })}
                   >
                     <SelectValue placeholder="Select category" />
@@ -166,7 +166,8 @@ const UpdateCategoriesForm = () => {
                 <>{errors.category_id?.message}</>
               </p>
             )}
-            <div className="flex flex-col space-y-1.5">
+
+            <div className="flex flex-col space-y-1.5 mt-3">
               <Label htmlFor="category_name">Display Name</Label>
               <Input
                 {...register("category_name")}
@@ -178,40 +179,44 @@ const UpdateCategoriesForm = () => {
                 })}
               />
               {errors.category_name && (
-                <p className="text-red-600 text-sm mt-2">
+                <p className="text-red-600 text-sm mt-2 text-center">
                   {errors.category_name?.message}
                 </p>
               )}
             </div>
-            <Controller
-              name="category_image"
-              control={control}
-              render={({ field: { value, onChange, ...field } }) => (
-                <>
-                  <Label htmlFor="category_image">Category Image</Label>
-                  <Input
-                    {...field}
-                    onChange={(event) => {
-                      const selectedFile = event.target.files?.[0];
-                      if (selectedFile) {
-                        onChange(selectedFile);
-                      }
-                    }}
-                    type="file"
-                    id="category_image"
-                  />
-                </>
+            <div className="mt-2">
+              <Controller
+                name="category_image"
+                control={control}
+                render={({ field: { value, onChange, ...field } }) => (
+                  <>
+                    <Label htmlFor="category_image">Category Image</Label>
+                    <Input
+                      {...field}
+                      onChange={(event) => {
+                        const selectedFile = event.target.files?.[0];
+                        if (selectedFile) {
+                          onChange(selectedFile);
+                        }
+                      }}
+                      type="file"
+                      id="category_image"
+                    />
+                  </>
+                )}
+              />
+              {errors.category_image && (
+                <p className="text-red-600 text-sm mt-2 text-center">
+                  <>{errors.category_image?.message}</>
+                </p>
               )}
-            />
-            {errors.category_image && (
-              <p className="text-red-600 text-sm mt-2">
-                <>{errors.category_image?.message}</>
-              </p>
-            )}
-            <DialogFooter>
+            </div>
+            <DialogFooter className="mt-2">
               <Dialog>
-                <DialogTrigger ref={buttonRef}>
-                  {isSubmitting ? "Updating" : "Update"}
+                <DialogTrigger asChild>
+                  <Button variant="submit" ref={buttonRef}>
+                    {isSubmitting ? "Updating" : "Update"}
+                  </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <Permission
