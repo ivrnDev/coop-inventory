@@ -126,7 +126,7 @@ const AdminRenderProducts = ({ products, deletedProducts }: Props) => {
                             width={20}
                             height={20}
                           />
-                          EDIT
+                          View
                         </Button>
                       </Link>
                       <div>
