@@ -334,124 +334,139 @@ const UpdateProductForm = ({ categories, id }: Props) => {
                     )}
                   </Dialog>
                 </div>
-                <div className="flex">
-                  <Label
-                    htmlFor="display_image"
-                    className={classNames({
-                      "border-red-600": errors.display_image,
-                      "border-black": errors.display_image === undefined,
-                      "bg-inputColor border  hover:cursor-pointer w-24 h-24 flex flex-col justify-center items-center":
-                        true,
-                    })}
-                  >
-                    <div id="add-icon-container" className="relative w-10 h-10">
-                      <Image
-                        src="/icons/add-image-icon.svg"
-                        alt="add-image-icon"
-                        sizes="min-w-1"
-                        fill
-                      />
-                    </div>
-                    <p>{selectedImage.image ? "Edit Image" : "Add Image"}</p>
-                    <p>{imageNumber.image}/1</p>
-                  </Label>
-                  <Controller
-                    name="display_image"
-                    control={control}
-                    render={({ field: { value, onChange, ...field } }) => (
-                      <>
-                        <Input
-                          {...field}
-                          onChange={(event) => {
-                            const selectedFile = event.target.files;
-                            if (selectedFile) {
-                              const imageFile = selectedFile[0];
-                              onChange(imageFile);
-                              setSelectedImage((prevFiles) => ({
-                                ...prevFiles,
-                                image: imageFile,
-                              }));
-                              setImageNumber((prevCount) => ({
-                                ...prevCount,
-                                image: selectedFile.length,
-                              }));
-                            }
-                          }}
-                          type="file"
-                          id="display_image"
-                          className={classNames({
-                            "border-red-600": errors.display_image,
-                            "border-black": errors.display_image === undefined,
-                            hidden: true,
-                          })}
+
+                <div className="flex space-x-2">
+                  <div className="flex flex-col">
+                    <Label
+                      htmlFor="display_image"
+                      className={classNames({
+                        "border-red-600": errors.display_image,
+                        "border-black": errors.display_image === undefined,
+                        "bg-inputColor border  hover:cursor-pointer w-24 h-24 flex flex-col justify-center items-center":
+                          true,
+                      })}
+                    >
+                      <div
+                        id="add-icon-container"
+                        className="relative w-10 h-10"
+                      >
+                        <Image
+                          src="/icons/add-image-icon.svg"
+                          alt="add-image-icon"
+                          sizes="min-w-1"
+                          fill
                         />
-                      </>
+                      </div>
+                      <p>{selectedImage.image ? "Edit Image" : "Add Image"}</p>
+                      <p>{imageNumber.image}/1</p>
+                    </Label>
+                    <Controller
+                      name="display_image"
+                      control={control}
+                      render={({ field: { value, onChange, ...field } }) => (
+                        <>
+                          <Input
+                            {...field}
+                            onChange={(event) => {
+                              const selectedFile = event.target.files;
+                              if (selectedFile) {
+                                const imageFile = selectedFile[0];
+                                onChange(imageFile);
+                                setSelectedImage((prevFiles) => ({
+                                  ...prevFiles,
+                                  image: imageFile,
+                                }));
+                                setImageNumber((prevCount) => ({
+                                  ...prevCount,
+                                  image: selectedFile.length,
+                                }));
+                              }
+                            }}
+                            type="file"
+                            id="display_image"
+                            className={classNames({
+                              "border-red-600": errors.display_image,
+                              "border-black":
+                                errors.display_image === undefined,
+                              hidden: true,
+                            })}
+                          />
+                        </>
+                      )}
+                    />
+                    {errors.display_image && (
+                      <p className="text-red-600 text-sm mt-2">
+                        <>{errors.display_image?.message}</>
+                      </p>
                     )}
-                  />
-                  {errors.display_image && (
-                    <p className="text-red-600 text-sm mt-2">
-                      <>{errors.display_image?.message}</>
-                    </p>
-                  )}
-                </div>
-                <div className="flex">
-                  <Label
-                    htmlFor="product_album"
-                    className="bg-inputColor border border-black hover:cursor-pointer w-24 h-24 flex flex-col justify-center items-center"
-                  >
-                    <div id="add-icon-container" className="relative w-10 h-10">
-                      <Image
-                        src="/icons/add-image-icon.svg"
-                        alt="add-image-icon"
-                        sizes="min-w-1"
-                        fill
-                      />
-                    </div>
-                    <p>
-                      {selectedImage.albums.length > 0
-                        ? "Edit Image"
-                        : "Add Image"}
-                    </p>
-                    <p>{imageNumber.albums}/10</p>
-                  </Label>
-                  <Controller
-                    name="product_album"
-                    control={control}
-                    render={({ field: { value, onChange, ...field } }) => (
-                      <>
-                        <Input
-                          {...field}
-                          onChange={(event) => {
-                            const selectedFile = event.target.files;
-                            if (selectedFile) {
-                              const albumFiles = Array.from(selectedFile);
-                              onChange(albumFiles);
-                              setSelectedImage((prevFiles) => ({
-                                ...prevFiles,
-                                albums: albumFiles,
-                              }));
-                              setImageNumber((prevCount) => ({
-                                ...prevCount,
-                                ["albums"]: selectedFile.length,
-                              }));
-                            }
-                          }}
-                          type="file"
-                          id="product_album"
-                          multiple
-                          className={classNames({
-                            "border-red-600": errors.product_album,
-                            hidden: true,
-                          })}
+                  </div>
+                  <div className="flex flex-col">
+                    <Label
+                      htmlFor="product_album"
+                      className={classNames({
+                        "border-red-600": errors.product_album,
+                        "border-black": errors.product_album === undefined,
+                        "bg-inputColor border hover:cursor-pointer w-24 h-24 flex flex-col justify-center items-center":
+                          true,
+                      })}
+                    >
+                      <div
+                        id="add-icon-container"
+                        className="relative w-10 h-10"
+                      >
+                        <Image
+                          src="/icons/add-image-icon.svg"
+                          alt="add-image-icon"
+                          sizes="min-w-1"
+                          fill
                         />
-                      </>
+                      </div>
+                      <p>
+                        {selectedImage.albums.length > 0
+                          ? "Edit Image"
+                          : "Add Image"}
+                      </p>
+                      <p>{imageNumber.albums}/10</p>
+                    </Label>
+                    <Controller
+                      name="product_album"
+                      control={control}
+                      render={({ field: { value, onChange, ...field } }) => (
+                        <>
+                          <Input
+                            {...field}
+                            onChange={(event) => {
+                              const selectedFile = event.target.files;
+                              if (selectedFile) {
+                                const albumFiles = Array.from(selectedFile);
+                                onChange(albumFiles);
+                                setSelectedImage((prevFiles) => ({
+                                  ...prevFiles,
+                                  albums: albumFiles,
+                                }));
+                                setImageNumber((prevCount) => ({
+                                  ...prevCount,
+                                  ["albums"]: selectedFile.length,
+                                }));
+                              }
+                            }}
+                            type="file"
+                            id="product_album"
+                            multiple
+                            className={classNames({
+                              "border-red-600": errors.product_album,
+                              hidden: true,
+                            })}
+                          />
+                        </>
+                      )}
+                    />
+                    {errors.product_album && (
+                      <p className="text-red-600 text-sm mt-2">
+                        <>{errors.product_album?.message}</>
+                      </p>
                     )}
-                  />
-                  {errors.product_album && (
-                    <p className="text-red-600 text-sm mt-2">
-                      <>{errors.product_album?.message}</>
-                    </p>
-                  )}
+                  </div>
                 </div>
               </div>
 
