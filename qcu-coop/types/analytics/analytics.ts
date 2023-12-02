@@ -24,7 +24,7 @@ export type SalesAnalytics = {
     };
     day: {
       today: SalesValue;
-      yesterday: SalesValue;
+      previous: SalesValue;
     };
     month: {
       currentMonth: SalesValue;
@@ -39,7 +39,7 @@ export type SalesAnalytics = {
     };
     day: {
       today: SalesValue;
-      yesterday: SalesValue;
+      previous: SalesValue;
     };
     month: {
       currentMonth: SalesValue;

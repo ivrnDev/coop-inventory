@@ -26,7 +26,7 @@ const Analytics = async () => {
               <CardContent className="mx-auto flex items-center space-x-20 mt-16">
                 <div>
                   <p className="text-4xl text-white font-bold text-center">
-                    {sold?.day?.today?.value.toLocaleString() ?? 0}
+                    {sold?.all?.value.toLocaleString() ?? 0}
                   </p>
                 </div>
               </CardContent>
@@ -46,7 +46,7 @@ const Analytics = async () => {
                 <div>
                   <p className="text-4xl text-white font-bold text-center">
                     ₱{" "}
-                    {revenue?.day?.today?.value.toLocaleString("en-US", {
+                    {revenue?.all?.value.toLocaleString("en-US", {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     }) ?? 0.0}
@@ -76,7 +76,7 @@ const Analytics = async () => {
               </div>
               <div className="text-center h-fit">
                 <h2 className="text-3xl text-black font-bold">
-                  {sold?.day?.yesterday?.value ?? 0}
+                  {sold?.day?.previous?.value ?? 0}
                 </h2>
                 <p className=" text-slate-700 font-bold capitalize text-2xl mt-2">
                   Yesterday
@@ -109,7 +109,7 @@ const Analytics = async () => {
               <div className="text-center h-fit">
                 <h2 className="text-3xl text-black font-bold">
                   ₱{" "}
-                  {revenue?.day?.yesterday?.value.toLocaleString("en-US", {
+                  {revenue?.day?.previous?.value.toLocaleString("en-US", {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   }) ?? 0}
