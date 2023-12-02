@@ -19,10 +19,6 @@ import classNames from "classnames";
 import { loginAdmin } from "@/lib/api/admin";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import {
-  AlertDialogAction,
-  AlertDialogFooter,
-} from "@/components/ui/alert-dialog";
 import { useToast } from "@/components/ui/use-toast";
 
 export default function LoginForm() {
@@ -32,9 +28,8 @@ export default function LoginForm() {
   const {
     register,
     handleSubmit,
-    control,
     reset,
-    formState: { errors, isSubmitSuccessful, isSubmitting },
+    formState: { errors, isSubmitting },
   } = useForm<ValidateLoginForm>({
     resolver: zodResolver(LoginSchema),
   });
@@ -111,12 +106,22 @@ export default function LoginForm() {
       {error && (
         <Alert
           variant="destructive"
-          className="absolute w-96 top-[20%] left-[50%] translate-x-[-50%] bg-red-600 text-white"
+          className="absolute w-96 top-1/3 left-1/2 translate-x-[-50%] bg-red-600 text-white md:w-1/3"
         >
-          <AlertCircle className="h-4 w-4" color="white" />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>
-            Invalid Username or password. Please log in again.
+          <AlertTitle className="md:text-lg font-semibold flex items-center gap-2">
+            <AlertCircle className="h-4 w-4 md:h-6 md:w-6" color="white" />
+            Failed to login
+          </AlertTitle>
+          <AlertDescription className="mt-3 md:text-base indent-6">
+            Invalid Username or password.
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setError(false)}
+              className="float-right mt-2"
+            >
+              Okay
+            </Button>
           </AlertDescription>
         </Alert>
       )}
