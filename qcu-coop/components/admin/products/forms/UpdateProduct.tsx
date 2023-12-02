@@ -716,7 +716,7 @@ const UpdateProductForm = ({ categories, id }: Props) => {
       {currentStep === 2 && (
         <div className="grid grid-cols-2 w-full h-full overflow-y-auto pt-10 p-3">
           <UpdateVariant productId={id} productName={productName} />
-          <div className="flex flex-col w-fit space-y-8">
+          <div className="flex flex-col w-fit space-y-4">
             <div className="bg-[#52B788] rounded-e-3xl rounded p-3 text-sm w-28 text-center">
               Maximum
             </div>
@@ -725,10 +725,13 @@ const UpdateProductForm = ({ categories, id }: Props) => {
               Minimum
             </div>
             <div className="bg-[#EAB61A] rounded-e-3xl rounded w-28 p-3 text-sm  text-center">
-              Warning
+              Average
             </div>
-            <div className="bg-[#DE1919] text-white rounded-e-3xl rounded w-28 p-3 text-sm  text-center">
-              Danger
+            <div className="bg-[#ff831d] rounded-e-3xl rounded w-28 p-3 text-sm  text-center">
+              Re-stock  
+            </div>
+            <div className="bg-[#de1919] text-white rounded-e-3xl rounded w-28 p-3 text-sm  text-center">
+              Safety stocks
             </div>
             <div className="bg-black text-white rounded-e-3xl rounded w-28 p-3 text-sm  text-center">
               Out of Stocks

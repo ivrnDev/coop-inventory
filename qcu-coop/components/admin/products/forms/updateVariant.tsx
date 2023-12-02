@@ -27,7 +27,7 @@ const UpdateVariant = ({ productId, productName }: Props) => {
   const { moderate } = rolePermissions;
   const [isAllowed, setIsAllowed] = useState<boolean>(false);
   const [adminId, setAdminId] = useState<number>(0);
-  const [maxStocks, setMaxStocks] = useState<number>(100);
+  const [maxStocks, setMaxStocks] = useState<number>(125);
   const {
     register,
     handleSubmit,
@@ -208,13 +208,16 @@ const UpdateVariant = ({ productId, productName }: Props) => {
                       watch(`variants.${index}.variant_stocks`) <= maxStocks,
                     "bg-[#BCE784]":
                       watch(`variants.${index}.variant_stocks`) <
-                      0.7 * maxStocks,
+                      0.8 * maxStocks,
                     "bg-[#EAB61A]":
                       watch(`variants.${index}.variant_stocks`) <
-                      0.5 * maxStocks,
-                    "bg-[#DE1919]":
+                      0.64 * maxStocks,
+                    "bg-[#ff831d]":
                       watch(`variants.${index}.variant_stocks`) <
-                      0.3 * maxStocks,
+                      0.4 * maxStocks,
+                    "bg-[#DE1919]":
+                      watch(`variants.${index}.variant_stocks`) <=
+                      0.2 * maxStocks,
                     "bg-black text-white":
                       watch(`variants.${index}.variant_stocks`) == 0,
                   })}

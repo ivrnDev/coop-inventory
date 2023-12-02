@@ -736,7 +736,7 @@ const CreateProductForm = () => {
                         { valueAsNumber: true }
                       )}
                       type="number"
-                      max={100}
+                      max={125}
                       min={0}
                       id={`variants.${index}.variant_stocks`}
                       autoComplete="off"
